@@ -17,13 +17,7 @@
  */
 package Model;
 
-import DAO.CityDAO;
-import Utilities.SQL_Queries;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  *
@@ -34,19 +28,6 @@ public class City {
     private int cityId, countryId;
     private String cityName, createdBy, lastUpdateBy;
     private Date createDate, lastUpdate;
-
-    CityDAO cityDAO = new CityDAO();
-    
-    //Default Constructor
-    public City(int cityId, String cityName, int countryId, Date createDate, String createdBy, Date lastUpdate, String lastUpdateBy) {
-        this.cityId = cityId;
-        this.cityName = cityName;
-        this.countryId = countryId;
-        this.createdBy = createdBy;
-        this.createDate = createDate;
-        this.lastUpdateBy = lastUpdateBy;
-        this.lastUpdate = lastUpdate;
-    }
 
     public int getCityId() {
         return cityId;
@@ -103,29 +84,4 @@ public class City {
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
-
-    public static ObservableList<City> getAllCities(ResultSet results) {
-
-        ObservableList<City> allCities = FXCollections.observableArrayList();
-
-        try {
-
-            while (results.next()) {
-                allCities.add(new City(
-                        results.getInt("cityId"),
-                        results.getString("city"),
-                        results.getInt("countryId"),
-                        results.getDate("createDate"),
-                        results.getString("createdBy"),
-                        results.getDate("lastUpdate"),             
-                        results.getString("lastUpdateBy"))); 
-            }
-
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-        return allCities;
-    }
-
 }

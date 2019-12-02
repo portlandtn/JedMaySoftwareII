@@ -17,13 +17,7 @@
  */
 package Model;
 
-import DAO.AddressDAO;
-import Utilities.SQL_Queries;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  *
@@ -34,23 +28,6 @@ public class Address {
     private int addressId, cityId;
     private String address, address2, postalCode, phone, createdBy, lastUpdateBy;
     private Date createDate, lastUpdate;
-    
-    AddressDAO addressDAO = new AddressDAO();
-
-    //Default Constructor
-    public Address(int addressId, String address, String address2, int cityId, String postalCode,
-            String phone, Date createDate, String createdBy, Date lastUpdate, String lastUpdateBy) {
-        this.addressId = addressId;
-        this.address = address;
-        this.address2 = address2;
-        this.cityId = cityId;
-        this.postalCode = postalCode;
-        this.phone = phone;
-        this.createdBy = createdBy;
-        this.createDate = createDate;
-        this.lastUpdateBy = lastUpdateBy;
-        this.lastUpdate = lastUpdate;
-    }
     
 
     public int getAddressId() {
@@ -131,33 +108,5 @@ public class Address {
 
     public void setLastUpdate(Date lastModifiedDate) {
         this.lastUpdate = lastModifiedDate;
-    }
-
-    public static ObservableList<Address> getAddressData(ResultSet results) {
-        
-        ObservableList<Address> allAddresses = FXCollections.observableArrayList();
-        
-        try {
-            while (results.next()) {
-                allAddresses.add(new Address(
-                        results.getInt("addressId"),
-                        results.getString("address"),
-                        results.getString("address2"),
-                        results.getInt("cityId"),
-                        results.getString("postalCode"),
-                        results.getString("phone"),
-                        results.getDate("createDate"),
-                        results.getString("createdBy"),
-                        results.getDate("lastUpdate"),
-                        results.getString("lastUpdateBy")
-                        ));    
-            }
-            
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-        return allAddresses;
-    }
-    
+    }   
 }

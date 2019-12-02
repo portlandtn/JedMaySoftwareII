@@ -17,13 +17,7 @@
  */
 package Model;
 
-import DAO.AppointmentDAO;
-import Utilities.SQL_Queries;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  *
@@ -33,32 +27,7 @@ public class Appointment {
 
     private int appointmentId, customerId, userId;
     private String title, customerName, assignedToUser, location, type, description, contact, url, createdBy, lastUpdateBy;
-            
     private Date appointmentDate, start, end, createDate, lastUpdate;
-    
-    AppointmentDAO appointmentDAO = new AppointmentDAO();
-
-    //Default Constructor
-    public Appointment(int appointmentId, int customerId, String title, String description, int userId, String location,
-            String contact, String type, String url, Date start, Date end, Date createDate, String createdBy, Date lastUpdate, String lastUpdateBy) {
-        this.appointmentId = appointmentId;
-        this.customerId = customerId;
-        this.title = title;
-        this.description = description;
-        this.userId = userId;
-        this.location = location;
-        this.contact = contact;
-        this.type = type;
-        this.url = url;
-        this.start = start;
-        this.end = end;
-        this.createdBy = createdBy;
-        this.createDate = createDate;
-        this.lastUpdateBy = lastUpdateBy;
-        this.lastUpdate = lastUpdate;
-
-    }
-
 
     public int getAppointmentId() {
         return appointmentId;
@@ -202,40 +171,5 @@ public class Appointment {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
-    }
-    
-    public static ObservableList<Appointment> getAllAppointments(ResultSet results) {
-        
-        ObservableList<Appointment> allAppointments = FXCollections.observableArrayList();
-
-        
-        try {
-
-            while (results.next()) {
-                allAppointments.add(new Appointment(
-                        results.getInt("appointmentId"),
-                        results.getInt("customerId"),
-                        results.getString("title"),
-                        results.getString("description"),
-                        results.getInt("userId"),
-                        results.getString("location"),
-                        results.getString("contact"),
-                        results.getString("type"),
-                        results.getString("url"),
-                        results.getDate("start"),
-                        results.getDate("start"),
-                        results.getDate("createDate"),
-                        results.getString("createdBy"),
-                        results.getDate("lastUpdate"),
-                        results.getString("lastUpdateBy")));
-            }
-       
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-        
-        return allAppointments;
-    }
-
-    
+    }    
 }

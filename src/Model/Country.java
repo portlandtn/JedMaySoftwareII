@@ -17,13 +17,7 @@
  */
 package Model;
 
-import DAO.CountryDAO;
-import Utilities.SQL_Queries;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  *
@@ -34,17 +28,6 @@ public class Country {
     private int countryId;
     private String countryName, createdBy, lastUpdateBy;
     private Date createDate, lastUpdate;
-
-    CountryDAO countryDAO = new CountryDAO();
-
-    public Country(int countryId, String countryName, Date createDate, String createdBy, Date lastUpdate, String lastUpdateBy) {
-        this.countryId = countryId;
-        this.countryName = countryName;
-        this.createdBy = createdBy;
-        this.createDate = createDate;
-        this.lastUpdateBy = lastUpdateBy;
-        this.lastUpdate = lastUpdate;
-    }
 
     public int getCountryId() {
         return countryId;
@@ -92,28 +75,5 @@ public class Country {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
-    }
-
-    public static ObservableList<Country> getAllCountries(ResultSet results) {
-
-        ObservableList<Country> allCountries = FXCollections.observableArrayList();
-
-        try {
-            while (results.next()) {
-                allCountries.add(new Country(
-                        results.getInt("countryId"),
-                        results.getString("country"),
-                        results.getDate("createDate"),
-                        results.getString("createdBy"),
-                        results.getDate("lastUpdate"),
-                        results.getString("lastUpdateBy")
-                ));
-            }
-
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-        return allCountries;
     }
 }

@@ -17,11 +17,7 @@
  */
 package Model;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  *
@@ -33,21 +29,7 @@ public class Customer {
     private String customerName, createdBy, lastUpdateBy;
     private Boolean active;
     private Date createdDate, lastUpdate;
-    
-    //CustomerDAO customerDAO = new CustomerDAO();
 
-    public Customer(int customerId, String customerName, int addressId, Boolean active, String createdBy, Date createdDate, String lastUpdatedBy, Date lastUpdate) {
-        this.customerId = customerId;
-        this.customerName = customerName;
-        this.addressId = addressId;
-        this.active = active;
-        this.createdDate = createdDate;
-        this.createdBy = createdBy;
-        this.lastUpdate = lastUpdate;
-        this.lastUpdateBy = lastUpdatedBy;
-    }
-
-    //
     public int getCustomerId() {
         return customerId;
     }
@@ -111,30 +93,4 @@ public class Customer {
     public void setLastUpdateBy(String lastUpdateBy) {
         this.lastUpdateBy = lastUpdateBy;
     }
-
-    public static ObservableList<Customer> getAllCustomers(ResultSet results) {
-
-        ObservableList<Customer> allCustomers = FXCollections.observableArrayList();
-
-        try {
-
-            while (results.next()) {
-                allCustomers.add(new Customer(
-                        results.getInt("customerId"),
-                        results.getString("customerName"),
-                        results.getInt("addressId"),
-                        results.getBoolean("active"),
-                        results.getString("createdBy"),
-                        results.getDate("createDate"),
-                        results.getString("lastUpdateBy"),
-                        results.getDate("lastUpdate")));
-            }
-
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-        return allCustomers;
-    }
-
 }

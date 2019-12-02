@@ -17,14 +17,7 @@
  */
 package jedschedfinalproject;
 
-import Model.User;
-import Utilities.DatabaseConnector;
-import Utilities.SQL_Inserter;
-import Utilities.SQL_Queries;
-import static java.sql.JDBCType.NULL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

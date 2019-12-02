@@ -17,16 +17,7 @@
  */
 package Model;
 
-import Utilities.DatabaseConnector;
-import DAO.UserDAO;
-import Utilities.SQL_Queries;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  *
@@ -38,20 +29,6 @@ public class User {
     private int userId;
     private Boolean active;
     private Date createDate, lastUpdate;
-
-    UserDAO userDAO = new UserDAO();
-
-    //Default constructor
-    public User(int userId, String userName, String password, Boolean active, Date createDate, String createdBy, Date lastUpdate, String lastUpdateBy) {
-        this.userId = userId;
-        this.userName = userName;
-        this.password = password;
-        this.active = active;
-        this.createDate = createDate;
-        this.createdBy = createdBy;
-        this.lastUpdate = lastUpdate;
-        this.lastUpdateBy = lastUpdateBy;
-    }
 
     //Getters and Setters
     public int getUserId() {
@@ -116,31 +93,5 @@ public class User {
 
     public void setLastModifiedDate(Date lastModifiedDate) {
         this.lastUpdate = lastModifiedDate;
-    }
-
-    public static ObservableList<User> getUserData(ResultSet result) {
-
-        ObservableList<User> allUsers = FXCollections.observableArrayList();
-
-        try {
-
-            while (result.next()) {
-                allUsers.add(new User(
-                        result.getInt("userId"),
-                        result.getString("userName"),
-                        result.getString("password"),
-                        result.getBoolean("active"),
-                        result.getDate("createDate"),
-                        result.getString("createdBy"),
-                        result.getDate("lastUpdate"),
-                        result.getString("lastUpdateBy")));
-            }
-
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-
-        return allUsers;
- 
     }
 }

@@ -27,72 +27,72 @@ import java.sql.SQLException;
  *
  * @author Jedidiah May
  */
-public class CountryDAO{
-//
-//    @Override
-//    public ResultSet queryTable() {
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("SELECT * FROM country;");
-//            return stmt.executeQuery();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//        return null;
-//    }
-//
-//    @Override
-//    public void create(Country country) {
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("INSERT INTO country ("
-//                    + "country, "
-//                    + "createDate, "
-//                    + "createdBy, "
-//                    + "lastUpdate, "
-//                    + "lastUpdateBy"
-//                    + ") Values ("
-//                    + "?, ?, ?, ?, ?);");
-//
-//            stmt.setString(1, country.getCountryName());
-//            stmt.setDate(2, new java.sql.Date(System.currentTimeMillis()));
-//            stmt.setString(3, DataProvider.getCurrentUser());
-//            stmt.setDate(4, new java.sql.Date(System.currentTimeMillis()));
-//            stmt.setString(5, DataProvider.getCurrentUser());
-//
-//            stmt.executeUpdate();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//    }
-//
-//    @Override
-//    public void update(Country country) {
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("UPDATE country SET"
-//                + "country = ?, "
-//                + "lastUpdate = ?, "
-//                + "lastUpdateBy = ? "
-//                + "WHERE countryId = " + country.getCountryId());
-//
-//            stmt.setString(1, country.getCountryName());
-//            stmt.setDate(2, new java.sql.Date(System.currentTimeMillis()));
-//            stmt.setString(3, DataProvider.getCurrentUser());
-//
-//            stmt.executeUpdate();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//    }
-//
-//    @Override
-//    public void delete(Country country) {
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("DELETE FROM country WHERE countryId = ?");
-//            stmt.setInt(1, country.getCountryId());
-//            
-//            stmt.executeUpdate();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//    }
+public class CountryDAO implements I_SQL_CRUD<Country> {
+
+    @Override
+    public ResultSet queryTable(){
+        try {
+            PreparedStatement stmt = databaseConnection.prepareStatement("SELECT * FROM country;");
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public void create(Country country) {
+        try {
+            PreparedStatement stmt = databaseConnection.prepareStatement("INSERT INTO country ("
+                    + "country, "
+                    + "createDate, "
+                    + "createdBy, "
+                    + "lastUpdate, "
+                    + "lastUpdateBy"
+                    + ") Values ("
+                    + "?, ?, ?, ?, ?);");
+
+            stmt.setString(1, country.getCountryName());
+            stmt.setDate(2, new java.sql.Date(System.currentTimeMillis()));
+            stmt.setString(3, DataProvider.getCurrentUser());
+            stmt.setDate(4, new java.sql.Date(System.currentTimeMillis()));
+            stmt.setString(5, DataProvider.getCurrentUser());
+
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Override
+    public void update(Country country) {
+        try {
+            PreparedStatement stmt = databaseConnection.prepareStatement("UPDATE country SET"
+                + "country = ?, "
+                + "lastUpdate = ?, "
+                + "lastUpdateBy = ? "
+                + "WHERE countryId = " + country.getCountryId());
+
+            stmt.setString(1, country.getCountryName());
+            stmt.setDate(2, new java.sql.Date(System.currentTimeMillis()));
+            stmt.setString(3, DataProvider.getCurrentUser());
+
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    @Override
+    public void delete(Country country) {
+        try {
+            PreparedStatement stmt = databaseConnection.prepareStatement("DELETE FROM country WHERE countryId = ?");
+            stmt.setInt(1, country.getCountryId());
+            
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
 }
