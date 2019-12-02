@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="372.0" prefWidth="362.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.EditCustomersController">
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="337.0" prefWidth="309.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label contentDisplay="CENTER" text="Jed May Scheduler" textAlignment="CENTER">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <GridPane hgap="5.0" vgap="10.0">
+              <columnConstraints>
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="224.0" minWidth="10.0" prefWidth="99.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="377.0" minWidth="10.0" prefWidth="228.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="CustomerID:" />
+                  <Label text="Customer Name:" GridPane.rowIndex="1" />
+                  <Label text="Address:" GridPane.rowIndex="2" />
+                  <Label text="Address 2:" GridPane.rowIndex="3" />
+                  <Label text="City:" GridPane.rowIndex="4" />
+                  <Label text="Country:" GridPane.rowIndex="5" />
+                  <Label text="Postal Code:" GridPane.rowIndex="6" />
+                  <Label text="Phone:" GridPane.rowIndex="7" />
+                  <TextField fx:id="customerIDTextField" disable="true" maxHeight="-Infinity" maxWidth="50.0" prefHeight="25.0" prefWidth="135.0" GridPane.columnIndex="1" />
+                  <TextField fx:id="customerNameTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="addressTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <TextField fx:id="address2TextField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <TextField fx:id="postalCodeTextField" maxHeight="-Infinity" maxWidth="75.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <TextField fx:id="phoneTextField" maxWidth="125.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                  <ComboBox onAction="#onActionCountrySelected" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <ComboBox fx:id="cityComboBox" onAction="#onActionCitySelected" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+               </children>
+               <VBox.margin>
+                  <Insets left="15.0" right="15.0" top="15.0" />
+               </VBox.margin>
+            </GridPane>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="332.0" spacing="30.0">
+               <children>
+                  <Button minWidth="75.0" mnemonicParsing="false" onAction="#onActionCancel" text="Cancel" />
+                  <Button minWidth="75.0" mnemonicParsing="false" onAction="#onActionSave" text="Save" />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <padding>
+            <Insets top="20.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>

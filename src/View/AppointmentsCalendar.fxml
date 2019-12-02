@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="532.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AppointmentsCalendarController">
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="337.0" prefWidth="309.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label contentDisplay="CENTER" text="Jed May Scheduler" textAlignment="CENTER">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <Label text="Calendar">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
+               </VBox.margin>
+            </Label>
+            <HBox alignment="TOP_CENTER" prefHeight="26.0" prefWidth="770.0">
+               <children>
+                  <RadioButton fx:id="allRadioButton" mnemonicParsing="false" onAction="#onActionSelectAll" prefWidth="75.0" selected="true" text="All">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="CalendarViewToggle" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="monthRadioButton" mnemonicParsing="false" onAction="#onActionSelectMonth" prefWidth="75.0" text="Month" toggleGroup="$CalendarViewToggle" />
+                  <RadioButton fx:id="weekRadioButton" mnemonicParsing="false" onAction="#onActionSelectWeek" prefWidth="75.0" text="Week" toggleGroup="$CalendarViewToggle" />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="20.0" top="10.0" />
+               </VBox.margin>
+            </HBox>
+            <TableView fx:id="calendarAppointmentTableView" maxWidth="-Infinity" prefHeight="300.0" prefWidth="825.0">
+              <columns>
+                <TableColumn fx:id="customerColumnTableView" prefWidth="150.0" text="Customer" />
+                <TableColumn fx:id="assignedToColumnTableView" prefWidth="100.0" text="Assigned To" />
+                  <TableColumn fx:id="locationColumnTableView" minWidth="0.0" prefWidth="125.0" text="Location" />
+                  <TableColumn fx:id="contactColumnTableView" minWidth="2.0" prefWidth="150.0" text="Contact" />
+                  <TableColumn fx:id="dateColumnTableView" prefWidth="100.0" text="Date" />
+                  <TableColumn fx:id="startColumnTableView" prefWidth="100.0" text="Start" />
+                  <TableColumn fx:id="endColumnTableView" prefWidth="100.0" text="End" />
+              </columns>
+            </TableView>
+            <HBox alignment="TOP_CENTER" prefHeight="55.0" prefWidth="825.0" spacing="15.0">
+               <children>
+                  <Button minWidth="125.0" mnemonicParsing="false" onAction="#onActionAddAppointment" text="Add Appointment" />
+                  <Button minWidth="125.0" mnemonicParsing="false" onAction="#onActionEditAppointment" text="Edit Appointment" />
+                  <Button minWidth="125.0" mnemonicParsing="false" onAction="#onActionDeleteAppointment" text="Delete Appointment" />
+               </children>
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </padding>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+               <children>
+                  <Button minWidth="75.0" mnemonicParsing="false" onAction="#onActionDisplayAppointmentDetail" text="More Info" />
+                  <Button minWidth="75.0" mnemonicParsing="false" onAction="#onActionBack" text="Back" />
+               </children>
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+               </padding>
+            </HBox>
+         </children>
+         <padding>
+            <Insets top="20.0" />
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>
