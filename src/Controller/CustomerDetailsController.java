@@ -20,6 +20,7 @@ package Controller;
 import DAO.CustomerDAO;
 import Utilities.DatabaseConnector;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -37,6 +38,14 @@ public class CustomerDetailsController implements Initializable {
     static String previousPath;
     static Boolean isEditing;
 
+    public CustomerDetailsController() {
+        try {
+            this.customerDAO = new CustomerDAO(dc.createConnection());
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
     @FXML
     private TextField address2TextField;
 
