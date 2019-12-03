@@ -53,11 +53,11 @@ public class Customer implements I_POJO {
         this.addressId = addressId;
     }
 
-    public Boolean getIsActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setIsActive(Boolean isActive) {
+    public void setActive(Boolean isActive) {
         this.active = isActive;
     }
     

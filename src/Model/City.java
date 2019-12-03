@@ -26,7 +26,7 @@ import java.util.Date;
 public class City implements I_POJO {
 
     private int cityId, countryId;
-    private String cityName, createdBy, lastUpdateBy;
+    private String city, createdBy, lastUpdateBy;
     private Date createDate, lastUpdate;
 
     public int getCityId() {
@@ -37,12 +37,12 @@ public class City implements I_POJO {
         this.cityId = id;
     }
 
-    public String getCityName() {
-        return cityName;
+    public String getCity() {
+        return city;
     }
 
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public int getCountryId() {

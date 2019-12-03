@@ -17,12 +17,14 @@
  */
 package DAO;
 
-import Utilities.DataProvider;
 import Model.City;
+import Utilities.DataProvider;
 import com.mysql.jdbc.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
@@ -30,6 +32,8 @@ import javafx.collections.ObservableList;
  * @author Jedidiah May
  */
 public class CityDAO extends DAO<City>{
+    
+    Calendar calendar = Calendar.getInstance();
 
     public CityDAO(Connection conn) {
         super(conn);
@@ -37,103 +41,77 @@ public class CityDAO extends DAO<City>{
     
         @Override
     public ObservableList<City> query() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            ObservableList<City> cities = FXCollections.observableArrayList();
+            try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                    + "cityId, "
+                    + "city, "
+                    + "countryId, "
+                    + "createDate, "
+                    + "createdBy, "
+                    + "lastUpdate, "
+                    + "lastUpdatedBy "
+                    + "FROM user")) {
+
+                ResultSet result = stmt.executeQuery();
+
+                while (result.next()) {
+                    City city = new City();
+                    city.setCityId(result.getInt("cityId"));
+                    city.setCity(result.getString("city"));
+                    city.setCountryId(result.getInt("countryId"));
+                    city.setCreateDate(result.getDate("createDate"));
+                    city.setCreatedBy(result.getString("createdBy"));
+                    city.setLastUpdate(result.getDate("lastUpdate"));
+                    city.setLastUpdateBy(result.getString("lastUpdateby"));
+                    cities.add(city);
+                }
+
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+            return cities;
     }
 
     @Override
     public void insert(City dto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO city "
+                + "city, countryId, createDate, createdBy, lastUpdate, lastUpdateby VALUES ?, ?, ?, ?, ?, ?")) {
+            stmt.setString(1, dto.getCity());
+            stmt.setInt(2, dto.getCountryId());
+            stmt.setDate(3, (java.sql.Date) calendar.getTime());
+            stmt.setString(4, DataProvider.getCurrentUser());
+            stmt.setDate(5, (java.sql.Date) calendar.getTime());
+            stmt.setString(6, DataProvider.getCurrentUser());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     @Override
     public void remove(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM city WHERE cityId = '" + id + "'")) {
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     @Override
     public void update(City dto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try (PreparedStatement stmt = conn.prepareStatement("UPDATE city SET"
+                + "city = ?, "
+                + "countryid = ?, "
+                + "lastUpdate = ?, "
+                + "lastUpdateBy = ? "
+                + "WHERE cityid = '" + dto.getCityId() + "'")) {
+            stmt.setString(1, dto.getCity());
+            stmt.setInt(2, dto.getCountryId());
+            stmt.setDate(4, (java.sql.Date) calendar.getTime());
+            stmt.setString(5, DataProvider.getCurrentUser());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
-    
-//    @Override
-//    public ResultSet queryTable() {
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("SELECT * FROM city;");
-//            return stmt.executeQuery();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//        return null;
-//    }
-//    
-//    public ResultSet queryTableWithJoins() {
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("SELECT * FROM city JOIN country on city.countryId = country.countryId;");
-//            return stmt.executeQuery();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//        return null;
-//    }
-//
-//    @Override
-//    public void create(City city) {
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("INSERT INTO city ("
-//                + "city, "
-//                + "countryId, "
-//                + "createDate, "
-//                + "createdBy, "
-//                + "lastUpdate, "
-//                + "lastUpdateBy"
-//                + ") Values ("
-//                + "?, ?, ?, ?, ?, ?);");
-//
-//            stmt.setString(1, city.getCityName());
-//            stmt.setInt(2, city.getCountryId());
-//            stmt.setDate(3, new java.sql.Date(System.currentTimeMillis()));
-//            stmt.setString(4, DataProvider.getCurrentUser());
-//            stmt.setDate(5, new java.sql.Date(System.currentTimeMillis()));
-//            stmt.setString(6, DataProvider.getCurrentUser());
-//
-//            stmt.executeUpdate();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//    }
-//
-//    @Override
-//    public void update(City city) {
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("UPDATE city SET "
-//                + "city = ?, "
-//                + "countryId = ?, "
-//                + "lastUpdate = ?, "
-//                + "lastUpdateBy = ? "
-//                + "WHERE cityId = " + city.getCityId());
-//
-//            stmt.setString(1, city.getCityName());
-//            stmt.setInt(2, city.getCountryId());
-//            stmt.setDate(3, new java.sql.Date(System.currentTimeMillis()));
-//            stmt.setString(4, DataProvider.getCurrentUser());
-//
-//            stmt.executeUpdate();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//    }
-//
-//    @Override
-//    public void delete(City city) {
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("DELETE FROM city WHERE cityId = ?");
-//            stmt.setInt(1, city.getCityId());
-//            
-//            stmt.executeUpdate();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//    }
-
-
 }

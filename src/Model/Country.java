@@ -26,7 +26,7 @@ import java.util.Date;
 public class Country implements I_POJO {
 
     private int countryId;
-    private String countryName, createdBy, lastUpdateBy;
+    private String country, createdBy, lastUpdateBy;
     private Date createDate, lastUpdate;
 
     public int getCountryId() {
@@ -37,12 +37,12 @@ public class Country implements I_POJO {
         this.countryId = id;
     }
 
-    public String getCountryName() {
-        return countryName;
+    public String getCountry() {
+        return country;
     }
 
-    public void setCountryName(String countryName) {
-        this.countryName = countryName;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     @Override

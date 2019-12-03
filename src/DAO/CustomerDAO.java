@@ -19,10 +19,10 @@ package DAO;
 
 
 import Model.Customer;
-import java.sql.Connection;
+import Utilities.DataProvider;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 import javafx.collections.ObservableList;
 
 /**
@@ -30,6 +30,8 @@ import javafx.collections.ObservableList;
  * @author Jedidiah May
  */
 public class CustomerDAO extends DAO<Customer>{
+    
+    Calendar calendar = Calendar.getInstance();
 
     public CustomerDAO(com.mysql.jdbc.Connection conn) {
         super(conn);
@@ -42,16 +44,49 @@ public class CustomerDAO extends DAO<Customer>{
 
     @Override
     public void insert(Customer dto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO Customer "
+                + "customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateby VALUES ?, ?, ?, ?, ?, ?, ?")) {
+            stmt.setString(1, dto.getCustomerName());
+            stmt.setInt(2, dto.getAddressId());
+            stmt.setBoolean(3, dto.getActive());
+            stmt.setDate(4, (java.sql.Date) calendar.getTime());
+            stmt.setString(5, DataProvider.getCurrentUser());
+            stmt.setDate(6, (java.sql.Date) calendar.getTime());
+            stmt.setString(7, DataProvider.getCurrentUser());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     @Override
     public void remove(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM customer WHERE customerId = '" + id + "'")) {
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     @Override
     public void update(Customer dto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        try (PreparedStatement stmt = conn.prepareStatement("UPDATE customer SET"
+                + "customerName = ?, "
+                + "addressId = ?, "
+                + "active = ?, "
+                + "lastUpdate = ?, "
+                + "lastUpdateBy = ? "
+                + "WHERE customerId = '" + dto.getCustomerId() + "'")) {
+            stmt.setString(1, dto.getCustomerName());
+            stmt.setInt(2, dto.getAddressId());
+            stmt.setBoolean(3, dto.getActive());
+            stmt.setDate(4, (java.sql.Date) calendar.getTime());
+            stmt.setString(5, DataProvider.getCurrentUser());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 }

@@ -23,6 +23,8 @@ import com.mysql.jdbc.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
@@ -30,6 +32,8 @@ import javafx.collections.ObservableList;
  * @author Jedidiah May
  */
 public class CountryDAO extends DAO<Country> {
+    
+    Calendar calendar = Calendar.getInstance();
 
     public CountryDAO(Connection conn) {
         super(conn);
@@ -37,89 +41,74 @@ public class CountryDAO extends DAO<Country> {
     
         @Override
     public ObservableList<Country> query() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            ObservableList<Country> countries = FXCollections.observableArrayList();
+            try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                    + "userId, "
+                    + "userName, "
+                    + "password, "
+                    + "active, "
+                    + "createDate, "
+                    + "createdBy, "
+                    + "lastUpdate, "
+                    + "lastUpdatedBy "
+                    + "FROM user")) {
+
+                ResultSet result = stmt.executeQuery();
+
+                while (result.next()) {
+                    Country country = new Country();
+                    country.setCountryId(result.getInt("countryId"));
+                    country.setCountry(result.getString("country"));
+                    country.setCreateDate(result.getDate("createDate"));
+                    country.setCreatedBy(result.getString("createdBy"));
+                    country.setLastUpdate(result.getDate("lastUpdate"));
+                    country.setLastUpdateBy(result.getString("lastUpdateby"));
+                    countries.add(country);
+                }
+
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+            return countries;
     }
 
     @Override
     public void insert(Country dto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO country "
+                + "country, createDate, createdBy, lastUpdate, lastUpdateby VALUES ?, ?, ?, ?, ?")) {
+            stmt.setString(1, dto.getCountry());
+            stmt.setDate(2, (java.sql.Date) calendar.getTime());
+            stmt.setString(3, DataProvider.getCurrentUser());
+            stmt.setDate(4, (java.sql.Date) calendar.getTime());
+            stmt.setString(5, DataProvider.getCurrentUser());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     @Override
     public void remove(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM country WHERE countryId = '" + id + "'")) {
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
     
     @Override
     public void update(Country dto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try (PreparedStatement stmt = conn.prepareStatement("UPDATE country SET"
+                + "country = ?, "
+                + "lastUpdate = ?, "
+                + "lastUpdateBy = ? "
+                + "WHERE countryId = '" + dto.getCountryId() + "'")) {
+            stmt.setString(1, dto.getCountry());
+            stmt.setDate(2, (java.sql.Date) calendar.getTime());
+            stmt.setString(3, DataProvider.getCurrentUser());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
-
-
-//    @Override
-//    public ResultSet queryTable(){
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("SELECT * FROM country;");
-//            return stmt.executeQuery();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//        return null;
-//    }
-//
-//    @Override
-//    public void create(Country country) {
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("INSERT INTO country ("
-//                    + "country, "
-//                    + "createDate, "
-//                    + "createdBy, "
-//                    + "lastUpdate, "
-//                    + "lastUpdateBy"
-//                    + ") Values ("
-//                    + "?, ?, ?, ?, ?);");
-//
-//            stmt.setString(1, country.getCountryName());
-//            stmt.setDate(2, new java.sql.Date(System.currentTimeMillis()));
-//            stmt.setString(3, DataProvider.getCurrentUser());
-//            stmt.setDate(4, new java.sql.Date(System.currentTimeMillis()));
-//            stmt.setString(5, DataProvider.getCurrentUser());
-//
-//            stmt.executeUpdate();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//    }
-//
-//    @Override
-//    public void update(Country country) {
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("UPDATE country SET"
-//                + "country = ?, "
-//                + "lastUpdate = ?, "
-//                + "lastUpdateBy = ? "
-//                + "WHERE countryId = " + country.getCountryId());
-//
-//            stmt.setString(1, country.getCountryName());
-//            stmt.setDate(2, new java.sql.Date(System.currentTimeMillis()));
-//            stmt.setString(3, DataProvider.getCurrentUser());
-//
-//            stmt.executeUpdate();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//    }
-//
-//    @Override
-//    public void delete(Country country) {
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("DELETE FROM country WHERE countryId = ?");
-//            stmt.setInt(1, country.getCountryId());
-//            
-//            stmt.executeUpdate();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//    }
-
 }

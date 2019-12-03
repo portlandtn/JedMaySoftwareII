@@ -18,8 +18,13 @@
 package DAO;
 
 import Model.Address;
+import Utilities.DataProvider;
 import com.mysql.jdbc.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Calendar;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
@@ -27,134 +32,102 @@ import javafx.collections.ObservableList;
  * @author Jedidiah May
  */
 public class AddressDAO extends DAO<Address> {
-    
-    Calendar myCalendar = Calendar.getInstance();
+
+    Calendar calendar = Calendar.getInstance();
 
     public AddressDAO(Connection conn) {
         super(conn);
     }
-    
-        @Override
+
+    @Override
     public ObservableList<Address> query() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        ObservableList<Address> addresses = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "addressId, "
+                + "address, "
+                + "address2, "
+                + "cityId, "
+                + "postalCode, "
+                + "phone, "
+                + "createDate, "
+                + "createdBy, "
+                + "lastUpdate, "
+                + "lastUpdatedBy "
+                + "FROM address")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Address address = new Address();
+                address.setAddressId(result.getInt("addressId"));
+                address.setAddress(result.getString("address"));
+                address.setAddress2(result.getString("address2"));
+                address.setCityId(result.getInt("cityId"));
+                address.setPostalCode(result.getString("postalCode"));
+                address.setPhone(result.getString("phone"));
+                address.setCreateDate(result.getDate("createDate"));
+                address.setCreatedBy(result.getString("createdBy"));
+                address.setLastUpdate(result.getDate("lastUpdate"));
+                address.setLastUpdateBy(result.getString("lastUpdateby"));
+                addresses.add(address);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return addresses;
     }
 
     @Override
     public void insert(Address dto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO address "
+                + "address, address2, cityId, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateby VALUES ?, ?, ?, ?, ?, ?, ?, ?, ?")) {
+            stmt.setString(1, dto.getAddress());
+            stmt.setString(2, dto.getAddress2());
+            stmt.setInt(3, dto.getCityId());
+            stmt.setString(4, dto.getPostalCode());
+            stmt.setString(5, dto.getPhone());
+            stmt.setDate(6, (java.sql.Date) calendar.getTime());
+            stmt.setString(7, DataProvider.getCurrentUser());
+            stmt.setDate(8, (java.sql.Date) calendar.getTime());
+            stmt.setString(9, DataProvider.getCurrentUser());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     @Override
     public void remove(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM address WHERE addressId = '" + id + "'")) {
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
-    
+
     @Override
     public void update(Address dto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try (PreparedStatement stmt = conn.prepareStatement("UPDATE address SET"
+                + "address = ?, "
+                + "address2 = ?, "
+                + "cityId = ?, "
+                + "postalCode = ?, "
+                + "phone = ?, "
+                + "lastUpdate = ?, "
+                + "lastUpdateBy = ? "
+                + "WHERE address = '" + dto.getAddressId() + "'")) {
+            stmt.setString(1, dto.getAddress());
+            stmt.setString(2, dto.getAddress2());
+            stmt.setInt(3, dto.getCityId());
+            stmt.setString(4, dto.getPostalCode());
+            stmt.setString(5, dto.getPhone());
+            stmt.setDate(6, (java.sql.Date) calendar.getTime());
+            stmt.setString(7, DataProvider.getCurrentUser());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
-//
-//    @Override
-//    public ResultSet queryTable() {
-//
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("SELECT * FROM address;");
-//            return stmt.executeQuery();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//        return null;
-//    }
-//
-//    public ResultSet queryTableWithJoins() {
-//
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("SELECT * FROM address JOIN city ON address.cityId = city.cityId;");
-//            return stmt.executeQuery();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//        return null;
-//    }
-//
-//    @Override
-//    public void create(Address address) {
-//        
-//        //will need to add a method to check if country exists. If not, add it prior to adding city and address.
-//        //will need to check if city exists as well.
-//
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("INSERT INTO address ("
-//                + "address, "
-//                + "address2, "
-//                + "cityId, "
-//                + "postalCode, "
-//                + "phone, "
-//                + "createDate, "
-//                + "createdBy, "
-//                + "lastUpdate, "
-//                + "lastUpdateBy"
-//                + ") Values ("
-//                + "?, ?, ?, ?, ?, ?, ?, ?, ?);");
-//            
-//            stmt.setString(1, address.getAddress());
-//            stmt.setString(2, address.getAddress2());
-//            stmt.setInt(3, address.getCityId());
-//            stmt.setString(4, address.getPostalCode());
-//            stmt.setString(5, address.getPhone());
-//            stmt.setDate(6, (Date) myCalendar.getTime());
-//            stmt.setString(7, DataProvider.getCurrentUser());
-//            stmt.setDate(8, (Date) myCalendar.getTime());
-//            stmt.setString(9, DataProvider.getCurrentUser());
-//            
-//
-//            stmt.executeUpdate();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//    }
-//
-//    @Override
-//    public void update(Address address) {
-//
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("UPDATE address SET "
-//                    + "address = ?, "
-//                    + "address2 = ?, "
-//                    + "cityId = ?, "
-//                    + "postalCode = ?, "
-//                    + "phone = ?, "
-//                    + "lastUpdate = ?, "
-//                    + "lastUpdatedBy = ?"
-//                    + "WHERE addressID = " + address.getAddressId());
-//
-//            stmt.setString(1, address.getAddress());
-//            stmt.setString(2, address.getAddress2());
-//            stmt.setInt(3, address.getCityId());
-//            stmt.setString(4, address.getPostalCode());
-//            stmt.setString(5, address.getPhone());
-//            stmt.setDate(6, new java.sql.Date(System.currentTimeMillis()));
-//            stmt.setString(7, DataProvider.getCurrentUser());
-//
-//            stmt.executeUpdate();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//    }
-//
-//    @Override
-//    public void delete(Address address) {
-//        
-//        try {
-//            PreparedStatement stmt = databaseConnection.prepareStatement("DELETE FROM address WHERE addressID = ?");
-//            stmt.setInt(1, address.getAddressId());
-//            stmt.executeUpdate();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//    }
-
-
-
-
 }

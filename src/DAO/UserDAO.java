@@ -160,7 +160,7 @@ public class UserDAO extends DAO<User> {
     @Override
     public void remove(int id) {
 
-        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM user WHERE userId = " + id)) {
+        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM user WHERE userId = '" + id + "'")) {
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
