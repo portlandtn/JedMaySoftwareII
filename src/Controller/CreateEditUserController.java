@@ -42,7 +42,7 @@ import javafx.stage.Stage;
  * @author Jedidiah May
  */
 public class CreateEditUserController implements Initializable {
-    
+
     DatabaseConnector dc = new DatabaseConnector();
     UserDAO userDAO;
 
@@ -78,12 +78,14 @@ public class CreateEditUserController implements Initializable {
 
     @FXML
     void onActionActive_Inactive(ActionEvent event) {
-        
+
     }
 
     @FXML
     void onActionSaveUser(ActionEvent event) throws IOException, SQLException, ClassNotFoundException {
-
+        
+        if(!canDataBeSaved()) return;
+        
         if (isEditing) {
             updateExistingUser(this.userToUpdate);
         } else {
@@ -120,26 +122,23 @@ public class CreateEditUserController implements Initializable {
 
     private void saveNewUser() {
 
-        try (Connection conn = dc.createConnection()){
-                    if (!canDataBeSaved()) {
-            return;
-        }
+        try (Connection conn = dc.createConnection()) {
 
-        //if all is verified good, declare variables to construct a new User and insert into the table.
-        setUserTableVariables();
-        User user = new User();
-        user.setUserName(this.userName);
-        user.setPassword(this.password);
-        user.setActive(this.active);
-        user.setCreateDate(this.createDate);
-        user.setCreatedBy(this.createdBy);
-        user.setLastUpdate(this.lastUpdate);
-        user.setLastUpdateBy(this.lastUpdateBy);
+            //if all is verified good, declare variables to construct a new User and insert into the table.
+            setUserTableVariables();
+            User user = new User();
+            user.setUserName(this.userName);
+            user.setPassword(this.password);
+            user.setActive(this.active);
+            user.setCreateDate(this.createDate);
+            user.setCreatedBy(this.createdBy);
+            user.setLastUpdate(this.lastUpdate);
+            user.setLastUpdateBy(this.lastUpdateBy);
 
-        userDAO.insert(user);
-        conn.close();
-        
-        } catch (SQLException | ClassNotFoundException ex){
+            userDAO.insert(user);
+            conn.close();
+
+        } catch (SQLException | ClassNotFoundException ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -156,16 +155,10 @@ public class CreateEditUserController implements Initializable {
 
     private void updateExistingUser(User existingUser) throws SQLException, ClassNotFoundException {
 
-        
         try (Connection conn = dc.createConnection()) {
-                    //if there is some kind of error, abort.
-        if (!canDataBeSaved()) {
-            return;
-        }
 
-
-        //if all is verified good, declare variables to construct a new User and update the table.
-        setUserTableVariables();
+            //if all is verified good, declare variables to construct a new User and update the table.
+            setUserTableVariables();
             User user = new User();
             user.setUserId(existingUser.getUserId());
             user.setUserName(this.userName);
@@ -176,8 +169,8 @@ public class CreateEditUserController implements Initializable {
             user.setLastUpdate(this.lastUpdate);
             user.setLastUpdateBy(this.lastUpdateBy);
 
-        userDAO.update(user);
-        conn.close();
+            userDAO.update(user);
+            conn.close();
         } catch (SQLException | ClassNotFoundException ex) {
             System.out.println(ex.getMessage());
         }

@@ -19,11 +19,10 @@ package Controller;
 
 import DAO.AppointmentDAO;
 import Model.Appointment;
-import Model.User;
 import Utilities.DatabaseConnector;
+import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -37,13 +36,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+
 /**
  *
  * @author Jedidiah May
  */
 public class AppointmentsCalendarController implements Initializable {
-    
-//    AppointmentDAO appointmentDAO = new AppointmentDAO();
+
+    DatabaseConnector dc = new DatabaseConnector();
+    AppointmentDAO appointmentDAO;
 
     @FXML
     private RadioButton allRadioButton;
@@ -81,9 +82,18 @@ public class AppointmentsCalendarController implements Initializable {
     @FXML
     private TableColumn<Appointment, Date> endColumnTableView;
 
+    public AppointmentsCalendarController() {
+        try {
+            this.appointmentDAO = new AppointmentDAO(dc.createConnection());
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
     @FXML
     void onActionAddAppointment(ActionEvent event) throws IOException {
-        displayScreen("/View/AppointmentsDetail.fxml", event);
+        AppointmentDetailController.isEditing = false;
+        displayScreen("/View/AppointmentDetail.fxml", event);
     }
 
     @FXML
@@ -97,28 +107,46 @@ public class AppointmentsCalendarController implements Initializable {
     }
 
     @FXML
-    void onActionEditAppointment(ActionEvent event) throws IOException {
-        displayScreen("/View/AppointmentsDetail.fxml", event);
+    void onActionEditAppointment(ActionEvent event) {
+        
+        AppointmentDetailController.isEditing = true;
+        
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/View/AppointmentDetail.fxml"));
+            loader.load();
+
+            AppointmentDetailController.previousPath = "/View/AppointmentsCalendar.fxml";
+
+            AppointmentDetailController apptController = loader.getController();
+            apptController.sendAppointmentDetails(calendarAppointmentTableView.getSelectionModel().getSelectedItem());
+
+            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            Parent scene = loader.getRoot();
+            stage.setScene(new Scene(scene));
+            stage.show();
+
+            displayScreen("/View/AppointmentDetail.fxml", event);
+
+        } catch (IOException | NullPointerException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
-    @FXML
-    void onActionDisplayAppointmentDetail(ActionEvent event) throws IOException {
-        displayScreen("/View/AppointmentsDetail.fxml", event);
-    }
 
     @FXML
     void onActionSelectAll(ActionEvent event) {
-
+        refreshData();
     }
 
     @FXML
     void onActionSelectMonth(ActionEvent event) {
-
+        refreshData();
     }
 
     @FXML
     void onActionSelectWeek(ActionEvent event) {
-
+        refreshData();
     }
 
     private void displayScreen(String path, ActionEvent event) throws IOException {
@@ -131,30 +159,38 @@ public class AppointmentsCalendarController implements Initializable {
         stage.setScene(new Scene(scene));
         stage.show();
     }
-    
-    private void refreshData() {
 
-//        try {
-//            //Setup the user table with data from the database.
-//            DatabaseConnector.createConnection();
-//            ResultSet results = appointmentDAO.queryTableWithJoins();
-//            ObservableList<Appointment> allAppointments = Appointment.getAllAppointments(results);
-//            DatabaseConnector.closeConnection();
-//
-//            calendarAppointmentTableView.setItems(allAppointments);
-//            customerColumnTableView.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-//            assignedToColumnTableView.setCellValueFactory(new PropertyValueFactory<>("assignedToUser"));
-//            locationColumnTableView.setCellValueFactory(new PropertyValueFactory<>("location"));
-//            contactColumnTableView.setCellValueFactory(new PropertyValueFactory<>("contact"));
-//            dateColumnTableView.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
-//            startColumnTableView.setCellValueFactory(new PropertyValueFactory<>("start"));
-//            endColumnTableView.setCellValueFactory(new PropertyValueFactory<>("end"));
-//
-//        } catch (ClassNotFoundException | SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
+    private void refreshData() {
+        ObservableList<Appointment> appointments;
+        try (Connection conn = dc.createConnection()) {
+
+
+            //Setup the user table with data from the database.
+            if (allRadioButton.isSelected()) {
+                appointments = appointmentDAO.queryForAppointmentCalendar();
+            } 
+            else if (monthRadioButton.isSelected()){
+                appointments = appointmentDAO.queryForAppointmentCalendar();
+            }
+            else appointments = appointmentDAO.queryForAppointmentCalendar();
+            
+            conn.close();
+
+
+            calendarAppointmentTableView.setItems(appointments);
+            customerColumnTableView.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+            assignedToColumnTableView.setCellValueFactory(new PropertyValueFactory<>("assignedToUser"));
+            locationColumnTableView.setCellValueFactory(new PropertyValueFactory<>("location"));
+            contactColumnTableView.setCellValueFactory(new PropertyValueFactory<>("contact"));
+            dateColumnTableView.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
+            startColumnTableView.setCellValueFactory(new PropertyValueFactory<>("start"));
+            endColumnTableView.setCellValueFactory(new PropertyValueFactory<>("end"));
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         refreshData();

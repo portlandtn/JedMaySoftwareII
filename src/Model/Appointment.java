@@ -26,8 +26,18 @@ import java.util.Date;
 public class Appointment implements I_POJO {
 
     private int appointmentId, customerId, userId;
-    private String title, customerName, assignedToUser, location, type, description, contact, url, createdBy, lastUpdateBy;
+    private String title, customerName, userName, location, type, description, contact, url, createdBy, lastUpdateBy;
     private Date appointmentDate, start, end, createDate, lastUpdate;
+    
+    
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
 
     public int getAppointmentId() {
         return appointmentId;
@@ -43,14 +53,6 @@ public class Appointment implements I_POJO {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
-    }
-
-    public String getAssignedToUser() {
-        return assignedToUser;
-    }
-
-    public void setAssignedToUser(String assignedToUser) {
-        this.assignedToUser = assignedToUser;
     }
 
     public Date getAppointmentDate() {

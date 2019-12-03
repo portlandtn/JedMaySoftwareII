@@ -86,6 +86,87 @@ public class AppointmentDAO extends DAO<Appointment>{
         }
         return appointments;
     }
+    
+    public Appointment querySingleAppointmenet(int id){
+        Appointment appt = new Appointment();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "appointmentId, "
+                + "customerName, "
+                + "userName, "
+                + "title, "
+                + "location, "
+                + "type, "
+                + "url, "
+                + "contact, "
+                + "description, "
+                + "start apptDate, "
+                + "start, "
+                + "end "
+                + "FROM appointment JOIN customer ON "
+                + "customer.customerId = appointment.customerId "
+                + "JOIN user ON "
+                + "user.userId = appointment.userId")) {
+            
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                appt.setAppointmentId(result.getInt("appointmentId"));
+                appt.setCustomerName(result.getString("customerName"));
+                appt.setUserName(result.getString("userName"));
+                appt.setTitle(result.getString("title"));
+                appt.setLocation(result.getString("location"));
+                appt.setType(result.getString("type"));
+                appt.setUrl(result.getString("url"));
+                appt.setContact(result.getString("contact"));
+                appt.setDescription(result.getString("description"));
+                appt.setAppointmentDate(result.getDate("apptDate"));
+                appt.setStart(result.getDate("start"));
+                appt.setEnd(result.getDate("end"));
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return appt;
+    }
+    
+    public ObservableList<Appointment> queryForAppointmentCalendar() {
+
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "customerName, "
+                + "userName, "
+                + "title, "
+                + "location, "
+                + "type, "
+                + "start apptDate, "
+                + "start, "
+                + "end "
+                + "FROM appointment JOIN customer ON "
+                + "customer.customerId = appointment.customerId "
+                + "JOIN user ON "
+                + "user.userId = appointment.userId")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Appointment appointment = new Appointment();
+                appointment.setCustomerName(result.getString("customerName"));
+                appointment.setUserName(result.getString("userName"));
+                appointment.setUserName(result.getString("title"));
+                appointment.setLocation(result.getString("location"));
+                appointment.setLocation(result.getString("type"));
+                appointment.setAppointmentDate(result.getDate("apptDate"));
+                appointment.setStart(result.getDate("start"));
+                appointment.setEnd(result.getDate("end"));
+                appointments.add(appointment);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return appointments;
+    }
 
     @Override
     public void insert(Appointment dto) {

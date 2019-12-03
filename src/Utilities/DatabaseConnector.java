@@ -34,7 +34,6 @@ public class DatabaseConnector {
     private final String DATABASE_DRIVER = "com.mysql.jdbc.Driver";
     private final Properties properties;
 
-    //static Connection dbc;
     public DatabaseConnector() {
         this.properties = new Properties();
         this.properties.setProperty("user", DATABASE_USERNAME);
@@ -47,18 +46,4 @@ public class DatabaseConnector {
 
         return (Connection) DriverManager.getConnection(DATABASE_URL, properties);
     }
-
-
-//    public static void createConnection() throws ClassNotFoundException, SQLException {
-//        Class.forName(DATABASE_DRIVER); 
-//        prop.setProperty(DATABASE_USERNAME, DATABASE_PASSWORD);
-//
-//        //conn = (Connection) DriverManager.getConnection(DATABASE_URL, DATABASE_USERNAME, DATABASE_PASSWORD);
-//        dbc = (Connection) DriverManager.getConnection(DATABASE_URL, prop);
-//    }
-
-//    public void closeConnection() throws ClassNotFoundException, SQLException {
-//
-//        dbc.close();
-//    }
 }
