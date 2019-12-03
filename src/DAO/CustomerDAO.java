@@ -21,8 +21,10 @@ package DAO;
 import Model.Customer;
 import Utilities.DataProvider;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
@@ -39,7 +41,37 @@ public class CustomerDAO extends DAO<Customer>{
 
     @Override
     public ObservableList<Customer> query() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ObservableList<Customer> customers = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "userId, "
+                + "userName, "
+                + "password, "
+                + "active, "
+                + "createDate, "
+                + "createdBy, "
+                + "lastUpdate, "
+                + "lastUpdatedBy "
+                + "FROM user")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Customer customer = new Customer();
+                customer.setCustomerId(result.getInt("customerId"));
+                customer.setCustomerName(result.getString("customerName"));
+                customer.setAddressId(result.getInt("addressId"));
+                customer.setActive(result.getBoolean("active"));
+                customer.setCreateDate(result.getDate("createDate"));
+                customer.setCreatedBy(result.getString("createdBy"));
+                customer.setLastUpdate(result.getDate("lastUpdate"));
+                customer.setLastUpdateBy(result.getString("lastUpdateby"));
+                customers.add(customer);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return customers;
     }
 
     @Override
