@@ -20,14 +20,11 @@ package Controller;
 import Model.User;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
-import Utilities.SQL_Deleter;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -45,7 +42,7 @@ import javafx.stage.Stage;
  */
 public class ManageUsersController implements Initializable {
     
-    UserDAO userDAO = new UserDAO();
+//    UserDAO userDAO = new UserDAO();
 
     @FXML
     private RadioButton allRadioButton;
@@ -76,10 +73,10 @@ public class ManageUsersController implements Initializable {
 
     @FXML
     void onActionDeleteUser(ActionEvent event) throws SQLException, ClassNotFoundException {
-        DatabaseConnector.createConnection();
-        userDAO.delete(manageUsersTableView.getSelectionModel().getSelectedItem());
-        refreshData();
-        DatabaseConnector.closeConnection();
+//        DatabaseConnector.createConnection();
+//        userDAO.delete(manageUsersTableView.getSelectionModel().getSelectedItem());
+//        refreshData();
+//        DatabaseConnector.closeConnection();
     }
 
     @FXML
@@ -151,24 +148,24 @@ public class ManageUsersController implements Initializable {
 
     private void refreshData() {
 
-        try {
+//        try {
             //Setup the user table with data from the database.
-            DatabaseConnector.createConnection();
-            
-            ResultSet result = userDAO.queryTable();
-            ObservableList<User> allUsers = User.getUserData(result);
-            
-            DatabaseConnector.closeConnection();
+//            DatabaseConnector.createConnection();
+//            
+//            ResultSet result = userDAO.queryTable();
+//            ObservableList<User> allUsers = User.getUserData(result);
+//            
+//            DatabaseConnector.closeConnection();
 
-            manageUsersTableView.setItems(allUsers);
-            userIdColumnTableView.setCellValueFactory(new PropertyValueFactory<>("userId"));
-            usernameColumnTableView.setCellValueFactory(new PropertyValueFactory<>("userName"));
-            passwordColumnTableView.setCellValueFactory(new PropertyValueFactory<>("password"));
-            activeColumnTableView.setCellValueFactory(new PropertyValueFactory<>("active"));
-
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
+//            manageUsersTableView.setItems(allUsers);
+//            userIdColumnTableView.setCellValueFactory(new PropertyValueFactory<>("userId"));
+//            usernameColumnTableView.setCellValueFactory(new PropertyValueFactory<>("userName"));
+//            passwordColumnTableView.setCellValueFactory(new PropertyValueFactory<>("password"));
+//            activeColumnTableView.setCellValueFactory(new PropertyValueFactory<>("active"));
+//
+//        } catch (ClassNotFoundException | SQLException ex) {
+//            System.out.println(ex.getMessage());
+//        }
     }
 
     @Override

@@ -28,26 +28,37 @@ import java.util.Properties;
  */
 public class DatabaseConnector {
 
-    private static final String DATABASENAME = "U056lw";
-    private static final String DATABASE_URL = "jdbc:mysql://3.227.166.251/" + DATABASENAME;
-    private static final String DATABASE_USERNAME = "U056lw";
-    private static final String DATABASE_PASSWORD = "53688428663";
-    private static final String DATABASE_DRIVER = "com.mysql.jdbc.Driver";
-    private static Properties prop;
+    private final String DATABASE_URL = "jdbc:mysql://3.227.166.251/U056lw";
+    private final String DATABASE_USERNAME = "U056lw";
+    private final String DATABASE_PASSWORD = "53688428663";
+    private final String DATABASE_DRIVER = "com.mysql.jdbc.Driver";
+    private final Properties properties;
 
-    static Connection dbc;
-
-    public static void createConnection() throws ClassNotFoundException, SQLException {
-        Class.forName(DATABASE_DRIVER); 
-        prop.setProperty(DATABASE_USERNAME, DATABASE_PASSWORD);
-
-        //conn = (Connection) DriverManager.getConnection(DATABASE_URL, DATABASE_USERNAME, DATABASE_PASSWORD);
-        dbc = (Connection) DriverManager.getConnection(DATABASE_URL, prop);
+    //static Connection dbc;
+    public DatabaseConnector() {
+        this.properties = new Properties();
+        this.properties.setProperty("user", DATABASE_USERNAME);
+        this.properties.setProperty("password", DATABASE_PASSWORD);
     }
 
-    public static void closeConnection() throws ClassNotFoundException, SQLException {
+    public Connection createConnection() throws ClassNotFoundException, SQLException {
+        Class.forName(DATABASE_DRIVER);
+        properties.setProperty(DATABASE_USERNAME, DATABASE_PASSWORD);
 
-        dbc.close();
+        return (Connection) DriverManager.getConnection(DATABASE_URL, properties);
     }
-    
+
+
+//    public static void createConnection() throws ClassNotFoundException, SQLException {
+//        Class.forName(DATABASE_DRIVER); 
+//        prop.setProperty(DATABASE_USERNAME, DATABASE_PASSWORD);
+//
+//        //conn = (Connection) DriverManager.getConnection(DATABASE_URL, DATABASE_USERNAME, DATABASE_PASSWORD);
+//        dbc = (Connection) DriverManager.getConnection(DATABASE_URL, prop);
+//    }
+
+//    public void closeConnection() throws ClassNotFoundException, SQLException {
+//
+//        dbc.close();
+//    }
 }

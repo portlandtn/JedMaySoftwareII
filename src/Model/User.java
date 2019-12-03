@@ -17,13 +17,14 @@
  */
 package Model;
 
+import DAO.I_SQL_CRUD;
 import java.util.Date;
 
 /**
  *
  * @author Jedidiah May
  */
-public class User {
+public class User implements I_SQL_CRUD {
 
     private String userName, password, createdBy, lastUpdateBy;
     private int userId;
@@ -93,5 +94,10 @@ public class User {
 
     public void setLastModifiedDate(Date lastModifiedDate) {
         this.lastUpdate = lastModifiedDate;
+    }
+
+    @Override
+    public int getId() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

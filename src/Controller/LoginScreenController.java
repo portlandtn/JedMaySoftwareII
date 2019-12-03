@@ -20,10 +20,9 @@ package Controller;
 import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
-import Utilities.SQL_Queries;
+import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -41,8 +40,9 @@ import javafx.stage.Stage;
  * @author Jedidiah May
  */
 public class LoginScreenController implements Initializable {
-    
-    UserDAO userDAO = new UserDAO();
+
+    DatabaseConnector dc = new DatabaseConnector();
+    UserDAO userDAO;
 
     @FXML
     private TextField userNameTextField;
@@ -53,6 +53,15 @@ public class LoginScreenController implements Initializable {
     @FXML
     private Label noUserFoundLabel;
 
+    //Constructor
+    public LoginScreenController() {
+        try {
+            this.userDAO = new UserDAO(dc.createConnection());
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
     @FXML
     void onActionShowUserDetails(ActionEvent event) throws IOException {
         CreateEditUserController.previousPath = "/View/LoginScreen.fxml";
@@ -61,42 +70,44 @@ public class LoginScreenController implements Initializable {
     }
 
     @FXML
-    void onActionShowDashboard(ActionEvent event) throws IOException {
+    void onActionShowDashboard(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
 
-        String userName = userNameTextField.getText();
-        String password = passwordTextField.getText();
+        try (Connection conn = dc.createConnection()) {
+            String userName = userDAO.getUserName(userNameTextField.getText());
+            conn.close();
 
-        try {
-            DatabaseConnector.createConnection();
-
-            //verifies both the username and password are in the table and allows the user to log in if they are present.
-            
-            ResultSet result = userDAO.queryTableWithUsernameAndPassword(userName, password);
-
-            //if no rows are returned, the deny access, show that the user is not found.
-            if (!result.next()) {
+            //if userName is not found, then alert that the user does not exist.
+            if (userName.isEmpty()) {
                 noUserFoundLabel.setVisible(true);
                 DataProvider.setIsLoggedIn(false);
-                DatabaseConnector.closeConnection();
-            } //if the username and password matches, and the result if found, but they are not active, then the admin must make them active.
-            //WILL NEED A NEW SCREEN TO MANAGE USERS, ACCESSIBLE BY ADMIN ONLY.
-            else {
-                if (result.getBoolean("active") == false) {
-                    Alert alert = new Alert(AlertType.ERROR, "While this user does exist, their account has been made inactive. "
-                            + "Please have the administrator update this account to use it for logging in.");
-                    alert.showAndWait();
-                    return;
-                }
-
+                Alert alert = new Alert(AlertType.ERROR, "The username does not exist.");
+                alert.showAndWait();
+                //if user exists, but the username and password does not match, alert the user.
+            } else if (!userDAO.isUserNameandPasswordValid(userNameTextField.getText(), passwordTextField.getText())) {
+                noUserFoundLabel.setVisible(true);
+                DataProvider.setIsLoggedIn(false);
+                Alert alert = new Alert(AlertType.ERROR, "The username and password does not match.");
+                alert.showAndWait();
+                //if user is inactive, warn that the user cannot log in with first being made active.
+            } else if (!userDAO.isUserActive(userNameTextField.getText())) {
+                Alert alert = new Alert(AlertType.ERROR, "While this user does exist, their account has been made inactive. "
+                        + "Please have the administrator update this account to use it for logging in.");
+                alert.showAndWait();
+                return;
+            } else {
                 DataProvider.setIsLoggedIn(true);
                 noUserFoundLabel.setVisible(false);
-                DatabaseConnector.closeConnection();
+                conn.close();
                 DataProvider.setCurrentUser(userNameTextField.getText());
                 displayScreen("/View/Dashboard.fxml", event);
             }
-
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
+        } catch (NullPointerException ex) {
+            noUserFoundLabel.setVisible(true);
+            DataProvider.setIsLoggedIn(false);
+            Alert alert = new Alert(AlertType.ERROR, "The username does not exist.");
+            alert.showAndWait();
         }
     }
 

@@ -17,13 +17,14 @@
  */
 package Model;
 
+import DAO.I_SQL_CRUD;
 import java.util.Date;
 
 /**
  *
  * @author Jedidiah May
  */
-public class Appointment {
+public class Appointment implements I_SQL_CRUD {
 
     private int appointmentId, customerId, userId;
     private String title, customerName, assignedToUser, location, type, description, contact, url, createdBy, lastUpdateBy;
@@ -172,4 +173,9 @@ public class Appointment {
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }    
+
+    @Override
+    public int getId() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

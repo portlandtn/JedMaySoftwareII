@@ -42,7 +42,7 @@ import javafx.stage.Stage;
  */
 public class CreateEditUserController implements Initializable {
 
-    UserDAO userDAO = new UserDAO();
+//    UserDAO userDAO = new UserDAO();
 
     public static Boolean isEditing;
     public static String previousPath;
@@ -119,13 +119,13 @@ public class CreateEditUserController implements Initializable {
         }
 
         //if all is verified good, declare variables to construct a new User and insert into the table.
-        setUserTableVariables();
-
-        User user = new User(0, this.userName, this.password, this.active, this.createDate, this.createdBy, this.lastModified, this.lastModifiedBy);
-        
-        DatabaseConnector.createConnection();
-        userDAO.create(user);
-        DatabaseConnector.closeConnection();
+//        setUserTableVariables();
+//
+//        User user = new User(0, this.userName, this.password, this.active, this.createDate, this.createdBy, this.lastModified, this.lastModifiedBy);
+//        
+//        DatabaseConnector.createConnection();
+//        userDAO.create(user);
+//        DatabaseConnector.closeConnection();
 
     }
 
@@ -141,20 +141,20 @@ public class CreateEditUserController implements Initializable {
 
     private void updateExistingUser(User existingUser) throws SQLException, ClassNotFoundException {
 
-        //if there is some kind of error, abort.
-        if (!canDataBeSaved()) {
-            return;
-        }
-
-        DatabaseConnector.createConnection();
-
-        //if all is verified good, declare variables to construct a new User and update the table.
-        setUserTableVariables();
-
-        User user = new User(existingUser.getUserId(), this.userName, this.password, this.active, this.createDate, this.createdBy, this.lastModified, this.lastModifiedBy);
-
-        userDAO.update(user);
-        DatabaseConnector.closeConnection();
+//        //if there is some kind of error, abort.
+//        if (!canDataBeSaved()) {
+//            return;
+//        }
+//
+//        DatabaseConnector.createConnection();
+//
+//        //if all is verified good, declare variables to construct a new User and update the table.
+//        setUserTableVariables();
+//
+//        User user = new User(existingUser.getUserId(), this.userName, this.password, this.active, this.createDate, this.createdBy, this.lastModified, this.lastModifiedBy);
+//
+//        userDAO.update(user);
+//        DatabaseConnector.closeConnection();
     }
 
     private Boolean canDataBeSaved() {

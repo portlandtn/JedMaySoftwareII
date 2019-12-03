@@ -17,12 +17,25 @@
  */
 package DAO;
 
+import com.mysql.jdbc.Connection;
+import javafx.collections.ObservableList;
 
 /**
  *
  * @author Jedidiah May
+ * @param <T>
  */
-public interface I_SQL_CRUD {
-
-    int getId();
+public abstract class DAO <T extends I_SQL_CRUD>{
+    
+    protected final Connection conn;
+    
+    public DAO(Connection conn){
+        super();
+        this.conn = conn;
+    }
+    
+    public abstract ObservableList<T> query();
+    public abstract void update(T dto);
+    public abstract void insert(T dto);
+    public abstract void remove(int id);
 }

@@ -29,118 +29,29 @@ import javafx.collections.ObservableList;
  *
  * @author Jedidiah May
  */
-public class CustomerDAO implements I_SQL_CRUD<Customer>{
+public class CustomerDAO extends DAO<Customer>{
 
-    public CustomerDAO(Connection connection) {
-        super(connection);
+    public CustomerDAO(com.mysql.jdbc.Connection conn) {
+        super(conn);
     }
 
     @Override
-    public Customer findById(int id) {
+    public ObservableList<Customer> query() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public ObservableList<Customer> getAll() {
+    public void insert(Customer dto) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Customer update(Customer dto) {
+    public void remove(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Customer create(Customer dto) {
+    public void update(Customer dto) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void delete(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public ResultSet queryTable() {
-        try {
-            PreparedStatement stmt = databaseConnection.prepareStatement("SELECT * FROM customer;");
-            return stmt.executeQuery();
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-        return null;
-    }
-    
-    public ResultSet queryTableWithJoins() {
-        try {
-            PreparedStatement stmt = databaseConnection.prepareStatement("SELECT * FROM customer JOIN address on customer.addressId = address.addressId;");
-            return stmt.executeQuery();
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-        return null;
-    }
-
-    @Override
-    public void create(Customer customer) {
-        try {
-            PreparedStatement stmt = databaseConnection.prepareStatement("INSERT INTO customer ("
-                + "customerName, "
-                + "addressId, "
-                + "active, "
-                + "createDate, "
-                + "createdBy, "
-                + "lastUpdate, "
-                + "lastUpdateBy"
-                + ") Values ("
-                + "?, ?, ?, ?, ?, ?, ?);");
-
-            stmt.setString(1, customer.getCustomerName());
-            stmt.setInt(2, customer.getAddressId());
-            stmt.setBoolean(3, customer.getIsActive());
-            stmt.setDate(4, new java.sql.Date(System.currentTimeMillis()));
-            stmt.setString(5, DataProvider.getCurrentUser());
-            stmt.setDate(6, new java.sql.Date(System.currentTimeMillis()));
-            stmt.setString(7, DataProvider.getCurrentUser());
-
-            stmt.executeUpdate();
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    @Override
-    public void update(Customer customer) {
-        try {
-            PreparedStatement stmt = databaseConnection.prepareStatement("UPDATE customer set"
-                + "customerName = ?, "
-                + "addressId = ?, "
-                + "active = ?, "
-                + "lastUpdate = ?, "
-                + "lastUpdateBy = ? "
-                + "WHERE customerId = " + customer.getCustomerId());
-
-            stmt.setString(1, customer.getCustomerName());
-            stmt.setInt(2, customer.getAddressId());
-            stmt.setBoolean(3, customer.getIsActive());
-            stmt.setDate(4, new java.sql.Date(System.currentTimeMillis()));
-            stmt.setString(5, DataProvider.getCurrentUser());
-
-            stmt.executeUpdate();
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    @Override
-    public void delete(Customer customer) {
-        try {
-            PreparedStatement stmt = databaseConnection.prepareStatement("DELETE FROM customer WHERE customerId = ?");
-            stmt.setInt(1, customer.getCustomerId());
-            
-            stmt.executeUpdate();
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
     }
 }

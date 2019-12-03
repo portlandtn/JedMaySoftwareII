@@ -41,7 +41,7 @@ import javafx.stage.Stage;
  */
 public class AppointmentDetailController implements Initializable {
     
-    AppointmentDAO appointmentDAO = new AppointmentDAO();
+//    AppointmentDAO appointmentDAO = new AppointmentDAO();
 
     @FXML
     private TextField appointmentIDTextField;
@@ -107,13 +107,13 @@ public class AppointmentDetailController implements Initializable {
     
     private void refreshData(){
         
-        try {
-            
-            DatabaseConnector.createConnection();
-            ResultSet results  = appointmentDAO.queryTableWithJoins();
-            
-            ObservableList<Appointment> allAppointments = Appointment.getAllAppointments(results);
-            DatabaseConnector.closeConnection();
+//        try {
+//            
+//            DatabaseConnector.createConnection();
+//            ResultSet results  = appointmentDAO.queryTableWithJoins();
+//            
+//            ObservableList<Appointment> allAppointments = Appointment.getAllAppointments(results);
+//            DatabaseConnector.closeConnection();
             
 //            appointmentIDTextField.setText(value);
 //            customerNameTextField.setText(value);
@@ -129,9 +129,9 @@ public class AppointmentDetailController implements Initializable {
 //            endTimeChoiceBox.setValue(values);
 
 
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
+//        } catch (ClassNotFoundException | SQLException ex) {
+//            System.out.println(ex.getMessage());
+//        }
     }
     
     @Override

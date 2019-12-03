@@ -16,14 +16,14 @@
  * Look for other projects on my github account at <https://github.com/portlandtn/>.
  */
 package Model;
-
+import DAO.I_SQL_CRUD;
 import java.util.Date;
 
 /**
  *
  * @author Jedidiah May
  */
-public class Customer {
+public class Customer implements I_SQL_CRUD {
 
     private int customerId, addressId;
     private String customerName, createdBy, lastUpdateBy;
@@ -92,5 +92,10 @@ public class Customer {
 
     public void setLastUpdateBy(String lastUpdateBy) {
         this.lastUpdateBy = lastUpdateBy;
+    }
+
+    @Override
+    public int getId() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

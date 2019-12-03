@@ -17,13 +17,14 @@
  */
 package Model;
 
+import DAO.I_SQL_CRUD;
 import java.util.Date;
 
 /**
  *
  * @author Jedidiah May
  */
-public class City {
+public class City implements I_SQL_CRUD {
 
     private int cityId, countryId;
     private String cityName, createdBy, lastUpdateBy;
@@ -83,5 +84,10 @@ public class City {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    @Override
+    public int getId() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
