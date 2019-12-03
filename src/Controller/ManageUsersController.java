@@ -57,9 +57,6 @@ public class ManageUsersController implements Initializable {
     private RadioButton allRadioButton;
 
     @FXML
-    private ToggleGroup AppointmentTypeToggle;
-
-    @FXML
     private RadioButton activeRadioButton;
 
     @FXML
@@ -132,17 +129,17 @@ public class ManageUsersController implements Initializable {
 
     @FXML
     void onActionSelectActive(ActionEvent event) {
-
+        refreshData();
     }
 
     @FXML
     void onActionSelectAll(ActionEvent event) {
-
+        refreshData();
     }
 
     @FXML
     void onActionSelectInactive(ActionEvent event) {
-
+        refreshData();
     }
 
     private void displayScreen(String path, ActionEvent event) throws IOException {
@@ -157,12 +154,19 @@ public class ManageUsersController implements Initializable {
     }
 
     private void refreshData() {
+        ObservableList<User> allUsers;
 
-        try (Connection conn = dc.createConnection()){
+        try (Connection conn = dc.createConnection()) {
+
+            if (allRadioButton.isSelected()) {
+                allUsers = userDAO.query();
+            } else if (activeRadioButton.isSelected()) {
+                allUsers = userDAO.queryActiveInactive(true);
+            } else {
+                allUsers = userDAO.queryActiveInactive(false);
+            }
             
-        //Setup the user table with data from the database.
-            ObservableList<User> allUsers = userDAO.query();
-            
+            //Setup the user table with data from the database.
             conn.close();
             manageUsersTableView.setItems(allUsers);
             userIdColumnTableView.setCellValueFactory(new PropertyValueFactory<>("userId"));

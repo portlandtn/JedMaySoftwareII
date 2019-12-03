@@ -74,6 +74,40 @@ public class UserDAO extends DAO<User> {
         }
         return users;
     }
+    
+    public ObservableList<User> queryActiveInactive(Boolean active) {
+        ObservableList<User> users = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "userId, "
+                + "userName, "
+                + "password, "
+                + "active, "
+                + "createDate, "
+                + "createdBy, "
+                + "lastUpdate, "
+                + "lastUpdateBy "
+                + "FROM user where active = " + active + "")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                User user = new User();
+                user.setUserId(result.getInt("userId"));
+                user.setUserName(result.getString("userName"));
+                user.setPassword(result.getString("password"));
+                user.setActive(result.getBoolean("active"));
+                user.setCreateDate(result.getDate("createDate"));
+                user.setCreatedBy(result.getString("createdBy"));
+                user.setLastUpdate(result.getDate("lastUpdate"));
+                user.setLastUpdateBy(result.getString("lastUpdateby"));
+                users.add(user);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return users;
+    }
 
     //Used to return username or password to validate login credentials.
     public String getUserName(String value) {
