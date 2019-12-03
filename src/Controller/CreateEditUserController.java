@@ -21,6 +21,7 @@ import Model.User;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
 import Utilities.Validator;
+import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -41,20 +42,17 @@ import javafx.stage.Stage;
  * @author Jedidiah May
  */
 public class CreateEditUserController implements Initializable {
-
-//    UserDAO userDAO = new UserDAO();
+    
+    DatabaseConnector dc = new DatabaseConnector();
+    UserDAO userDAO;
 
     public static Boolean isEditing;
     public static String previousPath;
 
     //Variables to be used for user object
-    private String userName;
-    private String password;
+    private String userName, password, createdBy, lastUpdateBy;
     private Boolean active;
-    private Date createDate;
-    private String createdBy;
-    private Date lastModified;
-    private String lastModifiedBy;
+    private Date createDate, lastUpdate;
 
     private User userToUpdate;
 
@@ -70,9 +68,17 @@ public class CreateEditUserController implements Initializable {
     @FXML
     private CheckBox activeCheckBox;
 
+    public CreateEditUserController() {
+        try {
+            this.userDAO = new UserDAO(dc.createConnection());
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
     @FXML
     void onActionActive_Inactive(ActionEvent event) {
-
+        
     }
 
     @FXML
@@ -112,21 +118,30 @@ public class CreateEditUserController implements Initializable {
         this.userToUpdate = user;
     }
 
-    private void saveNewUser() throws ClassNotFoundException, SQLException, IOException {
+    private void saveNewUser() {
 
-        if (!canDataBeSaved()) {
+        try (Connection conn = dc.createConnection()){
+                    if (!canDataBeSaved()) {
             return;
         }
 
         //if all is verified good, declare variables to construct a new User and insert into the table.
-//        setUserTableVariables();
-//
-//        User user = new User(0, this.userName, this.password, this.active, this.createDate, this.createdBy, this.lastModified, this.lastModifiedBy);
-//        
-//        DatabaseConnector.createConnection();
-//        userDAO.create(user);
-//        DatabaseConnector.closeConnection();
+        setUserTableVariables();
+        User user = new User();
+        user.setUserName(this.userName);
+        user.setPassword(this.password);
+        user.setActive(this.active);
+        user.setCreateDate(this.createDate);
+        user.setCreatedBy(this.createdBy);
+        user.setLastUpdate(this.lastUpdate);
+        user.setLastUpdateBy(this.lastUpdateBy);
 
+        userDAO.insert(user);
+        conn.close();
+        
+        } catch (SQLException | ClassNotFoundException ex){
+            System.out.println(ex.getMessage());
+        }
     }
 
     private void setUserTableVariables() {
@@ -135,26 +150,38 @@ public class CreateEditUserController implements Initializable {
         this.active = activeCheckBox.isSelected();
         this.createDate = new Date(System.currentTimeMillis());
         this.createdBy = userNameTextField.getText();
-        this.lastModified = new Date(System.currentTimeMillis());
-        this.lastModifiedBy = userNameTextField.getText();
+        this.lastUpdate = new Date(System.currentTimeMillis());
+        this.lastUpdateBy = userNameTextField.getText();
     }
 
     private void updateExistingUser(User existingUser) throws SQLException, ClassNotFoundException {
 
-//        //if there is some kind of error, abort.
-//        if (!canDataBeSaved()) {
-//            return;
-//        }
-//
-//        DatabaseConnector.createConnection();
-//
-//        //if all is verified good, declare variables to construct a new User and update the table.
-//        setUserTableVariables();
-//
-//        User user = new User(existingUser.getUserId(), this.userName, this.password, this.active, this.createDate, this.createdBy, this.lastModified, this.lastModifiedBy);
-//
-//        userDAO.update(user);
-//        DatabaseConnector.closeConnection();
+        
+        try (Connection conn = dc.createConnection()) {
+                    //if there is some kind of error, abort.
+        if (!canDataBeSaved()) {
+            return;
+        }
+
+
+        //if all is verified good, declare variables to construct a new User and update the table.
+        setUserTableVariables();
+            User user = new User();
+            user.setUserId(existingUser.getUserId());
+            user.setUserName(this.userName);
+            user.setPassword(this.password);
+            user.setActive(this.active);
+            user.setCreateDate(this.createDate);
+            user.setCreatedBy(this.createdBy);
+            user.setLastUpdate(this.lastUpdate);
+            user.setLastUpdateBy(this.lastUpdateBy);
+
+        userDAO.update(user);
+        conn.close();
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+
     }
 
     private Boolean canDataBeSaved() {

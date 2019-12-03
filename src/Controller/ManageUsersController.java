@@ -20,9 +20,9 @@ package Controller;
 import Model.User;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
+import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
@@ -41,8 +41,17 @@ import javafx.stage.Stage;
  * @author Jedidiah May
  */
 public class ManageUsersController implements Initializable {
-    
-//    UserDAO userDAO = new UserDAO();
+
+    DatabaseConnector dc = new DatabaseConnector();
+    UserDAO userDAO;
+
+    public ManageUsersController() {
+        try {
+            this.userDAO = new UserDAO(dc.createConnection());
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
 
     @FXML
     private RadioButton allRadioButton;
@@ -73,10 +82,13 @@ public class ManageUsersController implements Initializable {
 
     @FXML
     void onActionDeleteUser(ActionEvent event) throws SQLException, ClassNotFoundException {
-//        DatabaseConnector.createConnection();
-//        userDAO.delete(manageUsersTableView.getSelectionModel().getSelectedItem());
-//        refreshData();
-//        DatabaseConnector.closeConnection();
+        try (Connection conn = dc.createConnection()) {
+            userDAO.remove(manageUsersTableView.getSelectionModel().getSelectedItem().getUserId());
+            refreshData();
+            conn.close();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     @FXML
@@ -86,32 +98,30 @@ public class ManageUsersController implements Initializable {
 
     @FXML
     void onActionEditUser(ActionEvent event) {
-        
+
         CreateEditUserController.isEditing = true;
-        
+
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/View/CreateEditUser.fxml"));
             loader.load();
-            
+
             CreateEditUserController.previousPath = "/View/ManageUsers.fxml";
-            
+
             CreateEditUserController userController = loader.getController();
             userController.sendUserDetails(manageUsersTableView.getSelectionModel().getSelectedItem());
-            
+
             Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
             Parent scene = loader.getRoot();
             stage.setScene(new Scene(scene));
             stage.show();
-            
+
             displayScreen("/View/CreateEditUser.fxml", event);
-            
-            
+
         } catch (IOException | NullPointerException ex) {
             System.out.println(ex.getMessage());
         }
 
-        
     }
 
     @FXML
@@ -148,24 +158,21 @@ public class ManageUsersController implements Initializable {
 
     private void refreshData() {
 
-//        try {
-            //Setup the user table with data from the database.
-//            DatabaseConnector.createConnection();
-//            
-//            ResultSet result = userDAO.queryTable();
-//            ObservableList<User> allUsers = User.getUserData(result);
-//            
-//            DatabaseConnector.closeConnection();
+        try (Connection conn = dc.createConnection()){
+            
+        //Setup the user table with data from the database.
+            ObservableList<User> allUsers = userDAO.query();
+            
+            conn.close();
+            manageUsersTableView.setItems(allUsers);
+            userIdColumnTableView.setCellValueFactory(new PropertyValueFactory<>("userId"));
+            usernameColumnTableView.setCellValueFactory(new PropertyValueFactory<>("userName"));
+            passwordColumnTableView.setCellValueFactory(new PropertyValueFactory<>("password"));
+            activeColumnTableView.setCellValueFactory(new PropertyValueFactory<>("active"));
 
-//            manageUsersTableView.setItems(allUsers);
-//            userIdColumnTableView.setCellValueFactory(new PropertyValueFactory<>("userId"));
-//            usernameColumnTableView.setCellValueFactory(new PropertyValueFactory<>("userName"));
-//            passwordColumnTableView.setCellValueFactory(new PropertyValueFactory<>("password"));
-//            activeColumnTableView.setCellValueFactory(new PropertyValueFactory<>("active"));
-//
-//        } catch (ClassNotFoundException | SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     @Override

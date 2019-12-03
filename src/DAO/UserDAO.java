@@ -51,7 +51,7 @@ public class UserDAO extends DAO<User> {
                 + "createDate, "
                 + "createdBy, "
                 + "lastUpdate, "
-                + "lastUpdatedBy "
+                + "lastUpdateBy "
                 + "FROM user")) {
 
             ResultSet result = stmt.executeQuery();

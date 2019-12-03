@@ -93,12 +93,12 @@ public class LoginScreenController implements Initializable {
                 Alert alert = new Alert(AlertType.ERROR, "While this user does exist, their account has been made inactive. "
                         + "Please have the administrator update this account to use it for logging in.");
                 alert.showAndWait();
-                return;
             } else {
                 DataProvider.setIsLoggedIn(true);
                 noUserFoundLabel.setVisible(false);
                 conn.close();
                 DataProvider.setCurrentUser(userNameTextField.getText());
+                conn.close();
                 displayScreen("/View/Dashboard.fxml", event);
             }
         } catch (SQLException ex) {
