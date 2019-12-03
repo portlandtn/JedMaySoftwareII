@@ -81,7 +81,7 @@ public class AddressDAO extends DAO<Address> {
 
     @Override
     public void insert(Address dto) {
-        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO address "
+        try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO address "
                 + "address, address2, cityId, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateby VALUES ?, ?, ?, ?, ?, ?, ?, ?, ?")) {
             stmt.setString(1, dto.getAddress());
             stmt.setString(2, dto.getAddress2());
@@ -100,7 +100,7 @@ public class AddressDAO extends DAO<Address> {
 
     @Override
     public void remove(int id) {
-        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM address WHERE addressId = '" + id + "'")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("DELETE FROM address WHERE addressId = '" + id + "'")) {
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -109,7 +109,7 @@ public class AddressDAO extends DAO<Address> {
 
     @Override
     public void update(Address dto) {
-        try (PreparedStatement stmt = conn.prepareStatement("UPDATE address SET"
+        try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE address SET"
                 + "address = ?, "
                 + "address2 = ?, "
                 + "cityId = ?, "

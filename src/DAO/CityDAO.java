@@ -74,7 +74,7 @@ public class CityDAO extends DAO<City>{
 
     @Override
     public void insert(City dto) {
-        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO city "
+        try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO city "
                 + "city, countryId, createDate, createdBy, lastUpdate, lastUpdateby VALUES ?, ?, ?, ?, ?, ?")) {
             stmt.setString(1, dto.getCity());
             stmt.setInt(2, dto.getCountryId());
@@ -90,7 +90,7 @@ public class CityDAO extends DAO<City>{
 
     @Override
     public void remove(int id) {
-        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM city WHERE cityId = '" + id + "'")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("DELETE FROM city WHERE cityId = '" + id + "'")) {
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -99,7 +99,7 @@ public class CityDAO extends DAO<City>{
 
     @Override
     public void update(City dto) {
-        try (PreparedStatement stmt = conn.prepareStatement("UPDATE city SET"
+        try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE city SET"
                 + "city = ?, "
                 + "countryid = ?, "
                 + "lastUpdate = ?, "

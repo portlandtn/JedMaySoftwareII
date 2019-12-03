@@ -156,7 +156,7 @@ public class UserDAO extends DAO<User> {
     @Override
     public void update(User dto) {
 
-        try (PreparedStatement stmt = conn.prepareStatement("UPDATE user SET"
+        try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE user SET"
                 + "userName = ?, "
                 + "password = ?, "
                 + "active = ?, "
@@ -176,7 +176,7 @@ public class UserDAO extends DAO<User> {
 
     @Override
     public void insert(User dto) {
-        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO user "
+        try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO user "
                 + "userName, password, active, createDate, createdBy, lastUpdate, lastUpdateby VALUES ?, ?, ?, ?, ?, ?, ?")) {
             stmt.setString(1, dto.getUserName());
             stmt.setString(2, dto.getPassword());
@@ -194,7 +194,7 @@ public class UserDAO extends DAO<User> {
     @Override
     public void remove(int id) {
 
-        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM user WHERE userId = '" + id + "'")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("DELETE FROM user WHERE userId = '" + id + "'")) {
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

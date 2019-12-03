@@ -82,13 +82,15 @@ public class LoginScreenController implements Initializable {
                 DataProvider.setIsLoggedIn(false);
                 Alert alert = new Alert(AlertType.ERROR, "The username does not exist.");
                 alert.showAndWait();
-                //if user exists, but the username and password does not match, alert the user.
+                
+                //if user exists, but the username and password do not match, alert the user.
             } else if (!userDAO.isUserNameandPasswordValid(userNameTextField.getText(), passwordTextField.getText())) {
                 noUserFoundLabel.setVisible(true);
                 DataProvider.setIsLoggedIn(false);
                 Alert alert = new Alert(AlertType.ERROR, "The username and password does not match.");
                 alert.showAndWait();
-                //if user is inactive, warn that the user cannot log in with first being made active.
+                
+                //if user is inactive, warn that the user cannot log in without first being made active.
             } else if (!userDAO.isUserActive(userNameTextField.getText())) {
                 Alert alert = new Alert(AlertType.ERROR, "While this user does exist, their account has been made inactive. "
                         + "Please have the administrator update this account to use it for logging in.");
@@ -96,7 +98,6 @@ public class LoginScreenController implements Initializable {
             } else {
                 DataProvider.setIsLoggedIn(true);
                 noUserFoundLabel.setVisible(false);
-                conn.close();
                 DataProvider.setCurrentUser(userNameTextField.getText());
                 conn.close();
                 displayScreen("/View/Dashboard.fxml", event);

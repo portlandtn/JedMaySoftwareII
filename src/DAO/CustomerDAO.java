@@ -76,7 +76,7 @@ public class CustomerDAO extends DAO<Customer>{
 
     @Override
     public void insert(Customer dto) {
-        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO Customer "
+        try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO Customer "
                 + "customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateby VALUES ?, ?, ?, ?, ?, ?, ?")) {
             stmt.setString(1, dto.getCustomerName());
             stmt.setInt(2, dto.getAddressId());
@@ -94,7 +94,7 @@ public class CustomerDAO extends DAO<Customer>{
     @Override
     public void remove(int id) {
         
-        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM customer WHERE customerId = '" + id + "'")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("DELETE FROM customer WHERE customerId = '" + id + "'")) {
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -104,7 +104,7 @@ public class CustomerDAO extends DAO<Customer>{
     @Override
     public void update(Customer dto) {
 
-        try (PreparedStatement stmt = conn.prepareStatement("UPDATE customer SET"
+        try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE customer SET"
                 + "customerName = ?, "
                 + "addressId = ?, "
                 + "active = ?, "

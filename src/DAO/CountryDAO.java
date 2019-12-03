@@ -74,7 +74,7 @@ public class CountryDAO extends DAO<Country> {
 
     @Override
     public void insert(Country dto) {
-        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO country "
+        try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO country "
                 + "country, createDate, createdBy, lastUpdate, lastUpdateby VALUES ?, ?, ?, ?, ?")) {
             stmt.setString(1, dto.getCountry());
             stmt.setDate(2, (java.sql.Date) calendar.getTime());
@@ -89,7 +89,7 @@ public class CountryDAO extends DAO<Country> {
 
     @Override
     public void remove(int id) {
-        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM country WHERE countryId = '" + id + "'")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("DELETE FROM country WHERE countryId = '" + id + "'")) {
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -98,7 +98,7 @@ public class CountryDAO extends DAO<Country> {
     
     @Override
     public void update(Country dto) {
-        try (PreparedStatement stmt = conn.prepareStatement("UPDATE country SET"
+        try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE country SET"
                 + "country = ?, "
                 + "lastUpdate = ?, "
                 + "lastUpdateBy = ? "

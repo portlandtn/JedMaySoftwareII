@@ -89,7 +89,7 @@ public class AppointmentDAO extends DAO<Appointment>{
 
     @Override
     public void insert(Appointment dto) {
-        try (PreparedStatement stmt = conn.prepareStatement("INSERT INTO appointment "
+        try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO appointment "
                 + "customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateby "
                 + "VALUES ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?")) {
             stmt.setInt(1, dto.getCustomerId());
@@ -114,7 +114,7 @@ public class AppointmentDAO extends DAO<Appointment>{
 
     @Override
     public void remove(int id) {
-        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM appointment WHERE appointmentId = '" + id + "'")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("DELETE FROM appointment WHERE appointmentId = '" + id + "'")) {
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -123,7 +123,7 @@ public class AppointmentDAO extends DAO<Appointment>{
     
         @Override
     public void update(Appointment dto) {
-            try (PreparedStatement stmt = conn.prepareStatement("UPDATE appointment SET"
+            try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE appointment SET"
                     + "customerId = ?, "
                     + "userId = ?, "
                     + "title = ?, "
