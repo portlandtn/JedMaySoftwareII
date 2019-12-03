@@ -43,15 +43,15 @@ public class CustomerDAO extends DAO<Customer>{
     public ObservableList<Customer> query() {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
-                + "userId, "
-                + "userName, "
-                + "password, "
+                + "customerId, "
+                + "customerName, "
+                + "addressId, "
                 + "active, "
                 + "createDate, "
                 + "createdBy, "
                 + "lastUpdate, "
                 + "lastUpdatedBy "
-                + "FROM user")) {
+                + "FROM customer")) {
 
             ResultSet result = stmt.executeQuery();
 
@@ -72,6 +72,21 @@ public class CustomerDAO extends DAO<Customer>{
             System.out.println(ex.getMessage());
         }
         return customers;
+    }
+    
+    public Boolean doesCustomerExist(String customerName){
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "customerName "
+                + "FROM customer WHERE customerName = '" + customerName + "'")) {
+
+            ResultSet result = stmt.executeQuery();
+            
+            return result.next();
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
     }
 
     @Override

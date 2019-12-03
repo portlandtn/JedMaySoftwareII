@@ -17,79 +17,61 @@
  */
 package Controller;
 
-import java.io.IOException;
+import DAO.CustomerDAO;
+import Utilities.DatabaseConnector;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 
 /**
  *
  * @author Jedidiah May
  */
-public class EditCustomersController implements Initializable {
+public class CustomerDetailsController implements Initializable {
 
-    @FXML
-    private TextField customerIDTextField;
-
-    @FXML
-    private TextField customerNameTextField;
-
-    @FXML
-    private TextField addressTextField;
+    DatabaseConnector dc = new DatabaseConnector();
+    CustomerDAO customerDAO;
+    static String previousPath;
+    static Boolean isEditing;
 
     @FXML
     private TextField address2TextField;
 
     @FXML
+    private TextField phoneTextField;
+
+    @FXML
+    private TextField addressTextField;
+
+    @FXML
+    private TextField customerNameTextField;
+
+    @FXML
     private TextField postalCodeTextField;
 
     @FXML
-    private TextField phoneTextField;
-
+    private ComboBox<String> countryComboBox;
+    
     @FXML
     private ComboBox<String> cityComboBox;
 
     @FXML
-    void onActionCancel(ActionEvent event) throws IOException {
-        displayScreen("/View/Customers.fxml", event);
-    }
+    private CheckBox activeCheckBox;
 
     @FXML
-    void onActionCitySelected(ActionEvent event) {
+    void onActionCancel(ActionEvent event) {
 
     }
 
     @FXML
-    void onActionCountrySelected(ActionEvent event) {
+    void onActionSave(ActionEvent event) {
 
     }
-
-    @FXML
-    void onActionSave(ActionEvent event) throws IOException {
-        displayScreen("/View/Customers.fxml", event);
-    }
-
-    private void displayScreen(String path, ActionEvent event) throws IOException {
-
-        Stage stage;
-        Parent scene;
-
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource(path));
-        stage.setScene(new Scene(scene));
-        stage.show();
-    }
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }
 
+    }
 }
