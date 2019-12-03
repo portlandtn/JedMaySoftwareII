@@ -17,13 +17,8 @@
  */
 package DAO;
 
-import Utilities.DataProvider;
 import Model.Address;
 import com.mysql.jdbc.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Calendar;
 import javafx.collections.ObservableList;
 

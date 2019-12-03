@@ -16,19 +16,18 @@
  * Look for other projects on my github account at <https://github.com/portlandtn/>.
  */
 package Model;
-import DAO.I_SQL_CRUD;
 import java.util.Date;
 
 /**
  *
  * @author Jedidiah May
  */
-public class Customer implements I_SQL_CRUD {
+public class Customer implements I_POJO {
 
     private int customerId, addressId;
     private String customerName, createdBy, lastUpdateBy;
     private Boolean active;
-    private Date createdDate, lastUpdate;
+    private Date createDate, lastUpdate;
 
     public int getCustomerId() {
         return customerId;
@@ -61,41 +60,45 @@ public class Customer implements I_SQL_CRUD {
     public void setIsActive(Boolean isActive) {
         this.active = isActive;
     }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
+    
+        @Override
     public String getCreatedBy() {
         return createdBy;
     }
 
+    @Override
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Date getLastUpdate() {
-        return lastUpdate;
+    @Override
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setLastUpdate(Date lastUpdate) {
-        this.lastUpdate = lastUpdate;
+    @Override
+    public void setCreateDate(Date createdOn) {
+        this.createDate = createdOn;
     }
 
+    @Override
     public String getLastUpdateBy() {
         return lastUpdateBy;
     }
 
+    @Override
     public void setLastUpdateBy(String lastUpdateBy) {
         this.lastUpdateBy = lastUpdateBy;
     }
 
     @Override
-    public int getId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Date getLastUpdate() {
+        return lastUpdate;
     }
+
+    @Override
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
 }

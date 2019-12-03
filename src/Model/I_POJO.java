@@ -15,14 +15,23 @@
  *
  * Look for other projects on my github account at <https://github.com/portlandtn/>.
  */
-package DAO;
+package Model;
+
+import java.util.Date;
 
 
 /**
  *
  * @author Jedidiah May
  */
-public interface I_SQL_CRUD {
+public interface I_POJO {
 
-    int getId();
+    Date getCreateDate();
+    void setCreateDate(Date createDate);
+    String getCreatedBy();
+    void setCreatedBy(String createdBy);
+    Date getLastUpdate();
+    void setLastUpdate(Date lastUpdate);
+    String getLastUpdateBy();
+    void setLastUpdateBy(String lastUpdatedBy);
 }

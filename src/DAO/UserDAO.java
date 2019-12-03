@@ -24,7 +24,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
-import java.util.Date;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -65,8 +64,8 @@ public class UserDAO extends DAO<User> {
                 user.setActive(result.getBoolean("active"));
                 user.setCreateDate(result.getDate("createDate"));
                 user.setCreatedBy(result.getString("createdBy"));
-                user.setLastModifiedDate(result.getDate("lastUpdate"));
-                user.setLastModifiedBy(result.getString("lastUpdateby"));
+                user.setLastUpdate(result.getDate("lastUpdate"));
+                user.setLastUpdateBy(result.getString("lastUpdateby"));
                 users.add(user);
             }
 

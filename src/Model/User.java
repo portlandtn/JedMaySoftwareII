@@ -17,21 +17,20 @@
  */
 package Model;
 
-import DAO.I_SQL_CRUD;
 import java.util.Date;
 
 /**
  *
  * @author Jedidiah May
  */
-public class User implements I_SQL_CRUD {
+public class User implements I_POJO {
 
     private String userName, password, createdBy, lastUpdateBy;
     private int userId;
     private Boolean active;
     private Date createDate, lastUpdate;
 
-    //Getters and Setters
+    
     public int getUserId() {
         return userId;
     }
@@ -56,22 +55,6 @@ public class User implements I_SQL_CRUD {
         this.password = password;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public String getLastModifiedBy() {
-        return lastUpdateBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastUpdateBy = lastModifiedBy;
-    }
-
     public Boolean getActive() {
         return active;
     }
@@ -79,25 +62,45 @@ public class User implements I_SQL_CRUD {
     public void setActive(Boolean active) {
         this.active = active;
     }
+    
+        @Override
+    public String getCreatedBy() {
+        return createdBy;
+    }
 
+    @Override
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    @Override
     public Date getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public Date getLastModifiedDate() {
-        return lastUpdate;
-    }
-
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastUpdate = lastModifiedDate;
+    @Override
+    public void setCreateDate(Date createdOn) {
+        this.createDate = createdOn;
     }
 
     @Override
-    public int getId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getLastUpdateBy() {
+        return lastUpdateBy;
     }
+
+    @Override
+    public void setLastUpdateBy(String lastUpdateBy) {
+        this.lastUpdateBy = lastUpdateBy;
+    }
+
+    @Override
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+
+    @Override
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
 }

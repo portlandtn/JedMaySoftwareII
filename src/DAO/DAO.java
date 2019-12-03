@@ -17,6 +17,7 @@
  */
 package DAO;
 
+import Model.I_POJO;
 import com.mysql.jdbc.Connection;
 import javafx.collections.ObservableList;
 
@@ -25,7 +26,7 @@ import javafx.collections.ObservableList;
  * @author Jedidiah May
  * @param <T>
  */
-public abstract class DAO <T extends I_SQL_CRUD>{
+public abstract class DAO <T extends I_POJO>{
     
     protected final Connection conn;
     

@@ -17,19 +17,17 @@
  */
 package Model;
 
-import DAO.I_SQL_CRUD;
 import java.util.Date;
 
 /**
  *
  * @author Jedidiah May
  */
-public class Address implements I_SQL_CRUD {
+public class Address implements I_POJO {
 
     private int addressId, cityId;
     private String address, address2, postalCode, phone, createdBy, lastUpdateBy;
     private Date createDate, lastUpdate;
-    
 
     public int getAddressId() {
         return addressId;
@@ -79,40 +77,44 @@ public class Address implements I_SQL_CRUD {
         this.phone = phone;
     }
 
+    @Override
     public String getCreatedBy() {
         return createdBy;
     }
 
+    @Override
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
+    @Override
     public Date getCreateDate() {
         return createDate;
     }
 
+    @Override
     public void setCreateDate(Date createdOn) {
         this.createDate = createdOn;
     }
 
+    @Override
     public String getLastUpdateBy() {
         return lastUpdateBy;
     }
 
-    public void setLastUpdateBy(String lastModifiedBy) {
-        this.lastUpdateBy = lastModifiedBy;
+    @Override
+    public void setLastUpdateBy(String lastUpdateBy) {
+        this.lastUpdateBy = lastUpdateBy;
     }
 
+    @Override
     public Date getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Date lastModifiedDate) {
-        this.lastUpdate = lastModifiedDate;
-    }   
-
     @Override
-    public int getId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
+
 }
