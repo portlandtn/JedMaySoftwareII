@@ -112,9 +112,9 @@ public class CustomerDAO extends DAO<Customer>{
             stmt.setString(1, dto.getCustomerName());
             stmt.setInt(2, dto.getAddressId());
             stmt.setBoolean(3, dto.getActive());
-            stmt.setDate(4, (java.sql.Date) calendar.getTime());
+            stmt.setDate(4, DataProvider.getCurrentDate());
             stmt.setString(5, DataProvider.getCurrentUser());
-            stmt.setDate(6, (java.sql.Date) calendar.getTime());
+            stmt.setDate(6, DataProvider.getCurrentDate());
             stmt.setString(7, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {
@@ -145,7 +145,7 @@ public class CustomerDAO extends DAO<Customer>{
             stmt.setString(1, dto.getCustomerName());
             stmt.setInt(2, dto.getAddressId());
             stmt.setBoolean(3, dto.getActive());
-            stmt.setDate(4, (java.sql.Date) calendar.getTime());
+            stmt.setDate(4, DataProvider.getCurrentDate());
             stmt.setString(5, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {

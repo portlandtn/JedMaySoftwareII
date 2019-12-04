@@ -183,9 +183,9 @@ public class AppointmentDAO extends DAO<Appointment>{
             stmt.setString(8, dto.getUrl());
             stmt.setDate(9, (java.sql.Date) dto.getStart());
             stmt.setDate(10, (java.sql.Date) dto.getEnd());
-            stmt.setDate(11, (java.sql.Date) calendar.getTime());
+            stmt.setDate(11, DataProvider.getCurrentDate());
             stmt.setString(12, DataProvider.getCurrentUser());
-            stmt.setDate(13, (java.sql.Date) calendar.getTime());
+            stmt.setDate(13, DataProvider.getCurrentDate());
             stmt.setString(14, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {
@@ -228,7 +228,7 @@ public class AppointmentDAO extends DAO<Appointment>{
                 stmt.setString(8, dto.getUrl());
                 stmt.setDate(9, (java.sql.Date) dto.getStart());
                 stmt.setDate(10, (java.sql.Date) dto.getEnd());
-                stmt.setDate(11, (java.sql.Date) calendar.getTime());
+                stmt.setDate(11, DataProvider.getCurrentDate());
                 stmt.setString(12, DataProvider.getCurrentUser());
                 stmt.executeUpdate();
             } catch (SQLException ex) {

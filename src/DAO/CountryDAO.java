@@ -77,9 +77,9 @@ public class CountryDAO extends DAO<Country> {
         try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO country "
                 + "country, createDate, createdBy, lastUpdate, lastUpdateby VALUES ?, ?, ?, ?, ?")) {
             stmt.setString(1, dto.getCountry());
-            stmt.setDate(2, (java.sql.Date) calendar.getTime());
+            stmt.setDate(2, DataProvider.getCurrentDate());
             stmt.setString(3, DataProvider.getCurrentUser());
-            stmt.setDate(4, (java.sql.Date) calendar.getTime());
+            stmt.setDate(4, DataProvider.getCurrentDate());
             stmt.setString(5, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {
@@ -104,7 +104,7 @@ public class CountryDAO extends DAO<Country> {
                 + "lastUpdateBy = ? "
                 + "WHERE countryId = '" + dto.getCountryId() + "'")) {
             stmt.setString(1, dto.getCountry());
-            stmt.setDate(2, (java.sql.Date) calendar.getTime());
+            stmt.setDate(2, DataProvider.getCurrentDate());
             stmt.setString(3, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {

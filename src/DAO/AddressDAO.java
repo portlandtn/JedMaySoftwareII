@@ -88,9 +88,9 @@ public class AddressDAO extends DAO<Address> {
             stmt.setInt(3, dto.getCityId());
             stmt.setString(4, dto.getPostalCode());
             stmt.setString(5, dto.getPhone());
-            stmt.setDate(6, (java.sql.Date) calendar.getTime());
+            stmt.setDate(6, DataProvider.getCurrentDate());
             stmt.setString(7, DataProvider.getCurrentUser());
-            stmt.setDate(8, (java.sql.Date) calendar.getTime());
+            stmt.setDate(8, DataProvider.getCurrentDate());
             stmt.setString(9, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {
@@ -123,7 +123,7 @@ public class AddressDAO extends DAO<Address> {
             stmt.setInt(3, dto.getCityId());
             stmt.setString(4, dto.getPostalCode());
             stmt.setString(5, dto.getPhone());
-            stmt.setDate(6, (java.sql.Date) calendar.getTime());
+            stmt.setDate(6, DataProvider.getCurrentDate());
             stmt.setString(7, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {

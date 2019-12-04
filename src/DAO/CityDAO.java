@@ -78,9 +78,9 @@ public class CityDAO extends DAO<City>{
                 + "city, countryId, createDate, createdBy, lastUpdate, lastUpdateby VALUES ?, ?, ?, ?, ?, ?")) {
             stmt.setString(1, dto.getCity());
             stmt.setInt(2, dto.getCountryId());
-            stmt.setDate(3, (java.sql.Date) calendar.getTime());
+            stmt.setDate(3, DataProvider.getCurrentDate());
             stmt.setString(4, DataProvider.getCurrentUser());
-            stmt.setDate(5, (java.sql.Date) calendar.getTime());
+            stmt.setDate(5, DataProvider.getCurrentDate());
             stmt.setString(6, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {
@@ -107,7 +107,7 @@ public class CityDAO extends DAO<City>{
                 + "WHERE cityid = '" + dto.getCityId() + "'")) {
             stmt.setString(1, dto.getCity());
             stmt.setInt(2, dto.getCountryId());
-            stmt.setDate(4, (java.sql.Date) calendar.getTime());
+            stmt.setDate(4, DataProvider.getCurrentDate());
             stmt.setString(5, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {

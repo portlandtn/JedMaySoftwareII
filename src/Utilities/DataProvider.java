@@ -51,6 +51,11 @@ public class DataProvider {
             }
         }
     }
+    
+    public static java.sql.Date getCurrentDate(){
+        java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
+        return sqlDate;
+    }
 
     public static void setTimeZoneToGMT() {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
