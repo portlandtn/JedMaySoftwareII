@@ -19,7 +19,9 @@ package Controller;
 
 import DAO.AppointmentDAO;
 import DAO.CustomerDAO;
+import DAO.UserDAO;
 import Model.Appointment;
+import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
@@ -47,6 +49,7 @@ public class AppointmentDetailController implements Initializable {
     DatabaseConnector dc = new DatabaseConnector();
     AppointmentDAO appointmentDAO;
     CustomerDAO customerDAO;
+    UserDAO userDAO;
     static String previousPath;
     static Boolean isEditing;
 
@@ -62,7 +65,7 @@ public class AppointmentDetailController implements Initializable {
         assignedToChoiceBox.setValue(appt.getUserName());
         titleTextField.setText(appt.getTitle());
         descriptionTextField.setText(appt.getDescription());
-        locationChoicebox.setValue(appt.getLocation());
+        locationChoiceBox.setValue(appt.getLocation());
         contactTextField.setText(appt.getContact());
         urlTextField.setText(appt.getUrl());
         typeChoiceBox.setValue(appt.getType());
@@ -83,7 +86,7 @@ public class AppointmentDetailController implements Initializable {
     private TextField titleTextField;
 
     @FXML
-    private ChoiceBox<String> locationChoicebox;
+    private ChoiceBox<String> locationChoiceBox;
 
     @FXML
     private ChoiceBox<String> typeChoiceBox;
@@ -110,6 +113,7 @@ public class AppointmentDetailController implements Initializable {
         try {
             this.appointmentDAO = new AppointmentDAO(dc.createConnection());
             this.customerDAO = new CustomerDAO(dc.createConnection());
+            this.userDAO = new UserDAO(dc.createConnection());
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
         }
@@ -217,7 +221,7 @@ public class AppointmentDetailController implements Initializable {
         this.userName = assignedToChoiceBox.getSelectionModel().getSelectedItem();
         this.title = titleTextField.getText();
         this.description = descriptionTextField.getText();
-        this.location = locationChoicebox.getSelectionModel().getSelectedItem();
+        this.location = locationChoiceBox.getSelectionModel().getSelectedItem();
         this.contact = contactTextField.getText();
         this.url = urlTextField.getText();
         this.type = typeChoiceBox.getSelectionModel().getSelectedItem();
@@ -235,6 +239,11 @@ public class AppointmentDetailController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        customerNameComboBox.setItems(customerDAO.queryAllCustomers());
+        assignedToChoiceBox.setItems(userDAO.queryAllUsers());
+        locationChoiceBox.setItems(DataProvider.LOCATIONS);
+        typeChoiceBox.setItems(DataProvider.LOCATIONS);
+        startTimeCholceBox.setItems(DataProvider.operatingHours);
+        endTimeChoiceBox.setItems(DataProvider.operatingHours);
     }
 }

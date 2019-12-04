@@ -88,6 +88,22 @@ public class CustomerDAO extends DAO<Customer>{
         }
         return null;
     }
+    
+    public ObservableList<String> queryAllCustomers(){
+        
+        ObservableList<String> customerNames = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT customerName FROM customer")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while(result.next()){
+                customerNames.add(result.getString("customerName"));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return customerNames;
+    }
 
     @Override
     public void insert(Customer dto) {

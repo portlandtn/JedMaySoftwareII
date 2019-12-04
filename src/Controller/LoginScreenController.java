@@ -20,11 +20,13 @@ package Controller;
 import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
+import Utilities.Converter;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -125,7 +127,8 @@ public class LoginScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        Converter.currentTimeZoneId = TimeZone.getDefault().getID();
+        DataProvider.setStartingHours();
     }
 
 }

@@ -100,6 +100,11 @@ public class AppointmentsCalendarController implements Initializable {
     void onActionBack(ActionEvent event) throws IOException {
         displayScreen("/View/Dashboard.fxml", event);
     }
+    
+    @FXML
+    void onActionDisplayAppointmentDetail(ActionEvent event) throws IOException {
+        displayScreen("/View/AppointmentDetail.fxml", event);
+    }
 
     @FXML
     void onActionDeleteAppointment(ActionEvent event) {
@@ -175,7 +180,6 @@ public class AppointmentsCalendarController implements Initializable {
             else appointments = appointmentDAO.queryForAppointmentCalendar();
             
             conn.close();
-
 
             calendarAppointmentTableView.setItems(appointments);
             customerColumnTableView.setCellValueFactory(new PropertyValueFactory<>("customerName"));

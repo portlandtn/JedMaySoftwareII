@@ -58,7 +58,7 @@
                   <TextField fx:id="titleTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label text="End Time:" GridPane.rowIndex="10" />
                   <Label text="Location:" GridPane.rowIndex="4" />
-                  <ChoiceBox fx:id="locationChoicebox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <ChoiceBox fx:id="locationChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                   <Label text="Contact:" GridPane.rowIndex="5" />
                   <Label text="Type:" GridPane.rowIndex="7" />
                   <ChoiceBox fx:id="typeChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />

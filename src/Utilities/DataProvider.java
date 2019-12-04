@@ -17,40 +17,44 @@
  */
 package Utilities;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 /**
  *
  * @author Jedidiah May
  */
-
 public class DataProvider {
     
-    //Really wanted to use enumbs, but it just wasn't in the cards for me. So, final string arrays it is.
-    public static final String[] APPOINTMENT_TYPES = new String[]{"Consultation","Introduction","Termination"};
-    
-    public static final String[] LOCATIONS = new String[]{"Home","Office"};
-
-
-    //Hours of operation will be Monday - Friday, 7:00AM - 7:00PM (07:00 - 19:00)
-    //There's a better way to do this. Going to figure it out.
-    public static final int[] HOURS_OF_OPERATION = new int[]{7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
-
-    public static final int[] MINUTES_OF_OPERATION = new int[]{0, 15, 30, 45};
-
-    //These may not be used. For now, however, I've included them. Possibly will iterate through them to create a single method that can crawl through the 
-    //columns of a database and return everything, instead of separate columns. Not sure, yet.
-    public static final String[] USER_COLUMNS = new String[]{"userName", "password", "active", "createDate", "createdBy", "lastUpdate", "lastUpdateBy"};
-
-    public static final String[] APPOINTMENT_COLUMNS = new String[]{"customerId", "userId", "title", "description", "location", "contact", "type", "url", "start", "end", "createDate", "createdBy", "lastUpdate", "lastUpdateBy"};
-
-    public static final String[] ADDRESS_COLUMNS = new String[]{"address", "address2", "cityId", "postalCode", "phone", "createDate", "createdBy", "lastUpdate", "lastUpdateBy"};
-
-    public static final String[] CUSTOMER_COLUMNS = new String[]{"customerName", "addressId", "active", "createDate", "createdBy", "lastUpdate", "lastUpdateBy"};
-
-    public static final String[] CITY_COLUMNS = new String[]{"city", "countryId", "createDate", "createdBy", "lastUpdate", "lastUpdateBy"};
-
-    public static final String[] COUNTRY_COLUMNS = new String[]{"country", "createDate", "createdBy", "lastUpdate", "lastUpdateBy"};
-
     private static String currentUser;
+    private static Boolean isLoggedIn = false;
+    
+    public static final ObservableList<String> APPOINTMENT_TYPES = FXCollections.observableArrayList("Consultation", "Introduction", "Termination");
+    public static final ObservableList<String> LOCATIONS = FXCollections.observableArrayList("Home", "Office");
+
+
+    public static ObservableList<String> operatingHours = FXCollections.observableArrayList();
+
+    public static void setStartingHours() {
+        final int[] HOURS = new int[]{7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
+        final String[] MINUTES = new String[]{"00", "15", "30", "45"};
+        
+        for (int i = 0; i < 13; i++) {
+            for (int j = 0; j <= 3; j++) {
+                operatingHours.add(String.valueOf(HOURS[i] + ":" + MINUTES[j]));
+            }
+        }
+    }
+
+    public static void setTimeZoneToGMT() {
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
+    }
 
     public static String getCurrentUser() {
         return currentUser;
@@ -59,8 +63,6 @@ public class DataProvider {
     public static void setCurrentUser(String currentUser) {
         DataProvider.currentUser = currentUser;
     }
-
-    private static Boolean isLoggedIn = false;
 
     public static Boolean getIsLoggedIn() {
         return isLoggedIn;

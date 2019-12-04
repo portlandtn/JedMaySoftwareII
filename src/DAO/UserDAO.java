@@ -75,6 +75,23 @@ public class UserDAO extends DAO<User> {
         return users;
     }
     
+    public ObservableList<String> queryAllUsers(){
+        ObservableList<String> users = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "userName "
+                + "FROM user")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()){
+                users.add(result.getString("UserName"));
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return users;
+    }
+    
     public ObservableList<User> queryActiveInactive(Boolean active) {
         ObservableList<User> users = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
