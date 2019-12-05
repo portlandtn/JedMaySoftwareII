@@ -183,6 +183,7 @@ public class CustomerDAO extends DAO<Customer>{
                 + "lastUpdate = ?, "
                 + "lastUpdateBy = ? "
                 + "WHERE customerId = '" + dto.getCustomerId() + "'")) {
+            
             stmt.setString(1, dto.getCustomerName());
             stmt.setInt(2, dto.getAddressId());
             stmt.setBoolean(3, dto.getActive());

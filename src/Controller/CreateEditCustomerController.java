@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,6 +39,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 /**
@@ -166,15 +168,82 @@ public class CreateEditCustomerController implements Initializable {
     }
 
     private void updateExistingCustomer(Customer customerToUpdate) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        try (Connection conn = dc.createConnection()) {
+
+            if (!countryDAO.doesCountryExist(country)) {
+
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Create New Country?");
+                alert.setContentText("The country entered does not exist in the database. Are you sure you want to create a new country?");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    saveNewCountry();
+                } else {
+                    return;
+                }
+            }
+
+            if (!cityDAO.doesCityExist(city)) {
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Create New City?");
+                alert.setContentText("The city entered does not exist in the database. Are you sure you want to create a new city?");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    saveNewCity();
+                } else {
+                    return;
+                }
+            }
+
+            customerToUpdate.setCustomerId(this.customerId);
+            customerToUpdate.setCustomerName(this.customerName);
+            customerToUpdate.setAddressId(this.addressId);
+            customerToUpdate.setActive(this.active);
+            customerToUpdate.setCreateDate(this.createDate);
+            customerToUpdate.setCreatedBy(this.createdBy);
+            customerToUpdate.setLastUpdate(this.lastUpdate);
+            customerToUpdate.setLastUpdateBy(this.lastUpdateBy);
+            
+            customerDAO.update(customerToUpdate);
+            conn.close();
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     private void saveNewCustomer() {
-        try (Connection conn = dc.createConnection()) {
-
-            //THIS WILL NEED TO CASCADE. CHECK COUNTRY FIRST (QUERY) IF IT DOESN'T EXIST, CREATE IT. THEN CREATE CITY, FINALLY CREATE THIS.
-            //if all is verified good, declare variables to construct a new customer and insert into the table.
+        
             setVariablesFromScreen();
+            
+        try (Connection conn = dc.createConnection()) {
+            
+            if (!countryDAO.doesCountryExist(country)){
+                
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Create New Country?");
+                alert.setContentText("The country entered does not exist in the database. Are you sure you want to create a new country?");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    saveNewCountry();
+                } else {
+                    return;
+                }
+            }
+            
+            if (!cityDAO.doesCityExist(city)){
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Create New City?");
+                alert.setContentText("The city entered does not exist in the database. Are you sure you want to create a new city?");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    saveNewCity();
+                } else {
+                    return;
+                }
+            }
+
             Customer cust = new Customer();
             cust.setCustomerName(this.customerName);
             cust.setAddressId(this.addressId);
@@ -183,7 +252,6 @@ public class CreateEditCustomerController implements Initializable {
             cust.setCreatedBy(this.createdBy);
             cust.setLastUpdate(this.lastUpdate);
             cust.setLastUpdateBy(this.lastUpdateBy);
-
             customerDAO.insert(cust);
             conn.close();
 

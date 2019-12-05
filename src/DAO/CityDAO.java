@@ -87,6 +87,19 @@ public class CityDAO extends DAO<City> {
         }
         return cities;
     }
+    
+    public Boolean doesCityExist(String city) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT " + city + " FROM city")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            return result.next();
+
+        } catch (SQLException ex) {
+            ex.getMessage();
+        }
+        return false;
+    }
 
     @Override
     public void insert(City dto) {

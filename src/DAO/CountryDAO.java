@@ -86,6 +86,19 @@ public class CountryDAO extends DAO<Country> {
         }
         return countries;
     }
+    
+    public Boolean doesCountryExist(String country){
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT " + country + " FROM country")) {
+            
+            ResultSet result = stmt.executeQuery();
+            
+            return result.next();
+            
+        } catch (SQLException ex){
+            ex.getMessage();
+        }
+        return false;
+    }
 
     @Override
     public void insert(Country dto) {

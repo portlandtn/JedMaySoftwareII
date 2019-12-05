@@ -19,15 +19,12 @@ package Controller;
 
 import DAO.CustomerDAO;
 import Model.Customer;
-import Model.User;
 import Utilities.DatabaseConnector;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
