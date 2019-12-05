@@ -53,7 +53,7 @@ public class DashboardController implements Initializable {
 
     @FXML
     void onActionShowCustomers(ActionEvent event) throws IOException {
-        displayScreen("/View/Customers.fxml", event);
+        displayScreen("/View/ManageCustomers.fxml", event);
     }
 
     @FXML

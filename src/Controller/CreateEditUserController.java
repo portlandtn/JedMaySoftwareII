@@ -20,6 +20,7 @@ package Controller;
 import Model.User;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
+import Utilities.DataProvider;
 import Utilities.Validator;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
@@ -125,7 +126,7 @@ public class CreateEditUserController implements Initializable {
         try (Connection conn = dc.createConnection()) {
 
             //if all is verified good, declare variables to construct a new User and insert into the table.
-            setUserTableVariables();
+            setVariablesFromScreen();
             User user = new User();
             user.setUserName(this.userName);
             user.setPassword(this.password);
@@ -143,13 +144,13 @@ public class CreateEditUserController implements Initializable {
         }
     }
 
-    private void setUserTableVariables() {
+    private void setVariablesFromScreen() {
         this.userName = userNameTextField.getText();
         this.password = passwordTextField.getText();
         this.active = activeCheckBox.isSelected();
-        this.createDate = new Date(System.currentTimeMillis());
+        this.createDate = DataProvider.getCurrentDate();
         this.createdBy = userNameTextField.getText();
-        this.lastUpdate = new Date(System.currentTimeMillis());
+        this.lastUpdate = DataProvider.getCurrentDate();
         this.lastUpdateBy = userNameTextField.getText();
     }
 
@@ -158,7 +159,7 @@ public class CreateEditUserController implements Initializable {
         try (Connection conn = dc.createConnection()) {
 
             //if all is verified good, declare variables to construct a new User and update the table.
-            setUserTableVariables();
+            setVariablesFromScreen();
             User user = new User();
             user.setUserId(existingUser.getUserId());
             user.setUserName(this.userName);

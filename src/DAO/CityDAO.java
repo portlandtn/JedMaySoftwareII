@@ -31,45 +31,61 @@ import javafx.collections.ObservableList;
  *
  * @author Jedidiah May
  */
-public class CityDAO extends DAO<City>{
-    
+public class CityDAO extends DAO<City> {
+
     Calendar calendar = Calendar.getInstance();
 
     public CityDAO(Connection conn) {
         super(conn);
     }
-    
-        @Override
+
+    @Override
     public ObservableList<City> query() {
-            ObservableList<City> cities = FXCollections.observableArrayList();
-            try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
-                    + "cityId, "
-                    + "city, "
-                    + "countryId, "
-                    + "createDate, "
-                    + "createdBy, "
-                    + "lastUpdate, "
-                    + "lastUpdatedBy "
-                    + "FROM user")) {
+        ObservableList<City> cities = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "cityId, "
+                + "city, "
+                + "countryId, "
+                + "createDate, "
+                + "createdBy, "
+                + "lastUpdate, "
+                + "lastUpdatedBy "
+                + "FROM user")) {
 
-                ResultSet result = stmt.executeQuery();
+            ResultSet result = stmt.executeQuery();
 
-                while (result.next()) {
-                    City city = new City();
-                    city.setCityId(result.getInt("cityId"));
-                    city.setCity(result.getString("city"));
-                    city.setCountryId(result.getInt("countryId"));
-                    city.setCreateDate(result.getDate("createDate"));
-                    city.setCreatedBy(result.getString("createdBy"));
-                    city.setLastUpdate(result.getDate("lastUpdate"));
-                    city.setLastUpdateBy(result.getString("lastUpdateby"));
-                    cities.add(city);
-                }
-
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
+            while (result.next()) {
+                City city = new City();
+                city.setCityId(result.getInt("cityId"));
+                city.setCity(result.getString("city"));
+                city.setCountryId(result.getInt("countryId"));
+                city.setCreateDate(result.getDate("createDate"));
+                city.setCreatedBy(result.getString("createdBy"));
+                city.setLastUpdate(result.getDate("lastUpdate"));
+                city.setLastUpdateBy(result.getString("lastUpdateby"));
+                cities.add(city);
             }
-            return cities;
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return cities;
+    }
+    
+    public ObservableList<String> queryAllCities() {
+        ObservableList<String> cities = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT city from city")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                cities.add(result.getString("city"));
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return cities;
     }
 
     @Override

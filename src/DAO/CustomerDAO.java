@@ -74,6 +74,46 @@ public class CustomerDAO extends DAO<Customer>{
         return customers;
     }
     
+    //This returns all of the customers with their complete addresses for the Manage Customers screen.
+    public ObservableList<Customer> queryWithAddress() {
+        ObservableList<Customer> customers = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "customerId, "
+                + "customerName, "
+                + "active, "
+                + "address, "
+                + "address2, "
+                + "city, "
+                + "postalCode, "
+                + "country, "
+                + "phone "
+                + "FROM customer JOIN address ON "
+                + "customer.addressId = address.addressID JOIN "
+                + "city ON address.cityId = city.cityId JOIN "
+                + "country ON city.countryId = country.countryID;")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Customer customer = new Customer();
+                customer.setCustomerId(result.getInt("customerId"));
+                customer.setCustomerName(result.getString("customerName"));
+                customer.setActive(result.getBoolean("active"));
+                customer.setAddress(result.getString("address"));
+                customer.setAddress2(result.getString("address2"));
+                customer.setCity(result.getString("city"));
+                customer.setPostalCode(result.getString("postalCode"));
+                customer.setCountry(result.getString("country"));
+                customer.setPhone(result.getString("phone"));
+                customers.add(customer);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return customers;
+    }
+    
     public Boolean doesCustomerExist(String customerName){
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "customerName "
@@ -89,6 +129,7 @@ public class CustomerDAO extends DAO<Customer>{
         return null;
     }
     
+    //Returns list of string to populate combo boxes
     public ObservableList<String> queryAllCustomers(){
         
         ObservableList<String> customerNames = FXCollections.observableArrayList();

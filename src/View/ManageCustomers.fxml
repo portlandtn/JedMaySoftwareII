@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="987.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CustomersController">
+<AnchorPane id="AnchorPane" prefHeight="500.0" prefWidth="1061.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ManageCustomersController">
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="337.0" prefWidth="309.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -28,10 +28,11 @@
                   </Label>
                </children>
             </HBox>
-            <TableView fx:id="calendarTableView" maxWidth="-Infinity" prefHeight="250.0" prefWidth="900.0">
+            <TableView fx:id="manageCustomersTableView" maxWidth="-Infinity" prefHeight="250.0" prefWidth="983.0">
               <columns>
                 <TableColumn fx:id="idColumnTableView" prefWidth="50.0" text="ID" />
                 <TableColumn fx:id="nameColumnTableView" prefWidth="150.0" text="Name" />
+                  <TableColumn fx:id="activeColumnTableView" prefWidth="75.0" text="Active" />
                   <TableColumn fx:id="addressColumnTableView" prefWidth="150.0" text="Address" />
                   <TableColumn fx:id="address2ColumnTableView" prefWidth="150.0" text="Address2" />
                   <TableColumn fx:id="cityColumnTableView" prefWidth="100.0" text="City" />

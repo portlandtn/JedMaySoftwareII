@@ -78,12 +78,12 @@ public class ManageUsersController implements Initializable {
     private TableColumn<User, Boolean> activeColumnTableView;
 
     @FXML
-    void onActionDeleteUser(ActionEvent event) throws SQLException, ClassNotFoundException {
+    void onActionDeleteUser(ActionEvent event) {
         try (Connection conn = dc.createConnection()) {
             userDAO.remove(manageUsersTableView.getSelectionModel().getSelectedItem().getUserId());
             refreshData();
             conn.close();
-        } catch (SQLException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -112,8 +112,6 @@ public class ManageUsersController implements Initializable {
             Parent scene = loader.getRoot();
             stage.setScene(new Scene(scene));
             stage.show();
-
-            displayScreen("/View/CreateEditUser.fxml", event);
 
         } catch (IOException | NullPointerException ex) {
             System.out.println(ex.getMessage());

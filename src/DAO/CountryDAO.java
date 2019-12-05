@@ -43,15 +43,13 @@ public class CountryDAO extends DAO<Country> {
     public ObservableList<Country> query() {
             ObservableList<Country> countries = FXCollections.observableArrayList();
             try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
-                    + "userId, "
-                    + "userName, "
-                    + "password, "
-                    + "active, "
+                    + "countryId, "
+                    + "country, "
                     + "createDate, "
                     + "createdBy, "
                     + "lastUpdate, "
                     + "lastUpdatedBy "
-                    + "FROM user")) {
+                    + "FROM country")) {
 
                 ResultSet result = stmt.executeQuery();
 
@@ -70,6 +68,23 @@ public class CountryDAO extends DAO<Country> {
                 System.out.println(ex.getMessage());
             }
             return countries;
+    }
+    
+    //Returns only a list of String of countries to populate combo boxes
+    public ObservableList<String> queryAllCountries() {
+        ObservableList<String> countries = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT country from country")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                countries.add(result.getString("country"));
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return countries;
     }
 
     @Override
