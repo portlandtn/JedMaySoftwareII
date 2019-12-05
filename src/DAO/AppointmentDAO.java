@@ -170,9 +170,9 @@ public class AppointmentDAO extends DAO<Appointment>{
 
     @Override
     public void insert(Appointment dto) {
-        try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO appointment "
-                + "customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateby "
-                + "VALUES ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO appointment ("
+                + "customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateby) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             stmt.setInt(1, dto.getCustomerId());
             stmt.setInt(2, dto.getUserId());
             stmt.setString(3, dto.getTitle());
@@ -204,7 +204,7 @@ public class AppointmentDAO extends DAO<Appointment>{
     
         @Override
     public void update(Appointment dto) {
-            try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE appointment SET"
+            try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE appointment SET "
                     + "customerId = ?, "
                     + "userId = ?, "
                     + "title = ?, "

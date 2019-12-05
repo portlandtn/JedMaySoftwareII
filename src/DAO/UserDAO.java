@@ -173,7 +173,7 @@ public class UserDAO extends DAO<User> {
     @Override
     public void update(User dto) {
 
-        try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE user SET"
+        try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE user SET "
                 + "userName = ?, "
                 + "password = ?, "
                 + "active = ?, "
@@ -193,8 +193,8 @@ public class UserDAO extends DAO<User> {
 
     @Override
     public void insert(User dto) {
-        try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO user "
-                + "userName, password, active, createDate, createdBy, lastUpdate, lastUpdateby VALUES ?, ?, ?, ?, ?, ?, ?")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO user ("
+                + "userName, password, active, createDate, createdBy, lastUpdate, lastUpdateby) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
             stmt.setString(1, dto.getUserName());
             stmt.setString(2, dto.getPassword());
             stmt.setBoolean(3, dto.getActive());

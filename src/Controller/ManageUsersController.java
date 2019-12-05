@@ -124,6 +124,7 @@ public class ManageUsersController implements Initializable {
     @FXML
     void onActionCreateUser(ActionEvent event) throws IOException {
         CreateEditUserController.isEditing = false;
+        CreateEditUserController.previousPath = "/View/ManageUsers.fxml";
         displayScreen("/View/CreateEditUser.fxml", event);
     }
 

@@ -74,8 +74,8 @@ public class CountryDAO extends DAO<Country> {
 
     @Override
     public void insert(Country dto) {
-        try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO country "
-                + "country, createDate, createdBy, lastUpdate, lastUpdateby VALUES ?, ?, ?, ?, ?")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO country ("
+                + "country, createDate, createdBy, lastUpdate, lastUpdateby) VALUES (?, ?, ?, ?, ?)")) {
             stmt.setString(1, dto.getCountry());
             stmt.setDate(2, DataProvider.getCurrentDate());
             stmt.setString(3, DataProvider.getCurrentUser());
@@ -98,7 +98,7 @@ public class CountryDAO extends DAO<Country> {
     
     @Override
     public void update(Country dto) {
-        try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE country SET"
+        try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE country SET "
                 + "country = ?, "
                 + "lastUpdate = ?, "
                 + "lastUpdateBy = ? "

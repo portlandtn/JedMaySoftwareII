@@ -107,8 +107,8 @@ public class CustomerDAO extends DAO<Customer>{
 
     @Override
     public void insert(Customer dto) {
-        try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO Customer "
-                + "customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateby VALUES ?, ?, ?, ?, ?, ?, ?")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO Customer ("
+                + "customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateby) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
             stmt.setString(1, dto.getCustomerName());
             stmt.setInt(2, dto.getAddressId());
             stmt.setBoolean(3, dto.getActive());
@@ -135,7 +135,7 @@ public class CustomerDAO extends DAO<Customer>{
     @Override
     public void update(Customer dto) {
 
-        try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE customer SET"
+        try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE customer SET "
                 + "customerName = ?, "
                 + "addressId = ?, "
                 + "active = ?, "
