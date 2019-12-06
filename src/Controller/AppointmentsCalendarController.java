@@ -57,6 +57,9 @@ public class AppointmentsCalendarController implements Initializable {
 
     @FXML
     private RadioButton weekRadioButton;
+    
+    @FXML
+    private TextField searchTextField;
 
     @FXML
     private TableView<Appointment> calendarAppointmentTableView;
@@ -108,6 +111,11 @@ public class AppointmentsCalendarController implements Initializable {
 
     @FXML
     void onActionDeleteAppointment(ActionEvent event) {
+
+    }
+    
+    @FXML
+    void onActionSearch(ActionEvent event) {
 
     }
 

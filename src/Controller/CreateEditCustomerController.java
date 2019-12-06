@@ -23,6 +23,7 @@ import DAO.CustomerDAO;
 import Model.City;
 import Model.Country;
 import Model.Customer;
+import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
 import Utilities.Validator;
 import com.mysql.jdbc.Connection;
@@ -57,7 +58,7 @@ public class CreateEditCustomerController implements Initializable {
     Customer customerToUpdate = new Customer();
 
     private String customerName, address, address2, city, country, postalCode, phone, createdBy, lastUpdateBy;
-    private int customerId, addressId, cityId, countryid;
+    private int customerId, addressId, cityId, countryId;
     private Date createDate, lastUpdate;
     private Boolean active;
 
@@ -167,44 +168,46 @@ public class CreateEditCustomerController implements Initializable {
         this.active = activeCheckBox.isSelected();
     }
 
+    private void alertToSaveNewCountry() {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Create New Country?");
+        alert.setContentText("The country entered does not exist in the database. Are you sure you want to create a new country?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            saveNewCountry();
+        }
+    }
+
+    private void alertToSaveNewCity() {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Create New City?");
+        alert.setContentText("The city entered does not exist in the database. Are you sure you want to create a new city?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            saveNewCity();
+        }
+    }
+
     private void updateExistingCustomer(Customer customerToUpdate) {
-        
+
         try (Connection conn = dc.createConnection()) {
 
             if (!countryDAO.doesCountryExist(country)) {
-
-                Alert alert = new Alert(AlertType.CONFIRMATION);
-                alert.setTitle("Create New Country?");
-                alert.setContentText("The country entered does not exist in the database. Are you sure you want to create a new country?");
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                    saveNewCountry();
-                } else {
-                    return;
-                }
+                alertToSaveNewCountry();
             }
 
             if (!cityDAO.doesCityExist(city)) {
-                Alert alert = new Alert(AlertType.CONFIRMATION);
-                alert.setTitle("Create New City?");
-                alert.setContentText("The city entered does not exist in the database. Are you sure you want to create a new city?");
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                    saveNewCity();
-                } else {
-                    return;
-                }
+                alertToSaveNewCity();
             }
 
-            customerToUpdate.setCustomerId(this.customerId);
-            customerToUpdate.setCustomerName(this.customerName);
+            customerToUpdate.setCustomerName(customerNameTextField.getText());
             customerToUpdate.setAddressId(this.addressId);
             customerToUpdate.setActive(this.active);
             customerToUpdate.setCreateDate(this.createDate);
             customerToUpdate.setCreatedBy(this.createdBy);
             customerToUpdate.setLastUpdate(this.lastUpdate);
             customerToUpdate.setLastUpdateBy(this.lastUpdateBy);
-            
+
             customerDAO.update(customerToUpdate);
             conn.close();
 
@@ -214,34 +217,17 @@ public class CreateEditCustomerController implements Initializable {
     }
 
     private void saveNewCustomer() {
-        
-            setVariablesFromScreen();
-            
+
+        setVariablesFromScreen();
+
         try (Connection conn = dc.createConnection()) {
-            
-            if (!countryDAO.doesCountryExist(country)){
-                
-                Alert alert = new Alert(AlertType.CONFIRMATION);
-                alert.setTitle("Create New Country?");
-                alert.setContentText("The country entered does not exist in the database. Are you sure you want to create a new country?");
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                    saveNewCountry();
-                } else {
-                    return;
-                }
+
+            if (!countryDAO.doesCountryExist(country)) {
+                alertToSaveNewCountry();
             }
-            
-            if (!cityDAO.doesCityExist(city)){
-                Alert alert = new Alert(AlertType.CONFIRMATION);
-                alert.setTitle("Create New City?");
-                alert.setContentText("The city entered does not exist in the database. Are you sure you want to create a new city?");
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                    saveNewCity();
-                } else {
-                    return;
-                }
+
+            if (!cityDAO.doesCityExist(city)) {
+                alertToSaveNewCity();
             }
 
             Customer cust = new Customer();
@@ -265,12 +251,12 @@ public class CreateEditCustomerController implements Initializable {
 
             setVariablesFromScreen();
             City city = new City();
-            city.setCity(this.city);
-            city.setCountryId(this.countryid);
-            city.setCreateDate(this.createDate);
-            city.setCreatedBy(this.createdBy);
-            city.setLastUpdate(this.lastUpdate);
-            city.setLastUpdateBy(this.lastUpdateBy);
+            city.setCity(cityComboBox.getValue());
+            city.setCountryId(this.countryId);
+            city.setCreateDate(DataProvider.getCurrentDate());
+            city.setCreatedBy(DataProvider.getCurrentUser());
+            city.setLastUpdate(DataProvider.getCurrentDate());
+            city.setLastUpdateBy(DataProvider.getCurrentUser());
 
             cityDAO.insert(city);
             conn.close();
@@ -285,13 +271,14 @@ public class CreateEditCustomerController implements Initializable {
 
             setVariablesFromScreen();
             Country country = new Country();
-            country.setCountry(this.country);
-            country.setCreateDate(this.createDate);
-            country.setCreatedBy(this.createdBy);
-            country.setLastUpdate(this.lastUpdate);
-            country.setLastUpdateBy(this.lastUpdateBy);
+            country.setCountry(countryComboBox.getValue());
+            country.setCreateDate(DataProvider.getCurrentDate());
+            country.setCreatedBy(DataProvider.getCurrentUser());
+            country.setLastUpdate(DataProvider.getCurrentDate());
+            country.setLastUpdateBy(DataProvider.getCurrentUser());
 
             countryDAO.insert(country);
+            this.countryId = countryDAO.getCountryId(countryComboBox.getValue());
             conn.close();
 
         } catch (SQLException | ClassNotFoundException ex) {

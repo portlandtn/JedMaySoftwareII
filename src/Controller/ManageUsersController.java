@@ -61,6 +61,11 @@ public class ManageUsersController implements Initializable {
 
     @FXML
     private RadioButton inactiveRadioButton;
+    
+    @FXML
+    void onActionAllSelected(ActionEvent event) {
+
+    }
 
     @FXML
     private TableView<User> manageUsersTableView;
@@ -92,7 +97,12 @@ public class ManageUsersController implements Initializable {
     void onActionDisplayDashboard(ActionEvent event) throws IOException {
         displayScreen("/View/Dashboard.fxml", event);
     }
+    
+    @FXML
+    void onActionSearch(ActionEvent event) {
 
+    }
+    
     @FXML
     void onActionEditUser(ActionEvent event) {
 

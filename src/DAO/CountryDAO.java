@@ -88,7 +88,7 @@ public class CountryDAO extends DAO<Country> {
     }
     
     public Boolean doesCountryExist(String country){
-        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT " + country + " FROM country")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT country FROM country WHERE country = '" + country + "'")) {
             
             ResultSet result = stmt.executeQuery();
             
@@ -98,6 +98,23 @@ public class CountryDAO extends DAO<Country> {
             ex.getMessage();
         }
         return false;
+    }
+    
+    public int getCountryId(String countryName) {
+
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT counryId FROM country WHERE country = '" + countryName + "'")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                return result.getInt("countryId");
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        return 0;
     }
 
     @Override

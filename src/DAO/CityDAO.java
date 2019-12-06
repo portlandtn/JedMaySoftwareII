@@ -72,9 +72,26 @@ public class CityDAO extends DAO<City> {
         return cities;
     }
     
+    public int getCityId(String cityName){
+        
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT cityId FROM city WHERE city = '" + cityName + "'")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                return result.getInt("cityId");
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        return 0;
+    }
+    
     public ObservableList<String> queryAllCities() {
         ObservableList<String> cities = FXCollections.observableArrayList();
-        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT city from city")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT city FROM city")) {
 
             ResultSet result = stmt.executeQuery();
 
@@ -89,7 +106,8 @@ public class CityDAO extends DAO<City> {
     }
     
     public Boolean doesCityExist(String city) {
-        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT " + city + " FROM city")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT city FROM city INNER JOIN country ON city.countryId = country.countryId"
+                + "WHERE city = '" + city + "'")) {
 
             ResultSet result = stmt.executeQuery();
 

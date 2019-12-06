@@ -45,6 +45,22 @@ public class ManageCustomersController implements Initializable {
     DatabaseConnector dc = new DatabaseConnector();
     CustomerDAO customerDAO;
     static String previousPath;
+    
+    @FXML
+    private RadioButton allRadioButton;
+
+    @FXML
+    private ToggleGroup activeInactiveRadioButtons;
+
+    @FXML
+    private RadioButton activeRadioButton;
+
+    @FXML
+    private RadioButton inactiveRadioButton;
+
+    @FXML
+    private TextField searchTextField;
+
 
     @FXML
     private TableView<Customer> manageCustomersTableView;
@@ -82,6 +98,26 @@ public class ManageCustomersController implements Initializable {
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
         }
+    }
+    
+    @FXML
+    void onActionActiveSelected(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onActionAllSelected(ActionEvent event) {
+
+    }
+    
+    @FXML
+    void onActionInactiveSelected(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onActionSearch(ActionEvent event) {
+
     }
 
     @FXML

@@ -3,8 +3,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -19,14 +22,26 @@
                   <Font size="22.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER" prefHeight="58.0" prefWidth="900.0" spacing="30.0">
+            <Label text="Customers">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER" maxWidth="-Infinity" prefHeight="58.0" prefWidth="600.0" spacing="30.0">
                <children>
-                  <Label text="Customers">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
+                  <RadioButton fx:id="allRadioButton" mnemonicParsing="false" onAction="#onActionAllSelected" selected="true" text="All">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="activeInactiveRadioButtons" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="activeRadioButton" mnemonicParsing="false" onAction="#onActionActiveSelected" text="Active" toggleGroup="$activeInactiveRadioButtons" />
+                  <RadioButton fx:id="inactiveRadioButton" mnemonicParsing="false" onAction="#onActionInactiveSelected" text="Inactive" toggleGroup="$activeInactiveRadioButtons" />
+                  <TextField fx:id="searchTextField" />
+                  <Button mnemonicParsing="false" onAction="#onActionSearch" text="Search" />
                </children>
+               <VBox.margin>
+                  <Insets left="275.0" />
+               </VBox.margin>
             </HBox>
             <TableView fx:id="manageCustomersTableView" maxWidth="-Infinity" prefHeight="250.0" prefWidth="983.0">
               <columns>
