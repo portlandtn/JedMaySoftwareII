@@ -17,7 +17,6 @@
  */
 package DAO;
 
-
 import Model.Customer;
 import Utilities.DataProvider;
 import java.sql.PreparedStatement;
@@ -31,8 +30,8 @@ import javafx.collections.ObservableList;
  *
  * @author Jedidiah May
  */
-public class CustomerDAO extends DAO<Customer>{
-    
+public class CustomerDAO extends DAO<Customer> {
+
     Calendar calendar = Calendar.getInstance();
 
     public CustomerDAO(com.mysql.jdbc.Connection conn) {
@@ -50,7 +49,7 @@ public class CustomerDAO extends DAO<Customer>{
                 + "createDate, "
                 + "createdBy, "
                 + "lastUpdate, "
-                + "lastUpdatedBy "
+                + "lastUpdateBy "
                 + "FROM customer")) {
 
             ResultSet result = stmt.executeQuery();
@@ -73,7 +72,7 @@ public class CustomerDAO extends DAO<Customer>{
         }
         return customers;
     }
-    
+
     //This returns all of the customers with their complete addresses for the Manage Customers screen.
     public ObservableList<Customer> queryWithAddress() {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
@@ -88,15 +87,15 @@ public class CustomerDAO extends DAO<Customer>{
                 + "country, "
                 + "phone "
                 + "FROM customer JOIN address ON "
-                + "customer.addressId = address.addressID JOIN "
+                + "customer.addressId = address.addressId JOIN "
                 + "city ON address.cityId = city.cityId JOIN "
-                + "country ON city.countryId = country.countryID;")) {
+                + "country ON city.countryId = country.countryId;")) {
 
             ResultSet result = stmt.executeQuery();
 
             while (result.next()) {
                 Customer customer = new Customer();
-                customer.setCustomerId(result.getInt("customerId"));
+                customer.setCustomerId(result.getInt("customer.customerId"));
                 customer.setCustomerName(result.getString("customerName"));
                 customer.setActive(result.getBoolean("active"));
                 customer.setAddress(result.getString("address"));
@@ -113,14 +112,14 @@ public class CustomerDAO extends DAO<Customer>{
         }
         return customers;
     }
-    
-    public Boolean doesCustomerExist(String customerName){
+
+    public Boolean doesCustomerExist(String customerName) {
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "customerName "
                 + "FROM customer WHERE customerName = '" + customerName + "'")) {
 
             ResultSet result = stmt.executeQuery();
-            
+
             return result.next();
 
         } catch (SQLException ex) {
@@ -128,22 +127,142 @@ public class CustomerDAO extends DAO<Customer>{
         }
         return null;
     }
-    
+
     //Returns list of string to populate combo boxes
-    public ObservableList<String> queryAllCustomers(){
-        
+    public ObservableList<String> queryAllCustomers() {
+
         ObservableList<String> customerNames = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT customerName FROM customer")) {
 
             ResultSet result = stmt.executeQuery();
 
-            while(result.next()){
+            while (result.next()) {
                 customerNames.add(result.getString("customerName"));
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         return customerNames;
+    }
+
+    public ObservableList<Customer> lookupCustomer(int id) {
+        ObservableList<Customer> customers = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "customerId, "
+                + "customerName, "
+                + "active, "
+                + "address, "
+                + "address2, "
+                + "city, "
+                + "postalCode, "
+                + "country, "
+                + "phone "
+                + "FROM customer JOIN address ON "
+                + "customer.addressId = address.addressID JOIN "
+                + "city ON address.cityId = city.cityId JOIN "
+                + "country ON city.countryId = country.countryID "
+                + "WHERE customer.customerId like '" + id + "'")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Customer cust = new Customer();
+                cust.setCustomerId(result.getInt("customer.customerId"));
+                cust.setCustomerName(result.getString("customerName"));
+                cust.setActive(result.getBoolean("active"));
+                cust.setAddress(result.getString("address"));
+                cust.setAddress2(result.getString("address2"));
+                cust.setCity(result.getString("city"));
+                cust.setPostalCode(result.getString("postalCode"));
+                cust.setCountry(result.getString("country"));
+                cust.setPhone(result.getString("phone"));
+                customers.add(cust);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return customers;
+    }
+
+    public ObservableList<Customer> lookupCustomer(String customerName) {
+        ObservableList<Customer> customers = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "customerId, "
+                + "customerName, "
+                + "active, "
+                + "address, "
+                + "address2, "
+                + "city, "
+                + "postalCode, "
+                + "country, "
+                + "phone "
+                + "FROM customer JOIN address ON "
+                + "customer.addressId = address.addressID JOIN "
+                + "city ON address.cityId = city.cityId JOIN "
+                + "country ON city.countryId = country.countryID "
+                + "WHERE customer.customerName like '" + customerName + "%'")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Customer cust = new Customer();
+                cust.setCustomerId(result.getInt("customer.customerId"));
+                cust.setCustomerName(result.getString("customerName"));
+                cust.setActive(result.getBoolean("active"));
+                cust.setAddress(result.getString("address"));
+                cust.setAddress2(result.getString("address2"));
+                cust.setCity(result.getString("city"));
+                cust.setPostalCode(result.getString("postalCode"));
+                cust.setCountry(result.getString("country"));
+                cust.setPhone(result.getString("phone"));
+                customers.add(cust);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return customers;
+    }
+
+    public ObservableList<Customer> queryActiveInactive(Boolean active) {
+        ObservableList<Customer> customers = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "customerId, "
+                + "customerName, "
+                + "active, "
+                + "address, "
+                + "address2, "
+                + "city, "
+                + "postalCode, "
+                + "country, "
+                + "phone "
+                + "FROM customer JOIN address ON "
+                + "customer.addressId = address.addressId JOIN "
+                + "city ON address.cityId = city.cityId JOIN "
+                + "country ON city.countryId = country.countryId "
+                + "WHERE customer.active = " + active + "")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Customer cust = new Customer();
+                cust.setCustomerId(result.getInt("customer.customerId"));
+                cust.setCustomerName(result.getString("customerName"));
+                cust.setActive(result.getBoolean("active"));
+                cust.setAddress(result.getString("address"));
+                cust.setAddress2(result.getString("address2"));
+                cust.setCity(result.getString("city"));
+                cust.setPostalCode(result.getString("postalCode"));
+                cust.setCountry(result.getString("country"));
+                cust.setPhone(result.getString("phone"));
+                customers.add(cust);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return customers;
     }
 
     @Override
@@ -165,7 +284,7 @@ public class CustomerDAO extends DAO<Customer>{
 
     @Override
     public void remove(int id) {
-        
+
         try (PreparedStatement stmt = this.conn.prepareStatement("DELETE FROM customer WHERE customerId = '" + id + "'")) {
             stmt.executeUpdate();
         } catch (SQLException ex) {
@@ -183,7 +302,7 @@ public class CustomerDAO extends DAO<Customer>{
                 + "lastUpdate = ?, "
                 + "lastUpdateBy = ? "
                 + "WHERE customerId = '" + dto.getCustomerId() + "'")) {
-            
+
             stmt.setString(1, dto.getCustomerName());
             stmt.setInt(2, dto.getAddressId());
             stmt.setBoolean(3, dto.getActive());

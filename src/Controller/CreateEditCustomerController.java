@@ -168,36 +168,16 @@ public class CreateEditCustomerController implements Initializable {
         this.active = activeCheckBox.isSelected();
     }
 
-    private void alertToSaveNewCountry() {
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle("Create New Country?");
-        alert.setContentText("The country entered does not exist in the database. Are you sure you want to create a new country?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
-            saveNewCountry();
-        }
-    }
-
-    private void alertToSaveNewCity() {
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle("Create New City?");
-        alert.setContentText("The city entered does not exist in the database. Are you sure you want to create a new city?");
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK) {
-            saveNewCity();
-        }
-    }
-
     private void updateExistingCustomer(Customer customerToUpdate) {
 
         try (Connection conn = dc.createConnection()) {
 
             if (!countryDAO.doesCountryExist(country)) {
-                alertToSaveNewCountry();
+                saveNewCountry();
             }
 
-            if (!cityDAO.doesCityExist(city)) {
-                alertToSaveNewCity();
+            if (!cityDAO.doesCityExist(cityComboBox.getValue(), this.countryId)) {
+                saveNewCity();
             }
 
             customerToUpdate.setCustomerName(customerNameTextField.getText());
@@ -223,11 +203,11 @@ public class CreateEditCustomerController implements Initializable {
         try (Connection conn = dc.createConnection()) {
 
             if (!countryDAO.doesCountryExist(country)) {
-                alertToSaveNewCountry();
+                saveNewCountry();
             }
 
-            if (!cityDAO.doesCityExist(city)) {
-                alertToSaveNewCity();
+            if (!cityDAO.doesCityExist(cityComboBox.getValue(), this.countryId)) {
+                saveNewCity();
             }
 
             Customer cust = new Customer();
@@ -278,6 +258,7 @@ public class CreateEditCustomerController implements Initializable {
             country.setLastUpdateBy(DataProvider.getCurrentUser());
 
             countryDAO.insert(country);
+            
             this.countryId = countryDAO.getCountryId(countryComboBox.getValue());
             conn.close();
 

@@ -22,21 +22,32 @@ package Utilities;
  * @author Jedidiah May
  */
 public class Validator {
-    
+
     //Checks to see if an array of text is empty
-    public static Boolean isTextEntered(String[] textFields){
-        
-        for (String textField : textFields){
-            if(textField.trim().isEmpty()){
+    public static Boolean isTextEntered(String[] textFields) {
+
+        for (String textField : textFields) {
+            if (textField.trim().isEmpty()) {
                 return false;
             }
         }
         return true;
     }
-    
+
     //Checks to see if two strings match each other
-    public static Boolean doStringsMatch(String text1, String text2){
+    public static Boolean doStringsMatch(String text1, String text2) {
         return text1.trim().equals(text2.trim());
     }
     
+    //Determines if the search string is a number for code flow.
+    public static Boolean isSearchStringNumber(String search) {
+
+        try {
+            int aNumber = Integer.parseInt(search);
+            return true;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
+
 }

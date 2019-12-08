@@ -74,8 +74,8 @@ public class UserDAO extends DAO<User> {
         }
         return users;
     }
-    
-    public ObservableList<String> queryAllUsers(){
+
+    public ObservableList<String> queryAllUsers() {
         ObservableList<String> users = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "userName "
@@ -83,7 +83,7 @@ public class UserDAO extends DAO<User> {
 
             ResultSet result = stmt.executeQuery();
 
-            while (result.next()){
+            while (result.next()) {
                 users.add(result.getString("UserName"));
             }
         } catch (SQLException ex) {
@@ -91,7 +91,7 @@ public class UserDAO extends DAO<User> {
         }
         return users;
     }
-    
+
     public ObservableList<User> queryActiveInactive(Boolean active) {
         ObservableList<User> users = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
@@ -168,6 +168,76 @@ public class UserDAO extends DAO<User> {
             System.out.println(ex.getMessage());
         }
         return false;
+    }
+
+    public ObservableList<User> lookupUser(int id) {
+        
+        ObservableList<User> users = FXCollections.observableArrayList();
+        
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "userId, "
+                + "userName, "
+                + "password, "
+                + "active, "
+                + "createDate, "
+                + "createdBy, "
+                + "lastUpdate, "
+                + "lastUpdateBy "
+                + "FROM user where userId like '" + id + "%'")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                User user = new User();
+                user.setUserId(result.getInt("userId"));
+                user.setUserName(result.getString("userName"));
+                user.setPassword(result.getString("password"));
+                user.setActive(result.getBoolean("active"));
+                user.setCreateDate(result.getDate("createDate"));
+                user.setCreatedBy(result.getString("createdBy"));
+                user.setLastUpdate(result.getDate("lastUpdate"));
+                user.setLastUpdateBy(result.getString("lastUpdateby"));
+                users.add(user);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return users;
+    }
+    
+    public ObservableList<User> lookupUser(String user) {
+        ObservableList<User> users = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "userId, "
+                + "userName, "
+                + "password, "
+                + "active, "
+                + "createDate, "
+                + "createdBy, "
+                + "lastUpdate, "
+                + "lastUpdateBy "
+                + "FROM user where userName like '" + user + "%'")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                User newUser = new User();
+                newUser.setUserId(result.getInt("userId"));
+                newUser.setUserName(result.getString("userName"));
+                newUser.setPassword(result.getString("password"));
+                newUser.setActive(result.getBoolean("active"));
+                newUser.setCreateDate(result.getDate("createDate"));
+                newUser.setCreatedBy(result.getString("createdBy"));
+                newUser.setLastUpdate(result.getDate("lastUpdate"));
+                newUser.setLastUpdateBy(result.getString("lastUpdateby"));
+                users.add(newUser);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return users;
     }
 
     @Override

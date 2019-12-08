@@ -105,9 +105,9 @@ public class CityDAO extends DAO<City> {
         return cities;
     }
     
-    public Boolean doesCityExist(String city) {
-        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT city FROM city INNER JOIN country ON city.countryId = country.countryId"
-                + "WHERE city = '" + city + "'")) {
+    public Boolean doesCityExist(String city, int countryId) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT city FROM city JOIN country ON city.countryId = country.countryId"
+                + "WHERE city = '" + city + "'" + " AND city.countryId = " + countryId )) {
 
             ResultSet result = stmt.executeQuery();
 

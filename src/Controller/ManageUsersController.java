@@ -20,11 +20,14 @@ package Controller;
 import Model.User;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
+import Utilities.Validator;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,6 +36,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -61,11 +65,9 @@ public class ManageUsersController implements Initializable {
 
     @FXML
     private RadioButton inactiveRadioButton;
-    
-    @FXML
-    void onActionAllSelected(ActionEvent event) {
 
-    }
+    @FXML
+    private TextField searchTextField;
 
     @FXML
     private TableView<User> manageUsersTableView;
@@ -84,25 +86,56 @@ public class ManageUsersController implements Initializable {
 
     @FXML
     void onActionDeleteUser(ActionEvent event) {
-        try (Connection conn = dc.createConnection()) {
-            userDAO.remove(manageUsersTableView.getSelectionModel().getSelectedItem().getUserId());
-            refreshData();
-            conn.close();
-        } catch (SQLException | ClassNotFoundException ex) {
-            System.out.println(ex.getMessage());
+
+        Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to delete this user?");
+
+        ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
+
+        if (!ButtonType.CANCEL.equals(result)) {
+            try (Connection conn = dc.createConnection()) {
+                userDAO.remove(manageUsersTableView.getSelectionModel().getSelectedItem().getUserId());
+                refreshData();
+                conn.close();
+            } catch (SQLException | ClassNotFoundException ex) {
+                System.out.println(ex.getMessage());
+            }
         }
+
     }
 
     @FXML
     void onActionDisplayDashboard(ActionEvent event) throws IOException {
         displayScreen("/View/Dashboard.fxml", event);
     }
-    
+
     @FXML
     void onActionSearch(ActionEvent event) {
+        ObservableList<User> userSearchResultsList = FXCollections.observableArrayList();
 
+        String searchText = searchTextField.getText();
+
+        if (searchText.isEmpty()) {
+            manageUsersTableView.setItems(userDAO.query());
+            return;
+        }
+
+        userSearchResultsList.clear();
+
+        if (Validator.isSearchStringNumber(searchTextField.getText())) {
+            userSearchResultsList = userDAO.lookupUser(Integer.parseInt(searchText));
+
+        } else {
+            userSearchResultsList = userDAO.lookupUser(searchText);
+        }
+
+        if (userSearchResultsList.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "A user was not found.");
+            alert.showAndWait();
+        } else {
+            manageUsersTableView.setItems(userSearchResultsList);
+        }
     }
-    
+
     @FXML
     void onActionEditUser(ActionEvent event) {
 
@@ -123,8 +156,11 @@ public class ManageUsersController implements Initializable {
             stage.setScene(new Scene(scene));
             stage.show();
 
-        } catch (IOException | NullPointerException ex) {
+        } catch (IOException ex) {
             System.out.println(ex.getMessage());
+        } catch (NullPointerException ex) {
+            Alert alert = new Alert(AlertType.ERROR, "You must select a user to edit.");
+            alert.showAndWait();
         }
 
     }
@@ -138,16 +174,19 @@ public class ManageUsersController implements Initializable {
 
     @FXML
     void onActionSelectActive(ActionEvent event) {
+        searchTextField.setText("");
         refreshData();
     }
 
     @FXML
     void onActionSelectAll(ActionEvent event) {
+        searchTextField.setText("");
         refreshData();
     }
 
     @FXML
     void onActionSelectInactive(ActionEvent event) {
+        searchTextField.setText("");
         refreshData();
     }
 
@@ -174,7 +213,7 @@ public class ManageUsersController implements Initializable {
             } else {
                 allUsers = userDAO.queryActiveInactive(false);
             }
-            
+
             //Setup the user table with data from the database.
             conn.close();
             manageUsersTableView.setItems(allUsers);
