@@ -50,7 +50,7 @@ public class CustomerDAO extends DAO<Customer> {
                 + "createdBy, "
                 + "lastUpdate, "
                 + "lastUpdateBy "
-                + "FROM customer")) {
+                + "FROM customer ORDER BY customer.customerId")) {
 
             ResultSet result = stmt.executeQuery();
 
@@ -89,7 +89,7 @@ public class CustomerDAO extends DAO<Customer> {
                 + "FROM customer JOIN address ON "
                 + "customer.addressId = address.addressId JOIN "
                 + "city ON address.cityId = city.cityId JOIN "
-                + "country ON city.countryId = country.countryId;")) {
+                + "country ON city.countryId = country.countryId ORDER BY customer.customerId;")) {
 
             ResultSet result = stmt.executeQuery();
 
@@ -161,7 +161,7 @@ public class CustomerDAO extends DAO<Customer> {
                 + "customer.addressId = address.addressID JOIN "
                 + "city ON address.cityId = city.cityId JOIN "
                 + "country ON city.countryId = country.countryID "
-                + "WHERE customer.customerId like '" + id + "'")) {
+                + "WHERE customer.customerId like '" + id + "' ORDER BY customer.customerId")) {
 
             ResultSet result = stmt.executeQuery();
 
@@ -201,7 +201,8 @@ public class CustomerDAO extends DAO<Customer> {
                 + "customer.addressId = address.addressID JOIN "
                 + "city ON address.cityId = city.cityId JOIN "
                 + "country ON city.countryId = country.countryID "
-                + "WHERE customer.customerName like '" + customerName + "%'")) {
+                + "WHERE customer.customerName like '" + customerName + "%' "
+                + "ORDER BY customer.customerId")) {
 
             ResultSet result = stmt.executeQuery();
 
@@ -241,7 +242,7 @@ public class CustomerDAO extends DAO<Customer> {
                 + "customer.addressId = address.addressId JOIN "
                 + "city ON address.cityId = city.cityId JOIN "
                 + "country ON city.countryId = country.countryId "
-                + "WHERE customer.active = " + active + "")) {
+                + "WHERE customer.active = " + active + " ORDER BY customer.customerId")) {
 
             ResultSet result = stmt.executeQuery();
 
