@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,7 +38,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 /**
@@ -127,7 +125,7 @@ public class CreateEditCustomerController implements Initializable {
             postalCodeTextField.getText()};
 
         if (!Validator.isTextEntered(textFields)) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "At a minimum, you must have a customer name, address, city, country, and postal code entered to save.");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "At a minimum, you must have a Customer Name, Address, City, Country, and Postal Code entered to save.");
             alert.showAndWait();
             return false;
         } else {
@@ -213,7 +211,6 @@ public class CreateEditCustomerController implements Initializable {
 
             Customer cust = new Customer();
             cust.setCustomerName(this.customerName);
-            cust.setAddressId(this.addressId);
             cust.setActive(this.active);
             cust.setCreateDate(this.createDate);
             cust.setCreatedBy(this.createdBy);
@@ -288,6 +285,8 @@ public class CreateEditCustomerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        //Possibly disable City until a Country is selected. Use a query to pull up cities saved in that Country.
         cityComboBox.setItems(cityDAO.queryAllCities());
         countryComboBox.setItems(countryDAO.queryAllCountries());
     }

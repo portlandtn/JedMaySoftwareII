@@ -80,7 +80,7 @@ public class CustomerDAO extends DAO<Customer> {
                 + "customer.customerId, "
                 + "customerName, "
                 + "active, "
-                + "address.addressId, "
+                + "customer.addressId, "
                 + "address, "
                 + "address2, "
                 + "city.city, "
@@ -100,7 +100,7 @@ public class CustomerDAO extends DAO<Customer> {
                 Customer customer = new Customer();
                 customer.setCustomerId(result.getInt("customer.customerId"));
                 customer.setCustomerName(result.getString("customerName"));
-                customer.setAddressId(result.getInt("address.addressId"));
+                customer.setAddressId(result.getInt("customer.addressId"));
                 customer.setCountryId(result.getInt("country.countryId"));
                 customer.setCityId(result.getInt("city.cityId"));
                 customer.setActive(result.getBoolean("active"));
@@ -156,6 +156,7 @@ public class CustomerDAO extends DAO<Customer> {
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "customerId, "
                 + "customerName, "
+                + "customer.addressId, "
                 + "active, "
                 + "address, "
                 + "address2, "
@@ -175,6 +176,7 @@ public class CustomerDAO extends DAO<Customer> {
                 Customer cust = new Customer();
                 cust.setCustomerId(result.getInt("customer.customerId"));
                 cust.setCustomerName(result.getString("customerName"));
+                cust.setAddressId(result.getInt("customer.addressId"));
                 cust.setActive(result.getBoolean("active"));
                 cust.setAddress(result.getString("address"));
                 cust.setAddress2(result.getString("address2"));
@@ -196,6 +198,7 @@ public class CustomerDAO extends DAO<Customer> {
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "customerId, "
                 + "customerName, "
+                + "customer.addressId, "
                 + "active, "
                 + "address, "
                 + "address2, "
@@ -216,6 +219,7 @@ public class CustomerDAO extends DAO<Customer> {
                 Customer cust = new Customer();
                 cust.setCustomerId(result.getInt("customer.customerId"));
                 cust.setCustomerName(result.getString("customerName"));
+                cust.setAddressId(result.getInt("customer.addressId"));
                 cust.setActive(result.getBoolean("active"));
                 cust.setAddress(result.getString("address"));
                 cust.setAddress2(result.getString("address2"));
@@ -237,6 +241,7 @@ public class CustomerDAO extends DAO<Customer> {
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "customerId, "
                 + "customerName, "
+                + "customer.addressId, "
                 + "active, "
                 + "address, "
                 + "address2, "
@@ -256,6 +261,7 @@ public class CustomerDAO extends DAO<Customer> {
                 Customer cust = new Customer();
                 cust.setCustomerId(result.getInt("customer.customerId"));
                 cust.setCustomerName(result.getString("customerName"));
+                cust.setAddressId(result.getInt("customer.addressId"));
                 cust.setActive(result.getBoolean("active"));
                 cust.setAddress(result.getString("address"));
                 cust.setAddress2(result.getString("address2"));
@@ -274,7 +280,7 @@ public class CustomerDAO extends DAO<Customer> {
 
     @Override
     public void insert(Customer dto) {
-        try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO Customer ("
+        try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO customer ("
                 + "customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateby) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
             stmt.setString(1, dto.getCustomerName());
             stmt.setInt(2, dto.getAddressId());

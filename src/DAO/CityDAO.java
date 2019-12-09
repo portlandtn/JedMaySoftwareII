@@ -91,7 +91,7 @@ public class CityDAO extends DAO<City> {
     
     public ObservableList<String> queryAllCities() {
         ObservableList<String> cities = FXCollections.observableArrayList();
-        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT city FROM city")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT DISTINCT city FROM city GROUP BY city")) {
 
             ResultSet result = stmt.executeQuery();
 

@@ -73,7 +73,7 @@ public class CountryDAO extends DAO<Country> {
     //Returns only a list of String of countries to populate combo boxes
     public ObservableList<String> queryAllCountries() {
         ObservableList<String> countries = FXCollections.observableArrayList();
-        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT country from country")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT DISTINCT country from country GROUP BY country")) {
 
             ResultSet result = stmt.executeQuery();
 
