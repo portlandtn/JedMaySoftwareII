@@ -89,9 +89,28 @@ public class CityDAO extends DAO<City> {
         return 0;
     }
     
-    public ObservableList<String> queryAllCities() {
+    public ObservableList<String> queryCities() {
         ObservableList<String> cities = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT DISTINCT city FROM city GROUP BY city")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                cities.add(result.getString("city"));
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return cities;
+    }
+    
+    public ObservableList<String> queryCities(String countryName) {
+        ObservableList<String> cities = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT DISTINCT city FROM city "
+                + "JOIN country ON city.countryId = country.countryId "
+                + "GROUP BY city, country "
+                + "HAVING country = '" + countryName + "'")) {
 
             ResultSet result = stmt.executeQuery();
 

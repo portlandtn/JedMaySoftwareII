@@ -46,15 +46,15 @@
                   <Label text="Customer Name:" />
                   <Label text="Address:" GridPane.rowIndex="1" />
                   <Label text="Address 2:" GridPane.rowIndex="2" />
-                  <Label text="City:" GridPane.rowIndex="3" />
-                  <Label text="Country" GridPane.rowIndex="4" />
+                  <Label text="Country" GridPane.rowIndex="3" />
+                  <Label text="City:" GridPane.rowIndex="4" />
                   <Label text="Postal Code" GridPane.rowIndex="5" />
                   <Label text="Phone" GridPane.rowIndex="6" />
                   <TextField fx:id="customerNameTextField" GridPane.columnIndex="1" />
                   <TextField fx:id="addressTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <TextField fx:id="address2TextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <ComboBox fx:id="cityComboBox" editable="true" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <ComboBox fx:id="countryComboBox" editable="true" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <ComboBox fx:id="countryComboBox" editable="true" onAction="#onActionCountrySelected" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <ComboBox fx:id="cityComboBox" disable="true" editable="true" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                   <TextField fx:id="postalCodeTextField" maxWidth="-Infinity" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                   <TextField fx:id="phoneTextField" maxWidth="-Infinity" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                </children>
@@ -62,7 +62,7 @@
                   <Insets left="15.0" right="15.0" top="15.0" />
                </VBox.margin>
             </GridPane>
-            <CheckBox fx:id="activeCheckBox" mnemonicParsing="false" text="Active">
+            <CheckBox fx:id="activeCheckBox" mnemonicParsing="false" selected="true" text="Active">
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>

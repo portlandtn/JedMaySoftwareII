@@ -99,6 +99,17 @@ public class CreateEditCustomerController implements Initializable {
     void onActionCancel(ActionEvent event) throws IOException {
         displayScreen(previousPath, event);
     }
+    
+    @FXML
+    void onActionCountrySelected(ActionEvent event) {
+        cityComboBox.setValue("");
+        if (countryComboBox.getValue().isEmpty()){
+            cityComboBox.setDisable(true);
+            return;
+        }
+        cityComboBox.setDisable(false);
+        cityComboBox.setItems(cityDAO.queryCities(countryComboBox.getValue()));
+    }
 
     @FXML
     void onActionSave(ActionEvent event) throws IOException {
@@ -285,9 +296,7 @@ public class CreateEditCustomerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        //Possibly disable City until a Country is selected. Use a query to pull up cities saved in that Country.
-        cityComboBox.setItems(cityDAO.queryAllCities());
+
         countryComboBox.setItems(countryDAO.queryAllCountries());
     }
 }
