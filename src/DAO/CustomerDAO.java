@@ -77,14 +77,17 @@ public class CustomerDAO extends DAO<Customer> {
     public ObservableList<Customer> queryWithAddress() {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
-                + "customerId, "
+                + "customer.customerId, "
                 + "customerName, "
                 + "active, "
+                + "address.addressId, "
                 + "address, "
                 + "address2, "
-                + "city, "
+                + "city.city, "
+                + "city.cityId, "
+                + "country.countryId, "
                 + "postalCode, "
-                + "country, "
+                + "country.country, "
                 + "phone "
                 + "FROM customer JOIN address ON "
                 + "customer.addressId = address.addressId JOIN "
@@ -97,12 +100,15 @@ public class CustomerDAO extends DAO<Customer> {
                 Customer customer = new Customer();
                 customer.setCustomerId(result.getInt("customer.customerId"));
                 customer.setCustomerName(result.getString("customerName"));
+                customer.setAddressId(result.getInt("address.addressId"));
+                customer.setCountryId(result.getInt("country.countryId"));
+                customer.setCityId(result.getInt("city.cityId"));
                 customer.setActive(result.getBoolean("active"));
                 customer.setAddress(result.getString("address"));
                 customer.setAddress2(result.getString("address2"));
-                customer.setCity(result.getString("city"));
+                customer.setCity(result.getString("city.city"));
                 customer.setPostalCode(result.getString("postalCode"));
-                customer.setCountry(result.getString("country"));
+                customer.setCountry(result.getString("country.country"));
                 customer.setPhone(result.getString("phone"));
                 customers.add(customer);
             }

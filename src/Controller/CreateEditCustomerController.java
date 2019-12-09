@@ -17,9 +17,8 @@
  */
 package Controller;
 
-import DAO.CityDAO;
-import DAO.CountryDAO;
-import DAO.CustomerDAO;
+import DAO.*;
+import Model.Address;
 import Model.City;
 import Model.Country;
 import Model.Customer;
@@ -53,6 +52,7 @@ public class CreateEditCustomerController implements Initializable {
     CustomerDAO customerDAO;
     CityDAO cityDAO;
     CountryDAO countryDAO;
+    AddressDAO addressDAO;
     static String previousPath;
     static Boolean isEditing;
     Customer customerToUpdate = new Customer();
@@ -67,6 +67,7 @@ public class CreateEditCustomerController implements Initializable {
             this.customerDAO = new CustomerDAO(dc.createConnection());
             this.cityDAO = new CityDAO(dc.createConnection());
             this.countryDAO = new CountryDAO(dc.createConnection());
+            this.addressDAO = new AddressDAO(dc.createConnection());
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
         }
@@ -179,14 +180,14 @@ public class CreateEditCustomerController implements Initializable {
             if (!cityDAO.doesCityExist(cityComboBox.getValue(), this.countryId)) {
                 saveNewCity();
             }
-
+            
+            updateAddress();
+            
             customerToUpdate.setCustomerName(customerNameTextField.getText());
-            customerToUpdate.setAddressId(this.addressId);
-            customerToUpdate.setActive(this.active);
-            customerToUpdate.setCreateDate(this.createDate);
-            customerToUpdate.setCreatedBy(this.createdBy);
-            customerToUpdate.setLastUpdate(this.lastUpdate);
-            customerToUpdate.setLastUpdateBy(this.lastUpdateBy);
+            customerToUpdate.setAddressId(this.addressId);       
+            customerToUpdate.setActive(activeCheckBox.isSelected());
+            customerToUpdate.setLastUpdate(DataProvider.getCurrentDate());
+            customerToUpdate.setLastUpdateBy(DataProvider.getCurrentUser());
 
             customerDAO.update(customerToUpdate);
             conn.close();
@@ -263,6 +264,24 @@ public class CreateEditCustomerController implements Initializable {
             conn.close();
 
         } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
+    private void updateAddress(){
+        try (Connection conn = dc.createConnection()){
+            
+            Address address = new Address();
+            address.setAddressId(this.addressId);
+            address.setAddress(addressTextField.getText());
+            address.setAddress2(address2TextField.getText());
+            address.setCityId(this.cityId);
+            address.setPhone(phoneTextField.getText());
+            address.setPostalCode(postalCodeTextField.getText());
+            
+            addressDAO.update(address);
+            
+        } catch (SQLException | ClassNotFoundException ex){
             System.out.println(ex.getMessage());
         }
     }

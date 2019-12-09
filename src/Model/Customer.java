@@ -24,7 +24,23 @@ import java.util.Date;
  */
 public class Customer implements I_POJO {
 
-    private int customerId, addressId;
+    private int customerId, addressId, countryId, cityId;
+
+    public int getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(int countryId) {
+        this.countryId = countryId;
+    }
+
+    public int getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(int cityId) {
+        this.cityId = cityId;
+    }
     private String customerName, address, address2, city, country, postalCode, phone, createdBy, lastUpdateBy;
 
     public String getAddress() {
