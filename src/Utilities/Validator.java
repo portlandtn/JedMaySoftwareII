@@ -43,6 +43,7 @@ public class Validator {
     public static Boolean isSearchStringNumber(String search) {
 
         try {
+            //Attempts to assign the string to an int variable. If there is an exception, it's not a number, and it falls through the catch.
             int aNumber = Integer.parseInt(search);
             return true;
         } catch (NumberFormatException ex) {

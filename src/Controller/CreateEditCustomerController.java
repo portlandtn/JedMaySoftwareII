@@ -289,6 +289,9 @@ public class CreateEditCustomerController implements Initializable {
             
             addressDAO.update(address);
             
+            conn.close();
+            
+            
         } catch (SQLException | ClassNotFoundException ex){
             System.out.println(ex.getMessage());
         }
