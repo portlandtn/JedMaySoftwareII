@@ -127,6 +127,7 @@ public class CreateEditCustomerController implements Initializable {
     }
 
     private Boolean canDataBeSaved() {
+        
         //Setup the string array that holds the text fields to verify that are not empty.
         String[] textFields = new String[]{
             customerNameTextField.getText(),
@@ -211,12 +212,13 @@ public class CreateEditCustomerController implements Initializable {
         setVariablesFromScreen();
 
         try (Connection conn = dc.createConnection()) {
+            setVariablesFromScreen();
 
             if (!countryDAO.doesCountryExist(country)) {
                 saveNewCountry();
             }
 
-            if (!cityDAO.doesCityExist(cityComboBox.getValue(), this.countryId)) {
+            if (!cityDAO.doesCityExist(cityComboBox.getValue(), this.countryId)) { //Where is the couuntry ID coming from?
                 saveNewCity();
             }
 
@@ -238,7 +240,6 @@ public class CreateEditCustomerController implements Initializable {
     private void saveNewCity() {
         try (Connection conn = dc.createConnection()) {
 
-            setVariablesFromScreen();
             City city = new City();
             city.setCity(cityComboBox.getValue());
             city.setCountryId(this.countryId);
@@ -258,7 +259,6 @@ public class CreateEditCustomerController implements Initializable {
     private void saveNewCountry() {
         try (Connection conn = dc.createConnection()) {
 
-            setVariablesFromScreen();
             Country country = new Country();
             country.setCountry(countryComboBox.getValue());
             country.setCreateDate(DataProvider.getCurrentDate());
