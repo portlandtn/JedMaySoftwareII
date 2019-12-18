@@ -43,12 +43,12 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label text="Customer Name:" />
-                  <Label text="Address:" GridPane.rowIndex="1" />
-                  <Label text="Address 2:" GridPane.rowIndex="2" />
-                  <Label text="Country" GridPane.rowIndex="3" />
-                  <Label text="City:" GridPane.rowIndex="4" />
-                  <Label text="Postal Code" GridPane.rowIndex="5" />
+                  <Label text="Customer Name *" />
+                  <Label text="Address *" GridPane.rowIndex="1" />
+                  <Label text="Address 2" GridPane.rowIndex="2" />
+                  <Label text="Country *" GridPane.rowIndex="3" />
+                  <Label text="City *" GridPane.rowIndex="4" />
+                  <Label text="Postal Code *" GridPane.rowIndex="5" />
                   <Label text="Phone" GridPane.rowIndex="6" />
                   <TextField fx:id="customerNameTextField" GridPane.columnIndex="1" />
                   <TextField fx:id="addressTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -62,12 +62,20 @@
                   <Insets left="15.0" right="15.0" top="15.0" />
                </VBox.margin>
             </GridPane>
-            <CheckBox fx:id="activeCheckBox" mnemonicParsing="false" selected="true" text="Active">
-               <VBox.margin>
-                  <Insets top="20.0" />
-               </VBox.margin>
-            </CheckBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="332.0" spacing="30.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="33.0" prefWidth="362.0" spacing="60.0">
+               <children>
+                  <Label contentDisplay="CENTER" text="* denotes required" textAlignment="CENTER">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                     <padding>
+                        <Insets left="15.0" />
+                     </padding>
+                  </Label>
+                  <CheckBox fx:id="activeCheckBox" mnemonicParsing="false" selected="true" text="Active" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="51.0" prefWidth="332.0" spacing="30.0">
                <children>
                   <Button minWidth="75.0" mnemonicParsing="false" onAction="#onActionCancel" text="Cancel" />
                   <Button minWidth="75.0" mnemonicParsing="false" onAction="#onActionSave" text="Save" />

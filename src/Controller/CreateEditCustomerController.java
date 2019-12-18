@@ -126,6 +126,7 @@ public class CreateEditCustomerController implements Initializable {
         displayScreen(previousPath, event);
     }
 
+    //simply a validator to make sure that data can be saved and doesn't violate any rules.
     private Boolean canDataBeSaved() {
         
         //Setup the string array that holds the text fields to verify that are not empty.
@@ -145,6 +146,7 @@ public class CreateEditCustomerController implements Initializable {
         }
     }
 
+    //helper method to display a screen.
     private void displayScreen(String path, ActionEvent event) throws IOException {
 
         Stage stage;
@@ -156,7 +158,9 @@ public class CreateEditCustomerController implements Initializable {
         stage.show();
     }
 
+    //Retrives a customer object from the previous screen (manage customers) to populate data on this screen.
     void sendCustomerDetails(Customer customer) {
+        //populate fields
         customerNameTextField.setText(customer.getCustomerName());
         addressTextField.setText(customer.getAddress());
         address2TextField.setText(customer.getAddress2());
@@ -165,9 +169,12 @@ public class CreateEditCustomerController implements Initializable {
         postalCodeTextField.setText(customer.getPostalCode());
         phoneTextField.setText(customer.getPhone());
         activeCheckBox.setSelected(customer.getActive());
+        
+        //Creates a customer object available for editing.
         this.customerToUpdate = customer;
     }
 
+    //sets field variables from the values entered on the screen
     private void setVariablesFromScreen() {
         this.customerName = customerNameTextField.getText();
         this.address = addressTextField.getText();
@@ -179,32 +186,38 @@ public class CreateEditCustomerController implements Initializable {
         this.active = activeCheckBox.isSelected();
     }
 
-    private void updateExistingCustomer(Customer customerToUpdate) {
+    private void updateExistingCustomer(Customer custToUpdate) {
 
         try (Connection conn = dc.createConnection()) {
 
+            //if the country does not exist, create a new country record in the country database
             if (!countryDAO.doesCountryExist(country)) {
                 saveNewCountry();
+                
+                //Assign the newly created country id to the country id field
+                this.countryId = countryDAO.getCountryId(countryComboBox.getValue());
             }
-
+            
+            //Checks to see if the city/country combination exists. If it does not exist, creates a record in the city database.
             if (!cityDAO.doesCityExist(cityComboBox.getValue(), this.countryId)) {
                 saveNewCity();
             }
             
             updateAddress();
             
-            customerToUpdate.setCustomerName(customerNameTextField.getText());
-            customerToUpdate.setAddressId(this.addressId);       
-            customerToUpdate.setActive(activeCheckBox.isSelected());
-            customerToUpdate.setLastUpdate(DataProvider.getCurrentDate());
-            customerToUpdate.setLastUpdateBy(DataProvider.getCurrentUser());
+            custToUpdate.setCustomerName(customerNameTextField.getText());
+            custToUpdate.setAddressId(this.addressId);       
+            custToUpdate.setActive(activeCheckBox.isSelected());
+            custToUpdate.setLastUpdate(DataProvider.getCurrentDate());
+            custToUpdate.setLastUpdateBy(DataProvider.getCurrentUser());
 
-            customerDAO.update(customerToUpdate);
+            customerDAO.update(custToUpdate);
             conn.close();
 
         } catch (SQLException | ClassNotFoundException ex) {
             System.out.println(ex.getMessage());
         }
+
     }
 
     private void saveNewCustomer() {
@@ -268,6 +281,7 @@ public class CreateEditCustomerController implements Initializable {
 
             countryDAO.insert(country);
             
+            //Sets the newly created country
             this.countryId = countryDAO.getCountryId(countryComboBox.getValue());
             conn.close();
 
