@@ -133,9 +133,24 @@ public class CityDAO extends DAO<City> {
             return result.next();
 
         } catch (SQLException ex) {
-            ex.getMessage();
+            System.out.println(ex.getMessage());
         }
         return false;
+    }
+    
+    public int getCountryIdFromCity(String city, String country){
+        
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT country.countryId FROM city JOIN country ON city.countryId = country.countryId"
+                + "WHERE city = '" + city + "'" + " AND country.country = '" + country + "'")) {
+         
+            ResultSet result = stmt.executeQuery();
+            return result.getInt("country.countryId");
+            
+        }
+        catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+            return 0;
+        }
     }
 
     @Override
