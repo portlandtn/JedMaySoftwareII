@@ -17,6 +17,7 @@
  */
 package Controller;
 
+import DAO.SchedulerDbAdapter;
 import Model.User;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
@@ -48,9 +49,11 @@ public class ManageUsersController implements Initializable {
 
     DatabaseConnector dc = new DatabaseConnector();
     UserDAO userDAO;
+    private SchedulerDbAdapter _adapter;
 
     public ManageUsersController() {
         try {
+            _adapter = new SchedulerDbAdapter(dc.createConnection());
             this.userDAO = new UserDAO(dc.createConnection());
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
@@ -209,9 +212,9 @@ public class ManageUsersController implements Initializable {
             if (allRadioButton.isSelected()) {
                 allUsers = userDAO.query();
             } else if (activeRadioButton.isSelected()) {
-                allUsers = userDAO.queryActiveInactive(true);
+                allUsers = userDAO.queryActiveInactiveUsers(true);
             } else {
-                allUsers = userDAO.queryActiveInactive(false);
+                allUsers = userDAO.queryActiveInactiveUsers(false);
             }
 
             //Setup the user table with data from the database.

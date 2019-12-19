@@ -17,15 +17,31 @@
  */
 package DAO;
 
-import java.sql.Connection;
+import com.mysql.jdbc.Connection;
 
 /**
  *
  * @author Jedidiah May
  */
 public class SchedulerDbAdapter {
-    
-    private Connection _conn;
-    
+
+    private final Connection _conn;
+    private final AddressDAO _addressDAO;
+    private final AppointmentDAO _appointmentDAO;
+    private final CityDAO _cityDAO;
+    private final CountryDAO _countryDAO;
+    private final CustomerDAO _customerDAO;
+    protected final UserDAO _userDAO;
+
+    //Constructor that uses a single connection 
+    public SchedulerDbAdapter(Connection conn) {
+        _conn = conn;
+        this._addressDAO = new AddressDAO(conn);
+        this._appointmentDAO = new AppointmentDAO(conn);
+        this._cityDAO = new CityDAO(conn);
+        this._countryDAO = new CountryDAO(conn);
+        this._customerDAO = new CustomerDAO(conn);
+        this._userDAO = new UserDAO(conn);
+    }
     
 }

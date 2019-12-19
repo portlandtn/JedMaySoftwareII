@@ -47,11 +47,7 @@ public class UserDAO extends DAO<User> {
                 + "userId, "
                 + "userName, "
                 + "password, "
-                + "active, "
-                + "createDate, "
-                + "createdBy, "
-                + "lastUpdate, "
-                + "lastUpdateBy "
+                + "active "
                 + "FROM user")) {
 
             ResultSet result = stmt.executeQuery();
@@ -62,10 +58,6 @@ public class UserDAO extends DAO<User> {
                 user.setUserName(result.getString("userName"));
                 user.setPassword(result.getString("password"));
                 user.setActive(result.getBoolean("active"));
-                user.setCreateDate(result.getDate("createDate"));
-                user.setCreatedBy(result.getString("createdBy"));
-                user.setLastUpdate(result.getDate("lastUpdate"));
-                user.setLastUpdateBy(result.getString("lastUpdateby"));
                 users.add(user);
             }
 
@@ -92,7 +84,7 @@ public class UserDAO extends DAO<User> {
         return users;
     }
 
-    public ObservableList<User> queryActiveInactive(Boolean active) {
+    public ObservableList<User> queryActiveInactiveUsers(Boolean active) {
         ObservableList<User> users = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "userId, "
