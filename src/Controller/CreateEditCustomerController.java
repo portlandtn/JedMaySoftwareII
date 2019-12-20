@@ -47,12 +47,16 @@ import javafx.stage.Stage;
 public class CreateEditCustomerController implements Initializable {
 
     DatabaseConnector dc = new DatabaseConnector();
+    Connection conn;
+    
     CustomerDAO customerDAO;
     CityDAO cityDAO;
     CountryDAO countryDAO;
     AddressDAO addressDAO;
+    
     static String previousPath;
     static Boolean isEditing;
+    
     Customer customerToUpdate = new Customer();
 
     private String customerName, address, address2, city, country, postalCode, phone, createdBy, lastUpdateBy;
@@ -62,10 +66,11 @@ public class CreateEditCustomerController implements Initializable {
 
     public CreateEditCustomerController() {
         try {
-            this.customerDAO = new CustomerDAO(dc.createConnection());
-            this.cityDAO = new CityDAO(dc.createConnection());
-            this.countryDAO = new CountryDAO(dc.createConnection());
-            this.addressDAO = new AddressDAO(dc.createConnection());
+            conn = dc.createConnection();
+            this.addressDAO = new AddressDAO(conn);
+            this.customerDAO = new CustomerDAO(conn);
+            this.cityDAO = new CityDAO(conn);
+            this.countryDAO = new CountryDAO(conn);
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
         }
@@ -96,7 +101,7 @@ public class CreateEditCustomerController implements Initializable {
     private CheckBox activeCheckBox;
 
     @FXML
-    void onActionCancel(ActionEvent event) throws IOException {
+    void onActionCancel(ActionEvent event) throws IOException, SQLException {
         displayScreen(previousPath, event);
     }
     
@@ -112,7 +117,7 @@ public class CreateEditCustomerController implements Initializable {
     }
 
     @FXML
-    void onActionSave(ActionEvent event) throws IOException {
+    void onActionSave(ActionEvent event) throws IOException, SQLException {
 
         if (!canDataBeSaved()) {
             return;
@@ -146,17 +151,6 @@ public class CreateEditCustomerController implements Initializable {
         }
     }
 
-    //helper method to display a screen.
-    private void displayScreen(String path, ActionEvent event) throws IOException {
-
-        Stage stage;
-        Parent scene;
-
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource(path));
-        stage.setScene(new Scene(scene));
-        stage.show();
-    }
 
     //Retrives a customer object from the previous screen (manage customers) to populate data on this screen.
     void sendCustomerDetails(Customer customer) {
@@ -280,6 +274,19 @@ public class CreateEditCustomerController implements Initializable {
             
             addressDAO.update(address);
 
+    }
+    
+    //helper method to display a screen.
+    private void displayScreen(String path, ActionEvent event) throws IOException, SQLException {
+
+        Stage stage;
+        Parent scene;
+
+        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        scene = FXMLLoader.load(getClass().getResource(path));
+        stage.setScene(new Scene(scene));
+        conn.close();
+        stage.show();
     }
 
     @Override

@@ -17,11 +17,11 @@
  */
 package Controller;
 
-import DAO.SchedulerDbAdapter;
 import Model.User;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
 import Utilities.Validator;
+import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -46,11 +46,13 @@ import javafx.stage.Stage;
 public class ManageUsersController implements Initializable {
 
     DatabaseConnector dc = new DatabaseConnector();
+    Connection conn;
     UserDAO userDAO;
 
     public ManageUsersController() {
         try {
-            this.userDAO = new UserDAO(dc.createConnection());
+            conn = dc.createConnection();
+            this.userDAO = new UserDAO(conn);
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
         }
@@ -98,7 +100,7 @@ public class ManageUsersController implements Initializable {
     }
 
     @FXML
-    void onActionDisplayDashboard(ActionEvent event) throws IOException {
+    void onActionDisplayDashboard(ActionEvent event) throws IOException, SQLException {
         displayScreen("/View/Dashboard.fxml", event);
     }
 
@@ -160,7 +162,7 @@ public class ManageUsersController implements Initializable {
     }
 
     @FXML
-    void onActionCreateUser(ActionEvent event) throws IOException {
+    void onActionCreateUser(ActionEvent event) throws IOException, SQLException {
         CreateEditUserController.isEditing = false;
         CreateEditUserController.previousPath = "/View/ManageUsers.fxml";
         displayScreen("/View/CreateEditUser.fxml", event);
@@ -184,16 +186,6 @@ public class ManageUsersController implements Initializable {
         refreshData();
     }
 
-    private void displayScreen(String path, ActionEvent event) throws IOException {
-
-        Stage stage;
-        Parent scene;
-
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource(path));
-        stage.setScene(new Scene(scene));
-        stage.show();
-    }
 
     private void refreshData() {
         ObservableList<User> allUsers;
@@ -215,6 +207,18 @@ public class ManageUsersController implements Initializable {
 
     }
 
+    private void displayScreen(String path, ActionEvent event) throws IOException, SQLException {
+
+        Stage stage;
+        Parent scene;
+
+        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        scene = FXMLLoader.load(getClass().getResource(path));
+        stage.setScene(new Scene(scene));
+        conn.close();
+        stage.show();
+    }    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         refreshData();

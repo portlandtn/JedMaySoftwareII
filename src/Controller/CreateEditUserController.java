@@ -45,6 +45,7 @@ import javafx.stage.Stage;
 public class CreateEditUserController implements Initializable {
 
     DatabaseConnector dc = new DatabaseConnector();
+    Connection conn;
     UserDAO userDAO;
 
     public static Boolean isEditing;
@@ -71,7 +72,8 @@ public class CreateEditUserController implements Initializable {
 
     public CreateEditUserController() {
         try {
-            this.userDAO = new UserDAO(dc.createConnection());
+            conn = dc.createConnection();
+            this.userDAO = new UserDAO(conn);
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
         }
@@ -83,7 +85,7 @@ public class CreateEditUserController implements Initializable {
     }
 
     @FXML
-    void onActionSaveUser(ActionEvent event) throws IOException {
+    void onActionSaveUser(ActionEvent event) throws IOException, SQLException {
         
         if(!canDataBeSaved()) return;
         
@@ -97,20 +99,10 @@ public class CreateEditUserController implements Initializable {
     }
 
     @FXML
-    void onActionGoBack(ActionEvent event) throws IOException {
+    void onActionGoBack(ActionEvent event) throws IOException, SQLException {
         displayScreen(previousPath, event);
     }
 
-    private void displayScreen(String path, ActionEvent event) throws IOException {
-
-        Stage stage;
-        Parent scene;
-
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource(path));
-        stage.setScene(new Scene(scene));
-        stage.show();
-    }
 
     public void sendUserDetails(User user) {
 
@@ -195,6 +187,18 @@ public class CreateEditUserController implements Initializable {
 
         // if these three checks are good, input is valid and can be saved.
         return true;
+    }
+    
+        private void displayScreen(String path, ActionEvent event) throws IOException, SQLException {
+
+        Stage stage;
+        Parent scene;
+
+        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        scene = FXMLLoader.load(getClass().getResource(path));
+        stage.setScene(new Scene(scene));
+        conn.close();
+        stage.show();
     }
 
     @Override

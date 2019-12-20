@@ -47,6 +47,7 @@ public class ManageCustomersController implements Initializable {
 
     DatabaseConnector dc = new DatabaseConnector();
     CustomerDAO customerDAO;
+    Connection conn;
     static String previousPath;
 
     @FXML
@@ -96,7 +97,7 @@ public class ManageCustomersController implements Initializable {
 
     public ManageCustomersController() {
         try {
-            Connection conn = dc.createConnection();
+            conn = dc.createConnection();
             this.customerDAO = new CustomerDAO(conn);
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
@@ -151,12 +152,12 @@ public class ManageCustomersController implements Initializable {
 
     //Go Back button
     @FXML
-    void onActionShowDashboard(ActionEvent event) throws IOException {
+    void onActionShowDashboard(ActionEvent event) throws IOException, SQLException {
         displayScreen("/View/Dashboard.fxml", event);
     }
 
     @FXML
-    void onActionAddNewCustomer(ActionEvent event) throws IOException {
+    void onActionAddNewCustomer(ActionEvent event) throws IOException, SQLException {
         CreateEditCustomerController.isEditing = false;
         CreateEditCustomerController.previousPath = "/View/ManageCustomers.fxml";
         displayScreen("/View/CreateEditCustomer.fxml", event);
@@ -225,7 +226,7 @@ public class ManageCustomersController implements Initializable {
 
     }
 
-    private void displayScreen(String path, ActionEvent event) throws IOException {
+    private void displayScreen(String path, ActionEvent event) throws IOException, SQLException {
 
         Stage stage;
         Parent scene;
@@ -233,6 +234,7 @@ public class ManageCustomersController implements Initializable {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         scene = FXMLLoader.load(getClass().getResource(path));
         stage.setScene(new Scene(scene));
+        conn.close();
         stage.show();
     }
 

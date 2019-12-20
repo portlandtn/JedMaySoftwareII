@@ -44,6 +44,7 @@ import javafx.stage.Stage;
 public class LoginScreenController implements Initializable {
 
     DatabaseConnector dc = new DatabaseConnector();
+    Connection conn;
     UserDAO userDAO;
 
     @FXML
@@ -58,21 +59,22 @@ public class LoginScreenController implements Initializable {
     //Constructor
     public LoginScreenController() {
         try {
-            this.userDAO = new UserDAO(dc.createConnection());
+            conn = dc.createConnection();
+            this.userDAO = new UserDAO(conn);
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
         }
     }
 
     @FXML
-    void onActionShowUserDetails(ActionEvent event) throws IOException {
+    void onActionShowUserDetails(ActionEvent event) throws IOException, SQLException {
         CreateEditUserController.previousPath = "/View/LoginScreen.fxml";
         CreateEditUserController.isEditing = false;
         displayScreen("/View/CreateEditUser.fxml", event);
     }
 
     @FXML
-    void onActionShowDashboard(ActionEvent event) {
+    void onActionShowDashboard(ActionEvent event) throws SQLException {
 
         try {
             String userName = userDAO.getUserName(userNameTextField.getText());
@@ -112,7 +114,7 @@ public class LoginScreenController implements Initializable {
         }
     }
 
-    private void displayScreen(String path, ActionEvent event) throws IOException {
+    private void displayScreen(String path, ActionEvent event) throws IOException, SQLException {
 
         Stage stage;
         Parent scene;
@@ -120,6 +122,7 @@ public class LoginScreenController implements Initializable {
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         scene = FXMLLoader.load(getClass().getResource(path));
         stage.setScene(new Scene(scene));
+        conn.close();
         stage.show();
     }
 
