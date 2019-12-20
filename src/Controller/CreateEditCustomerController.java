@@ -31,6 +31,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.ResourceBundle;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -56,6 +57,7 @@ public class CreateEditCustomerController implements Initializable {
 
     static String previousPath;
     static Boolean isEditing;
+    static ObservableList<String> cities;
 
     Customer customerToUpdate = new Customer();
 
@@ -133,7 +135,7 @@ public class CreateEditCustomerController implements Initializable {
             saveNewCity();
         }
         //Whether or not the city existed before, it does now. Retrieve city Id.
-        this.cityId = cityDAO.getCityId(cityComboBox.getValue());
+        this.cityId = cityDAO.getCityId(cityComboBox.getValue(), this.countryId);
 
         if (isEditing) {
             updateAddress(addressDAO.getAddress(this.customerToUpdate.getAddressId()));
@@ -173,6 +175,7 @@ public class CreateEditCustomerController implements Initializable {
         addressTextField.setText(customer.getAddress());
         address2TextField.setText(customer.getAddress2());
         cityComboBox.setValue(customer.getCity());
+        cityComboBox.setItems(cityDAO.queryCities(customer.getCountry()));
         countryComboBox.setValue(customer.getCountry());
         postalCodeTextField.setText(customer.getPostalCode());
         phoneTextField.setText(customer.getPhone());

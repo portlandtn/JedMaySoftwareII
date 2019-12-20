@@ -72,9 +72,9 @@ public class CityDAO extends DAO<City> {
         return cities;
     }
 
-    public int getCityId(String cityName) {
+    public int getCityId(String cityName, int countryId) {
 
-        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT cityId FROM city WHERE city = '" + cityName + "'")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT cityId FROM city WHERE city = '" + cityName + "' AND countryId = " + countryId )) {
 
             ResultSet result = stmt.executeQuery();
 
