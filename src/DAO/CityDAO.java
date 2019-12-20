@@ -156,7 +156,7 @@ public class CityDAO extends DAO<City> {
     @Override
     public void insert(City dto) {
         try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO city ("
-                + "city, countryId, createDate, createdBy, lastUpdate, lastUpdateby VALUES ?, ?, ?, ?, ?, ?)")) {
+                + "city, countryId, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES (?, ?, ?, ?, ?, ?)")) {
             stmt.setString(1, dto.getCity());
             stmt.setInt(2, dto.getCountryId());
             stmt.setDate(3, DataProvider.getCurrentDate());

@@ -196,20 +196,6 @@ public class CreateEditCustomerController implements Initializable {
 
     private void updateExistingCustomer(Customer custToUpdate) {
 
-//        //if the country does not exist, create a new country record in the country database
-//        if (!countryDAO.doesCountryExist(country)) {
-//            saveNewCountry();
-//
-//            //Assign the newly created country id to the country id field
-//            this.countryId = countryDAO.getCountryId(countryComboBox.getValue());
-//        }
-//
-//        //Checks to see if the city/country combination exists. If it does not exist, creates a record in the city database.
-//        if (!cityDAO.doesCityExist(cityComboBox.getValue(), this.countryId)) {
-//            saveNewCity();
-//        }
-//
-
         custToUpdate.setCustomerName(customerNameTextField.getText());
         custToUpdate.setAddressId(this.addressId);
         custToUpdate.setActive(activeCheckBox.isSelected());
@@ -223,18 +209,6 @@ public class CreateEditCustomerController implements Initializable {
     private void saveNewCustomer() {
 
         setVariablesFromScreen();
-//
-//        if (!countryDAO.doesCountryExist(country)) {
-//            saveNewCountry();
-//        }
-//        //Whether country existed or not, it does after the logic above, and a country Id can be retrieved.
-//        this.countryId = countryDAO.getCountryId(countryComboBox.getValue());
-//
-//        if (!cityDAO.doesCityExist(cityComboBox.getValue(), this.countryId)) {
-//            saveNewCity();
-//        }
-//        //Whether or not the city existed before, it does now. Retrive city Id.
-//        this.cityId = cityDAO.getCityId(cityComboBox.getValue());
 
         Customer cust = new Customer();
         cust.setCustomerName(this.customerName);
@@ -242,10 +216,6 @@ public class CreateEditCustomerController implements Initializable {
         cust.setActive(this.active);
         cust.setCityId(this.cityId);
         cust.setCountryId(this.countryId);
-        cust.setCreateDate(this.createDate);
-        cust.setCreatedBy(this.createdBy);
-        cust.setLastUpdate(this.lastUpdate);
-        cust.setLastUpdateBy(this.lastUpdateBy);
         customerDAO.insert(cust);
     }
 
@@ -253,10 +223,6 @@ public class CreateEditCustomerController implements Initializable {
         City city = new City();
         city.setCity(cityComboBox.getValue());
         city.setCountryId(this.countryId);
-        city.setCreateDate(DataProvider.getCurrentDate());
-        city.setCreatedBy(DataProvider.getCurrentUser());
-        city.setLastUpdate(DataProvider.getCurrentDate());
-        city.setLastUpdateBy(DataProvider.getCurrentUser());
 
         cityDAO.insert(city);
     }
@@ -265,10 +231,6 @@ public class CreateEditCustomerController implements Initializable {
 
         Country country = new Country();
         country.setCountry(countryComboBox.getValue());
-        country.setCreateDate(DataProvider.getCurrentDate());
-        country.setCreatedBy(DataProvider.getCurrentUser());
-        country.setLastUpdate(DataProvider.getCurrentDate());
-        country.setLastUpdateBy(DataProvider.getCurrentUser());
 
         countryDAO.insert(country);
     }
@@ -315,5 +277,10 @@ public class CreateEditCustomerController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
         countryComboBox.setItems(countryDAO.queryAllCountries());
+        if (isEditing) {
+            cityComboBox.setDisable(false);
+        } else {
+            cityComboBox.setDisable(true);
+        }
     }
 }
