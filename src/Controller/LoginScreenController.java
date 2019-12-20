@@ -72,11 +72,10 @@ public class LoginScreenController implements Initializable {
     }
 
     @FXML
-    void onActionShowDashboard(ActionEvent event) throws IOException, ClassNotFoundException, SQLException {
+    void onActionShowDashboard(ActionEvent event) {
 
-        try (Connection conn = dc.createConnection()) {
+        try {
             String userName = userDAO.getUserName(userNameTextField.getText());
-            conn.close();
 
             //if userName is not found, then alert that the user does not exist.
             if (userName.isEmpty()) {
@@ -84,14 +83,14 @@ public class LoginScreenController implements Initializable {
                 DataProvider.setIsLoggedIn(false);
                 Alert alert = new Alert(AlertType.ERROR, "The username does not exist.");
                 alert.showAndWait();
-                
+
                 //if user exists, but the username and password do not match, alert the user.
             } else if (!userDAO.isUserNameandPasswordValid(userNameTextField.getText(), passwordTextField.getText())) {
                 noUserFoundLabel.setVisible(true);
                 DataProvider.setIsLoggedIn(false);
                 Alert alert = new Alert(AlertType.ERROR, "The username and password does not match.");
                 alert.showAndWait();
-                
+
                 //if user is inactive, warn that the user cannot log in without first being made active.
             } else if (!userDAO.isUserActive(userNameTextField.getText())) {
                 Alert alert = new Alert(AlertType.ERROR, "While this user does exist, their account has been made inactive. "
@@ -101,10 +100,9 @@ public class LoginScreenController implements Initializable {
                 DataProvider.setIsLoggedIn(true);
                 noUserFoundLabel.setVisible(false);
                 DataProvider.setCurrentUser(userNameTextField.getText());
-                conn.close();
                 displayScreen("/View/Dashboard.fxml", event);
             }
-        } catch (SQLException ex) {
+        } catch (IOException ex) {
             System.out.println(ex.getMessage());
         } catch (NullPointerException ex) {
             noUserFoundLabel.setVisible(true);

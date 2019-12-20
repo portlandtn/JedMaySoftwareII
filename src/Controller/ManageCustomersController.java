@@ -96,7 +96,8 @@ public class ManageCustomersController implements Initializable {
 
     public ManageCustomersController() {
         try {
-            this.customerDAO = new CustomerDAO(dc.createConnection());
+            Connection conn = dc.createConnection();
+            this.customerDAO = new CustomerDAO(conn);
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
         }
