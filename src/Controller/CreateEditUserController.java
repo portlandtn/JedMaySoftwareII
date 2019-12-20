@@ -33,11 +33,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Stage;
 
 /**
  *
@@ -59,6 +56,7 @@ public class CreateEditUserController implements Initializable {
 
     private User userToUpdate;
 
+    // <editor-fold defaultstate="collapsed" desc="FXML objects">
     @FXML
     private TextField userNameTextField;
 
@@ -70,7 +68,8 @@ public class CreateEditUserController implements Initializable {
 
     @FXML
     private CheckBox activeCheckBox;
-
+    // </editor-fold>
+    
     public CreateEditUserController() {
         try {
             conn = dc.createConnection();

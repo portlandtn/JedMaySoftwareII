@@ -45,6 +45,7 @@ public class LoginScreenController implements Initializable {
     Connection conn;
     UserDAO userDAO;
 
+    // <editor-fold defaultstate="collapsed" desc="FXML objects">
     @FXML
     private TextField userNameTextField;
 
@@ -53,6 +54,7 @@ public class LoginScreenController implements Initializable {
 
     @FXML
     private Label noUserFoundLabel;
+    // </editor-fold>
 
     //Constructor
     public LoginScreenController() {
@@ -64,38 +66,45 @@ public class LoginScreenController implements Initializable {
         }
     }
 
+    // This is used when creating a new user. 
     @FXML
     void onActionShowUserDetails(ActionEvent event) throws IOException, SQLException {
+        // Sets the previous path for navigation back here from the next screen (static field)
         CreateEditUserController.previousPath = "/View/LoginScreen.fxml";
+        // Static field that sets code flow based on whether or not form is for editing or creating a new user (flag)
         CreateEditUserController.isEditing = false;
+        conn.close();
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource("/View/CreateEditUser.fxml")));
     }
 
+    // Login button is clicked.
     @FXML
     void onActionShowDashboard(ActionEvent event) throws SQLException {
 
         try {
             String userName = userDAO.getUserName(userNameTextField.getText());
 
-            //if userName is not found, then alert that the user does not exist.
+            // If userName is not found, then alert that the user does not exist.
             if (userName.isEmpty()) {
                 noUserFoundLabel.setVisible(true);
                 DataProvider.setIsLoggedIn(false);
                 Alert alert = new Alert(AlertType.ERROR, "The username does not exist.");
                 alert.showAndWait();
 
-                //if user exists, but the username and password do not match, alert the user.
+                // If user exists, but the username and password do not match, alert the user.
             } else if (!userDAO.isUserNameandPasswordValid(userNameTextField.getText(), passwordTextField.getText())) {
                 noUserFoundLabel.setVisible(true);
                 DataProvider.setIsLoggedIn(false);
                 Alert alert = new Alert(AlertType.ERROR, "The username and password does not match.");
                 alert.showAndWait();
 
-                //if user is inactive, warn that the user cannot log in without first being made active.
+                // If user is inactive, warn that the user cannot log in without first being made active.
             } else if (!userDAO.isUserActive(userNameTextField.getText())) {
                 Alert alert = new Alert(AlertType.ERROR, "While this user does exist, their account has been made inactive. "
                         + "Please have the administrator update this account to use it for logging in.");
                 alert.showAndWait();
+                
+                // All checks are cleared, so the user can login and go to the dashboard.
             } else {
                 DataProvider.setIsLoggedIn(true);
                 noUserFoundLabel.setVisible(false);
@@ -112,7 +121,6 @@ public class LoginScreenController implements Initializable {
             alert.showAndWait();
         }
     }
-
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

@@ -30,6 +30,18 @@ public class DataProvider {
     private static String currentUser;
     private static Boolean isLoggedIn = false;
     
+    private static String appointmentDetailControllerPath = "/View/Dashboard.fxml";
+    private static String appointmentTypeReportControllerPath;
+    private static String appointmentsCalendarControllerPath;
+    private static String createEditCustomerControllerPath;
+    private static String createEditUserControllerPath;
+    private static String dashboardControllerPath;
+    private static String locationReportControllerPath;
+    private static String loginScreenControllerPath;
+    private static String manageCustomersControllerPath;
+    private static String reportsDashboardControllerPath;
+    private static String scheduleReportControllerPath;
+    
     public static final ObservableList<String> APPOINTMENT_TYPES = FXCollections.observableArrayList("Consultation", "Introduction", "Termination");
     public static final ObservableList<String> LOCATIONS = FXCollections.observableArrayList("Home", "Office");
 

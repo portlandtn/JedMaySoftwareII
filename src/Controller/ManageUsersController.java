@@ -20,6 +20,7 @@ package Controller;
 import Model.User;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
+import Utilities.Navigator;
 import Utilities.Validator;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
@@ -58,6 +59,7 @@ public class ManageUsersController implements Initializable {
         }
     }
 
+    // <editor-fold defaultstate="collapsed" desc="FXML objects">
     @FXML
     private RadioButton allRadioButton;
 
@@ -84,6 +86,7 @@ public class ManageUsersController implements Initializable {
 
     @FXML
     private TableColumn<User, Boolean> activeColumnTableView;
+    // </editor-fold>
 
     @FXML
     void onActionDeleteUser(ActionEvent event) {
@@ -101,7 +104,7 @@ public class ManageUsersController implements Initializable {
 
     @FXML
     void onActionDisplayDashboard(ActionEvent event) throws IOException, SQLException {
-        displayScreen("/View/Dashboard.fxml", event);
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource("/View/Dashboard.fxml")));
     }
 
     @FXML
@@ -165,7 +168,7 @@ public class ManageUsersController implements Initializable {
     void onActionCreateUser(ActionEvent event) throws IOException, SQLException {
         CreateEditUserController.isEditing = false;
         CreateEditUserController.previousPath = "/View/ManageUsers.fxml";
-        displayScreen("/View/CreateEditUser.fxml", event);
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource("/View/CreateEditUser.fxml")));
     }
 
     @FXML
@@ -206,18 +209,6 @@ public class ManageUsersController implements Initializable {
         activeColumnTableView.setCellValueFactory(new PropertyValueFactory<>("active"));
 
     }
-
-    private void displayScreen(String path, ActionEvent event) throws IOException, SQLException {
-
-        Stage stage;
-        Parent scene;
-
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource(path));
-        stage.setScene(new Scene(scene));
-        conn.close();
-        stage.show();
-    }    
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {

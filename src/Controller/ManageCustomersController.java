@@ -51,6 +51,7 @@ public class ManageCustomersController implements Initializable {
     Connection conn;
     static String previousPath;
 
+    // <editor-fold defaultstate="collapsed" desc="FXML objects">
     @FXML
     private RadioButton allRadioButton;
 
@@ -95,7 +96,9 @@ public class ManageCustomersController implements Initializable {
 
     @FXML
     private TableColumn<Customer, String> phoneColumnTableView;
+    // </editor-fold>
 
+    // Constructor
     public ManageCustomersController() {
         try {
             conn = dc.createConnection();
@@ -105,30 +108,37 @@ public class ManageCustomersController implements Initializable {
         }
     }
 
+    // Active radio button selected, show only active customers.
     @FXML
     void onActionActiveSelected(ActionEvent event) {
         searchTextField.setText("");
         refreshData();
     }
 
+    // All radio button selected, show all users (whether active or inactive).
     @FXML
     void onActionAllSelected(ActionEvent event) {
         searchTextField.setText("");
         refreshData();
     }
 
+    // Inactive radio button selected, show only inactive customers.
     @FXML
     void onActionInactiveSelected(ActionEvent event) {
         searchTextField.setText("");
         refreshData();
     }
 
+    // Search button clicked.
     @FXML
     void onActionSearch(ActionEvent event) {
+        
+        // Holds the list of retrieved items
         ObservableList<Customer> customerSearchResultsList = FXCollections.observableArrayList();
 
         String searchText = searchTextField.getText();
-
+        
+        // If the textbox is empty when searching, display all customers.
         if (searchText.isEmpty()) {
             manageCustomersTableView.setItems(customerDAO.query());
             return;
@@ -136,17 +146,22 @@ public class ManageCustomersController implements Initializable {
 
         customerSearchResultsList.clear();
 
+        // Checks to see if the search string is only a number. If it is a number, it's going to lookup
+        // the customer Id, rather than the customer name.
         if (Validator.isSearchStringNumber(searchTextField.getText())) {
             customerSearchResultsList = customerDAO.lookupCustomer(Integer.parseInt(searchText));
 
         } else {
+            // If the search string has letters, then the program looks up the customer name.
             customerSearchResultsList = customerDAO.lookupCustomer(searchText);
         }
-
+        
+        // If the search yields no results, then pop-up a box telling the user why it's blank.
         if (customerSearchResultsList.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "A customer was not found.");
             alert.showAndWait();
         } else {
+            // If it's not empty, show the list.
             manageCustomersTableView.setItems(customerSearchResultsList);
         }
     }
@@ -175,15 +190,20 @@ public class ManageCustomersController implements Initializable {
         }
     }
 
+    // If editing a customer, this sets up the form on the next screen with data.
     @FXML
     void onActionEditCustomer(ActionEvent event) throws IOException {
+        
+        // Static field that guides code.
         CreateEditCustomerController.isEditing = true;
-
+        
+        // Setups the controller.
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/View/CreateEditCustomer.fxml"));
             loader.load();
 
+            // When the back button is pressed, this tells it where to go on the next screen (static field)
             CreateEditCustomerController.previousPath = "/View/ManageCustomers.fxml";
 
             CreateEditCustomerController custController = loader.getController();
@@ -203,6 +223,7 @@ public class ManageCustomersController implements Initializable {
 
     }
 
+    // This sets up the table. When radio buttons are selected, or when the form is initialized, this is called.
     private void refreshData() {
         ObservableList<Customer> customers;
 

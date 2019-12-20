@@ -36,10 +36,8 @@ public class Navigator {
     public static void displayScreen(ActionEvent event, Parent scene) throws IOException, SQLException {
 
         Stage stage;
-        //Parent scene;
 
         stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        //scene = sc;
         stage.setScene(new Scene(scene));
         stage.show();
     }

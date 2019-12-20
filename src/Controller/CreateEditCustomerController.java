@@ -30,7 +30,6 @@ import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -53,17 +52,15 @@ public class CreateEditCustomerController implements Initializable {
     CountryDAO countryDAO;
     AddressDAO addressDAO;
 
+    private int addressId, cityId, countryId;
+    
     static String previousPath;
     static Boolean isEditing;
-    static ObservableList<String> cities;
+    static ObservableList<String> cities; // If editing, sets up the cities for the country already set
 
     Customer customerToUpdate = new Customer();
 
-    private String customerName, address, address2, city, country, postalCode, phone, createdBy, lastUpdateBy;
-    private int customerId, addressId, cityId, countryId;
-    private Date createDate, lastUpdate;
-    private Boolean active;
-
+    // Constructor
     public CreateEditCustomerController() {
         try {
             conn = dc.createConnection();
@@ -76,6 +73,7 @@ public class CreateEditCustomerController implements Initializable {
         }
     }
 
+    // <editor-fold defaultstate="collapsed" desc="FXML objects">
     @FXML
     private TextField address2TextField;
 
@@ -99,12 +97,17 @@ public class CreateEditCustomerController implements Initializable {
 
     @FXML
     private CheckBox activeCheckBox;
+    // </editor-fold>
 
+    // Cancel - go back to the previous screen.
     @FXML
     void onActionCancel(ActionEvent event) throws IOException, SQLException {
+        conn.close();
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
     }
 
+    // When a country is selected, city options will be available, using the country as a 'where' clause
+    // in the SQL statement.
     @FXML
     void onActionCountrySelected(ActionEvent event) {
         cityComboBox.setValue("");
@@ -119,6 +122,7 @@ public class CreateEditCustomerController implements Initializable {
     @FXML
     void onActionSave(ActionEvent event) throws IOException, SQLException {
 
+        // Data validation
         if (!canDataBeSaved()) {
             return;
         }
@@ -126,30 +130,38 @@ public class CreateEditCustomerController implements Initializable {
         if (!countryDAO.doesCountryExist(countryComboBox.getValue())) {
             saveNewCountry();
         }
-        //Whether country existed or not, it does after the logic above, and a country Id can be retrieved.
+        // Whether country existed or not, it does after the logic above, and a country Id can be retrieved.
         this.countryId = countryDAO.getCountryId(countryComboBox.getValue());
 
         if (!cityDAO.doesCityExist(cityComboBox.getValue(), this.countryId)) {
             saveNewCity();
         }
-        //Whether or not the city existed before, it does now. Retrieve city Id.
+        // Whether or not the city existed before, it does now. Retrieve city Id.
         this.cityId = cityDAO.getCityId(cityComboBox.getValue(), this.countryId);
 
         if (isEditing) {
-            updateAddress(addressDAO.getAddress(this.customerToUpdate.getAddressId()));
+            // At this point, the country Id and city Id should be set.
+            // If updating, retrieve the addressId from the customerToUpdate object.
+            int addrId = this.customerToUpdate.getAddressId();
+            // The address will not be new - has to exist, so it will be an update, based on the addressId.
+            updateAddress(addressDAO.getAddress(addrId));
             updateExistingCustomer(this.customerToUpdate);
         } else {
+            // If not editing/updating, then this is a new customer. That means creating a new address, 
+            // getting the Id for the newly created address, and then assigning it, along with the customer
+            // properties to the new customer object and inserting that into the database.
             saveNewAddress();
             this.addressId = addressDAO.getMostRecentAddressEntered();
             saveNewCustomer();
         }
+        conn.close();
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
     }
 
-    //simply a validator to make sure that data can be saved and doesn't violate any rules.
+    // Validation to make sure that data can be saved and doesn't violate any rules.
     private Boolean canDataBeSaved() {
 
-        //Setup the string array that holds the text fields to verify that are not empty.
+        //Setup the string array that holds the text fields to verify that they are not empty.
         String[] textFields = new String[]{
             customerNameTextField.getText(),
             addressTextField.getText(),
@@ -166,7 +178,8 @@ public class CreateEditCustomerController implements Initializable {
         }
     }
 
-    //Retrives a customer object from the previous screen (manage customers) to populate data on this screen.
+    // Retrives a customer object from the previous screen (manage customers) to populate data on this screen,
+    // as well as assigning a customer ojbect to manipulate to the field above.
     void sendCustomerDetails(Customer customer) {
         //populate fields
         customerNameTextField.setText(customer.getCustomerName());
@@ -183,18 +196,12 @@ public class CreateEditCustomerController implements Initializable {
         this.customerToUpdate = customer;
     }
 
-    //sets field variables from the values entered on the screen
-    private void setVariablesFromScreen() {
-        this.customerName = customerNameTextField.getText();
-        this.address = addressTextField.getText();
-        this.address2 = address2TextField.getText();
-        this.city = cityComboBox.getValue();
-        this.country = countryComboBox.getValue();
-        this.postalCode = postalCodeTextField.getText();
-        this.phone = phoneTextField.getText();
-        this.active = activeCheckBox.isSelected();
-    }
-
+    /* 
+    *  Obviously, this only takes place when updating an existing customer.
+    *  Injecting customerToUpdate, which should have address, city, and country Id's.
+    *  Address Id will never change. if a new country or city is being created as a result
+    *  of updating, then new Id's will have to be associated.
+    */ 
     private void updateExistingCustomer(Customer custToUpdate) {
 
         custToUpdate.setCustomerName(customerNameTextField.getText());
@@ -207,24 +214,31 @@ public class CreateEditCustomerController implements Initializable {
 
     }
 
+    // Obviously, this only takes place when creating a new customer.
+    // A new address has to be created first. And possibly, a new city and country as well.
     private void saveNewCustomer() {
 
-        setVariablesFromScreen();
-
         Customer cust = new Customer();
-        cust.setCustomerName(this.customerName);
+        cust.setCustomerName(customerNameTextField.getText());
         cust.setAddressId(this.addressId);
-        cust.setActive(this.active);
+        cust.setActive(activeCheckBox.isSelected());
         cust.setCityId(this.cityId);
         cust.setCountryId(this.countryId);
+        
         customerDAO.insert(cust);
     }
 
+    /* 
+    *  This can take place whether editing or creating a new customer.
+    *  Validation should check to see if the customer/country combination exists.
+    *  Country is checked first. If it doesn't exist, then that country is created in the database.
+    *  If country/city combo doesn't exist, then a record is created in the database with that combo.
+    */ 
     private void saveNewCity() {
         City city = new City();
         city.setCity(cityComboBox.getValue());
         city.setCountryId(this.countryId);
-
+        
         cityDAO.insert(city);
     }
 
@@ -236,6 +250,8 @@ public class CreateEditCustomerController implements Initializable {
         countryDAO.insert(country);
     }
 
+    // This is only called if editing an existing customer. Address object injection
+    // is retrieved from addressId, which is from the customerToUpdate object.
     private void updateAddress(Address addressToUpdate) {
 
         addressToUpdate.setAddressId(this.addressId);
@@ -244,10 +260,12 @@ public class CreateEditCustomerController implements Initializable {
         addressToUpdate.setCityId(this.cityId);
         addressToUpdate.setPostalCode(postalCodeTextField.getText());
         addressToUpdate.setPhone(phoneTextField.getText());
+        
         addressDAO.update(addressToUpdate);
 
     }
 
+    // This takes place only when creating a new customer.
     private void saveNewAddress() {
 
         Address address = new Address();
