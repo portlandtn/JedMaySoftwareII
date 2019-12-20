@@ -48,15 +48,15 @@ public class CreateEditCustomerController implements Initializable {
 
     DatabaseConnector dc = new DatabaseConnector();
     Connection conn;
-    
+
     CustomerDAO customerDAO;
     CityDAO cityDAO;
     CountryDAO countryDAO;
     AddressDAO addressDAO;
-    
+
     static String previousPath;
     static Boolean isEditing;
-    
+
     Customer customerToUpdate = new Customer();
 
     private String customerName, address, address2, city, country, postalCode, phone, createdBy, lastUpdateBy;
@@ -104,11 +104,11 @@ public class CreateEditCustomerController implements Initializable {
     void onActionCancel(ActionEvent event) throws IOException, SQLException {
         displayScreen(previousPath, event);
     }
-    
+
     @FXML
     void onActionCountrySelected(ActionEvent event) {
         cityComboBox.setValue("");
-        if (countryComboBox.getValue().isEmpty()){
+        if (countryComboBox.getValue().isEmpty()) {
             cityComboBox.setDisable(true);
             return;
         }
@@ -123,9 +123,24 @@ public class CreateEditCustomerController implements Initializable {
             return;
         }
 
+        if (!countryDAO.doesCountryExist(countryComboBox.getValue())) {
+            saveNewCountry();
+        }
+        //Whether country existed or not, it does after the logic above, and a country Id can be retrieved.
+        this.countryId = countryDAO.getCountryId(countryComboBox.getValue());
+
+        if (!cityDAO.doesCityExist(cityComboBox.getValue(), this.countryId)) {
+            saveNewCity();
+        }
+        //Whether or not the city existed before, it does now. Retrieve city Id.
+        this.cityId = cityDAO.getCityId(cityComboBox.getValue());
+
         if (isEditing) {
+            updateAddress(addressDAO.getAddress(this.customerToUpdate.getAddressId()));
             updateExistingCustomer(this.customerToUpdate);
         } else {
+            saveNewAddress();
+            this.addressId = addressDAO.getMostRecentAddressEntered();
             saveNewCustomer();
         }
         displayScreen(previousPath, event);
@@ -133,7 +148,7 @@ public class CreateEditCustomerController implements Initializable {
 
     //simply a validator to make sure that data can be saved and doesn't violate any rules.
     private Boolean canDataBeSaved() {
-        
+
         //Setup the string array that holds the text fields to verify that are not empty.
         String[] textFields = new String[]{
             customerNameTextField.getText(),
@@ -151,7 +166,6 @@ public class CreateEditCustomerController implements Initializable {
         }
     }
 
-
     //Retrives a customer object from the previous screen (manage customers) to populate data on this screen.
     void sendCustomerDetails(Customer customer) {
         //populate fields
@@ -163,7 +177,7 @@ public class CreateEditCustomerController implements Initializable {
         postalCodeTextField.setText(customer.getPostalCode());
         phoneTextField.setText(customer.getPhone());
         activeCheckBox.setSelected(customer.getActive());
-        
+
         //Creates a customer object available for editing.
         this.customerToUpdate = customer;
     }
@@ -182,100 +196,108 @@ public class CreateEditCustomerController implements Initializable {
 
     private void updateExistingCustomer(Customer custToUpdate) {
 
+//        //if the country does not exist, create a new country record in the country database
+//        if (!countryDAO.doesCountryExist(country)) {
+//            saveNewCountry();
+//
+//            //Assign the newly created country id to the country id field
+//            this.countryId = countryDAO.getCountryId(countryComboBox.getValue());
+//        }
+//
+//        //Checks to see if the city/country combination exists. If it does not exist, creates a record in the city database.
+//        if (!cityDAO.doesCityExist(cityComboBox.getValue(), this.countryId)) {
+//            saveNewCity();
+//        }
+//
 
-            //if the country does not exist, create a new country record in the country database
-            if (!countryDAO.doesCountryExist(country)) {
-                saveNewCountry();
-                
-                //Assign the newly created country id to the country id field
-                this.countryId = countryDAO.getCountryId(countryComboBox.getValue());
-            }
-            
-            //Checks to see if the city/country combination exists. If it does not exist, creates a record in the city database.
-            if (!cityDAO.doesCityExist(cityComboBox.getValue(), this.countryId)) {
-                saveNewCity();
-            }
-            
-            updateAddress();
-            
-            custToUpdate.setCustomerName(customerNameTextField.getText());
-            custToUpdate.setAddressId(this.addressId);       
-            custToUpdate.setActive(activeCheckBox.isSelected());
-            custToUpdate.setLastUpdate(DataProvider.getCurrentDate());
-            custToUpdate.setLastUpdateBy(DataProvider.getCurrentUser());
+        custToUpdate.setCustomerName(customerNameTextField.getText());
+        custToUpdate.setAddressId(this.addressId);
+        custToUpdate.setActive(activeCheckBox.isSelected());
+        custToUpdate.setLastUpdate(DataProvider.getCurrentDate());
+        custToUpdate.setLastUpdateBy(DataProvider.getCurrentUser());
 
-            customerDAO.update(custToUpdate);
+        customerDAO.update(custToUpdate);
 
     }
 
     private void saveNewCustomer() {
 
         setVariablesFromScreen();
+//
+//        if (!countryDAO.doesCountryExist(country)) {
+//            saveNewCountry();
+//        }
+//        //Whether country existed or not, it does after the logic above, and a country Id can be retrieved.
+//        this.countryId = countryDAO.getCountryId(countryComboBox.getValue());
+//
+//        if (!cityDAO.doesCityExist(cityComboBox.getValue(), this.countryId)) {
+//            saveNewCity();
+//        }
+//        //Whether or not the city existed before, it does now. Retrive city Id.
+//        this.cityId = cityDAO.getCityId(cityComboBox.getValue());
 
-            setVariablesFromScreen();
-
-            if (!countryDAO.doesCountryExist(country)) {
-                saveNewCountry();
-            }
-
-            if (!cityDAO.doesCityExist(cityComboBox.getValue(), this.countryId)) { //Where is the couuntry ID coming from?
-                saveNewCity();
-            }
-
-            Customer cust = new Customer();
-            cust.setCustomerName(this.customerName);
-            cust.setActive(this.active);
-            cust.setCreateDate(this.createDate);
-            cust.setCreatedBy(this.createdBy);
-            cust.setLastUpdate(this.lastUpdate);
-            cust.setLastUpdateBy(this.lastUpdateBy);
-            customerDAO.insert(cust);
-
+        Customer cust = new Customer();
+        cust.setCustomerName(this.customerName);
+        cust.setAddressId(this.addressId);
+        cust.setActive(this.active);
+        cust.setCityId(this.cityId);
+        cust.setCountryId(this.countryId);
+        cust.setCreateDate(this.createDate);
+        cust.setCreatedBy(this.createdBy);
+        cust.setLastUpdate(this.lastUpdate);
+        cust.setLastUpdateBy(this.lastUpdateBy);
+        customerDAO.insert(cust);
     }
 
     private void saveNewCity() {
-            City city = new City();
-            city.setCity(cityComboBox.getValue());
-            city.setCountryId(this.countryId);
-            city.setCreateDate(DataProvider.getCurrentDate());
-            city.setCreatedBy(DataProvider.getCurrentUser());
-            city.setLastUpdate(DataProvider.getCurrentDate());
-            city.setLastUpdateBy(DataProvider.getCurrentUser());
+        City city = new City();
+        city.setCity(cityComboBox.getValue());
+        city.setCountryId(this.countryId);
+        city.setCreateDate(DataProvider.getCurrentDate());
+        city.setCreatedBy(DataProvider.getCurrentUser());
+        city.setLastUpdate(DataProvider.getCurrentDate());
+        city.setLastUpdateBy(DataProvider.getCurrentUser());
 
-            cityDAO.insert(city);
+        cityDAO.insert(city);
     }
 
     private void saveNewCountry() {
 
-            Country country = new Country();
-            country.setCountry(countryComboBox.getValue());
-            country.setCreateDate(DataProvider.getCurrentDate());
-            country.setCreatedBy(DataProvider.getCurrentUser());
-            country.setLastUpdate(DataProvider.getCurrentDate());
-            country.setLastUpdateBy(DataProvider.getCurrentUser());
+        Country country = new Country();
+        country.setCountry(countryComboBox.getValue());
+        country.setCreateDate(DataProvider.getCurrentDate());
+        country.setCreatedBy(DataProvider.getCurrentUser());
+        country.setLastUpdate(DataProvider.getCurrentDate());
+        country.setLastUpdateBy(DataProvider.getCurrentUser());
 
-            countryDAO.insert(country);
-            
-            //Sets the newly created country
-            this.countryId = countryDAO.getCountryId(countryComboBox.getValue());
+        countryDAO.insert(country);
+    }
+
+    private void updateAddress(Address addressToUpdate) {
+
+        addressToUpdate.setAddressId(this.addressId);
+        addressToUpdate.setAddress(addressTextField.getText());
+        addressToUpdate.setAddress2(address2TextField.getText());
+        addressToUpdate.setCityId(this.cityId);
+        addressToUpdate.setPostalCode(postalCodeTextField.getText());
+        addressToUpdate.setPhone(phoneTextField.getText());
+        addressDAO.update(addressToUpdate);
 
     }
-    
-    private void updateAddress(){
 
-            
-            Address address = new Address();
-            address.setAddressId(this.addressId);
-            address.setAddress(addressTextField.getText());
-            address.setAddress2(address2TextField.getText());
-            address.setCityId(this.cityId);
-            address.setPhone(phoneTextField.getText());
-            address.setPostalCode(postalCodeTextField.getText());
-            
-            addressDAO.update(address);
+    private void saveNewAddress() {
 
+        Address address = new Address();
+        address.setAddressId(this.addressId);
+        address.setAddress(addressTextField.getText());
+        address.setAddress2(address2TextField.getText());
+        address.setCityId(this.cityId);
+        address.setPostalCode(postalCodeTextField.getText());
+        address.setPhone(phoneTextField.getText());
+
+        addressDAO.insert(address);
     }
-    
+
     //helper method to display a screen.
     private void displayScreen(String path, ActionEvent event) throws IOException, SQLException {
 

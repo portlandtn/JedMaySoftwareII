@@ -102,7 +102,7 @@ public class CountryDAO extends DAO<Country> {
     
     public int getCountryId(String countryName) {
 
-        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT counryId FROM country WHERE country = '" + countryName + "'")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT countryId FROM country WHERE country = '" + countryName + "'")) {
 
             ResultSet result = stmt.executeQuery();
 

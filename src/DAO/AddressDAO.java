@@ -78,6 +78,51 @@ public class AddressDAO extends DAO<Address> {
         }
         return addresses;
     }
+    
+    public Address getAddress(int addressId){
+        
+        Address address = new Address();
+        
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "addressId, "
+                + "address, "
+                + "address2, "
+                + "cityId, "
+                + "postalCode, "
+                + "phone, "
+                + "FROM address")) {
+            
+            ResultSet result = stmt.executeQuery();
+            
+            while (result.next()){
+                address.setAddressId(result.getInt("addressId"));
+                address.setAddress(result.getString("address"));
+                address.setAddress2(result.getString("address2"));
+                address.setCityId(result.getInt("cityId"));
+                address.setPostalCode(result.getString("postalCode"));
+                address.setPhone(result.getString("phone"));  
+            }
+        }
+        catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return address;
+    }
+    
+    public int getMostRecentAddressEntered() {
+        int addressId = 0;
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT addressId FROM address ORDER BY addressID desc limit 1;")) {
+            ResultSet result = stmt.executeQuery();
+            
+            while (result.next()) {
+                addressId = result.getInt("addressId");
+            }
+        }
+        catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return addressId;
+    }
 
     @Override
     public void insert(Address dto) {

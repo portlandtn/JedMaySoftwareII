@@ -71,9 +71,9 @@ public class CityDAO extends DAO<City> {
         }
         return cities;
     }
-    
-    public int getCityId(String cityName){
-        
+
+    public int getCityId(String cityName) {
+
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT cityId FROM city WHERE city = '" + cityName + "'")) {
 
             ResultSet result = stmt.executeQuery();
@@ -88,7 +88,7 @@ public class CityDAO extends DAO<City> {
 
         return 0;
     }
-    
+
     public ObservableList<String> queryCities() {
         ObservableList<String> cities = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT DISTINCT city FROM city GROUP BY city")) {
@@ -104,7 +104,7 @@ public class CityDAO extends DAO<City> {
         }
         return cities;
     }
-    
+
     public ObservableList<String> queryCities(String countryName) {
         ObservableList<String> cities = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT DISTINCT city FROM city "
@@ -123,10 +123,11 @@ public class CityDAO extends DAO<City> {
         }
         return cities;
     }
-    
+
     public Boolean doesCityExist(String city, int countryId) {
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT city FROM city JOIN country ON city.countryId = country.countryId"
-                + "WHERE city = '" + city + "'" + " AND city.countryId = " + countryId )) {
+                + " WHERE city = '" + city + "'"
+                + " AND city.countryId = " + countryId + ";")) {
 
             ResultSet result = stmt.executeQuery();
 
@@ -137,17 +138,16 @@ public class CityDAO extends DAO<City> {
         }
         return false;
     }
-    
-    public int getCountryIdFromCity(String city, String country){
-        
+
+    public int getCountryIdFromCity(String city, String country) {
+
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT country.countryId FROM city JOIN country ON city.countryId = country.countryId"
                 + "WHERE city = '" + city + "'" + " AND country.country = '" + country + "'")) {
-         
+
             ResultSet result = stmt.executeQuery();
             return result.getInt("country.countryId");
-            
-        }
-        catch (SQLException ex) {
+
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             return 0;
         }

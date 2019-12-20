@@ -74,6 +74,9 @@
                   </Label>
                   <CheckBox fx:id="activeCheckBox" mnemonicParsing="false" selected="true" text="Active" />
                </children>
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
             </HBox>
             <HBox alignment="CENTER" prefHeight="51.0" prefWidth="332.0" spacing="30.0">
                <children>
