@@ -22,11 +22,9 @@ import Model.User;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
 import Utilities.Validator;
-import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -49,11 +47,9 @@ public class ManageUsersController implements Initializable {
 
     DatabaseConnector dc = new DatabaseConnector();
     UserDAO userDAO;
-    private SchedulerDbAdapter _adapter;
 
     public ManageUsersController() {
         try {
-            _adapter = new SchedulerDbAdapter(dc.createConnection());
             this.userDAO = new UserDAO(dc.createConnection());
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
@@ -95,13 +91,8 @@ public class ManageUsersController implements Initializable {
         ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
 
         if (!ButtonType.CANCEL.equals(result)) {
-            try (Connection conn = dc.createConnection()) {
                 userDAO.remove(manageUsersTableView.getSelectionModel().getSelectedItem().getUserId());
                 refreshData();
-                conn.close();
-            } catch (SQLException | ClassNotFoundException ex) {
-                System.out.println(ex.getMessage());
-            }
         }
 
     }
@@ -207,27 +198,21 @@ public class ManageUsersController implements Initializable {
     private void refreshData() {
         ObservableList<User> allUsers;
 
-        try (Connection conn = dc.createConnection()) {
-
-            if (allRadioButton.isSelected()) {
-                allUsers = userDAO.query();
-            } else if (activeRadioButton.isSelected()) {
-                allUsers = userDAO.queryActiveInactiveUsers(true);
-            } else {
-                allUsers = userDAO.queryActiveInactiveUsers(false);
-            }
-
-            //Setup the user table with data from the database.
-            conn.close();
-            manageUsersTableView.setItems(allUsers);
-            userIdColumnTableView.setCellValueFactory(new PropertyValueFactory<>("userId"));
-            usernameColumnTableView.setCellValueFactory(new PropertyValueFactory<>("userName"));
-            passwordColumnTableView.setCellValueFactory(new PropertyValueFactory<>("password"));
-            activeColumnTableView.setCellValueFactory(new PropertyValueFactory<>("active"));
-
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println(ex.getMessage());
+        if (allRadioButton.isSelected()) {
+            allUsers = userDAO.query();
+        } else if (activeRadioButton.isSelected()) {
+            allUsers = userDAO.queryActiveInactiveUsers(true);
+        } else {
+            allUsers = userDAO.queryActiveInactiveUsers(false);
         }
+
+        //Setup the user table with data from the database.
+        manageUsersTableView.setItems(allUsers);
+        userIdColumnTableView.setCellValueFactory(new PropertyValueFactory<>("userId"));
+        usernameColumnTableView.setCellValueFactory(new PropertyValueFactory<>("userName"));
+        passwordColumnTableView.setCellValueFactory(new PropertyValueFactory<>("password"));
+        activeColumnTableView.setCellValueFactory(new PropertyValueFactory<>("active"));
+
     }
 
     @Override

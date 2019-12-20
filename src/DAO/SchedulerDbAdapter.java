@@ -17,7 +17,9 @@
  */
 package DAO;
 
+import Model.User;
 import com.mysql.jdbc.Connection;
+import javafx.collections.ObservableList;
 
 /**
  *
@@ -35,13 +37,21 @@ public class SchedulerDbAdapter {
 
     //Constructor that uses a single connection 
     public SchedulerDbAdapter(Connection conn) {
-        _conn = conn;
+        this._conn = conn;
         this._addressDAO = new AddressDAO(conn);
         this._appointmentDAO = new AppointmentDAO(conn);
         this._cityDAO = new CityDAO(conn);
         this._countryDAO = new CountryDAO(conn);
         this._customerDAO = new CustomerDAO(conn);
         this._userDAO = new UserDAO(conn);
+    }
+    
+    public ObservableList<User> getAllUsers(){
+        return _userDAO.query();
+    }
+    
+    public ObservableList<User> getAllActiveInactiveUsers(Boolean active) {
+        return _userDAO.queryActiveInactiveUsers(active);
     }
     
 }

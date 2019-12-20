@@ -25,7 +25,6 @@ import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -49,7 +48,7 @@ public class ManageCustomersController implements Initializable {
     DatabaseConnector dc = new DatabaseConnector();
     CustomerDAO customerDAO;
     static String previousPath;
-    
+
     @FXML
     private RadioButton allRadioButton;
 
@@ -64,7 +63,6 @@ public class ManageCustomersController implements Initializable {
 
     @FXML
     private TextField searchTextField;
-
 
     @FXML
     private TableView<Customer> manageCustomersTableView;
@@ -103,7 +101,7 @@ public class ManageCustomersController implements Initializable {
             System.out.println(ex.getMessage());
         }
     }
-    
+
     @FXML
     void onActionActiveSelected(ActionEvent event) {
         searchTextField.setText("");
@@ -115,7 +113,7 @@ public class ManageCustomersController implements Initializable {
         searchTextField.setText("");
         refreshData();
     }
-    
+
     @FXML
     void onActionInactiveSelected(ActionEvent event) {
         searchTextField.setText("");
@@ -165,16 +163,11 @@ public class ManageCustomersController implements Initializable {
 
     @FXML
     void onActionDeleteCustomer(ActionEvent event) {
-        Alert alert = new Alert(AlertType.CONFIRMATION,"Are you sure you want to delete this customer?");
+        Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to delete this customer?");
         ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
-        if(!ButtonType.CANCEL.equals(result)){
-            try (Connection conn = dc.createConnection()) {
-                customerDAO.remove(manageCustomersTableView.getSelectionModel().getSelectedItem().getCustomerId());
-                refreshData();
-                conn.close();
-            } catch (SQLException | ClassNotFoundException ex) {
-                System.out.println(ex.getMessage());
-            }  
+        if (!ButtonType.CANCEL.equals(result)) {
+            customerDAO.remove(manageCustomersTableView.getSelectionModel().getSelectedItem().getCustomerId());
+            refreshData();
         }
     }
 
@@ -209,33 +202,26 @@ public class ManageCustomersController implements Initializable {
     private void refreshData() {
         ObservableList<Customer> customers;
 
-        try (Connection conn = dc.createConnection()) {
-            
-            if(allRadioButton.isSelected()){
-                customers = customerDAO.queryWithAddress();
-            } else if(activeRadioButton.isSelected()){
-                customers = customerDAO.queryActiveInactive(true);
-            } else {
-                customers = customerDAO.queryActiveInactive(false);
-            }
-
-            conn.close();
-
-            //Setup the customer table with data from the database.
-            manageCustomersTableView.setItems(customers);
-            idColumnTableView.setCellValueFactory(new PropertyValueFactory<>("customerId"));
-            nameColumnTableView.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-            activeColumnTableView.setCellValueFactory(new PropertyValueFactory<>("active"));
-            addressColumnTableView.setCellValueFactory(new PropertyValueFactory<>("address"));
-            address2ColumnTableView.setCellValueFactory(new PropertyValueFactory<>("address2"));
-            cityColumnTableView.setCellValueFactory(new PropertyValueFactory<>("city"));
-            zipCodeColumnTableView.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
-            countryColumnTableView.setCellValueFactory(new PropertyValueFactory<>("country"));
-            phoneColumnTableView.setCellValueFactory(new PropertyValueFactory<>("phone"));
-
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println(ex.getMessage());
+        if (allRadioButton.isSelected()) {
+            customers = customerDAO.queryWithAddress();
+        } else if (activeRadioButton.isSelected()) {
+            customers = customerDAO.queryActiveInactive(true);
+        } else {
+            customers = customerDAO.queryActiveInactive(false);
         }
+
+        //Setup the customer table with data from the database.
+        manageCustomersTableView.setItems(customers);
+        idColumnTableView.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+        nameColumnTableView.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        activeColumnTableView.setCellValueFactory(new PropertyValueFactory<>("active"));
+        addressColumnTableView.setCellValueFactory(new PropertyValueFactory<>("address"));
+        address2ColumnTableView.setCellValueFactory(new PropertyValueFactory<>("address2"));
+        cityColumnTableView.setCellValueFactory(new PropertyValueFactory<>("city"));
+        zipCodeColumnTableView.setCellValueFactory(new PropertyValueFactory<>("postalCode"));
+        countryColumnTableView.setCellValueFactory(new PropertyValueFactory<>("country"));
+        phoneColumnTableView.setCellValueFactory(new PropertyValueFactory<>("phone"));
+
     }
 
     private void displayScreen(String path, ActionEvent event) throws IOException {

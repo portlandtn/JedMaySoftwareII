@@ -83,7 +83,7 @@ public class CreateEditUserController implements Initializable {
     }
 
     @FXML
-    void onActionSaveUser(ActionEvent event) throws IOException, SQLException, ClassNotFoundException {
+    void onActionSaveUser(ActionEvent event) throws IOException {
         
         if(!canDataBeSaved()) return;
         
@@ -123,7 +123,6 @@ public class CreateEditUserController implements Initializable {
 
     private void saveNewUser() {
 
-        try (Connection conn = dc.createConnection()) {
 
             //if all is verified good, declare variables to construct a new User and insert into the table.
             setVariablesFromScreen();
@@ -137,11 +136,7 @@ public class CreateEditUserController implements Initializable {
             user.setLastUpdateBy(this.lastUpdateBy);
 
             userDAO.insert(user);
-            conn.close();
 
-        } catch (SQLException | ClassNotFoundException ex) {
-            System.out.println(ex.getMessage());
-        }
     }
 
     private void setVariablesFromScreen() {
@@ -154,9 +149,7 @@ public class CreateEditUserController implements Initializable {
         this.lastUpdateBy = userNameTextField.getText();
     }
 
-    private void updateExistingUser(User existingUser) throws SQLException, ClassNotFoundException {
-
-        try (Connection conn = dc.createConnection()) {
+    private void updateExistingUser(User existingUser) {
 
             //if all is verified good, declare variables to construct a new User and update the table.
             setVariablesFromScreen();
@@ -171,10 +164,6 @@ public class CreateEditUserController implements Initializable {
             user.setLastUpdateBy(this.lastUpdateBy);
 
             userDAO.update(user);
-            conn.close();
-        } catch (SQLException | ClassNotFoundException ex) {
-            System.out.println(ex.getMessage());
-        }
 
     }
 

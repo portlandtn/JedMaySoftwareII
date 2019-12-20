@@ -188,7 +188,6 @@ public class CreateEditCustomerController implements Initializable {
 
     private void updateExistingCustomer(Customer custToUpdate) {
 
-        try (Connection conn = dc.createConnection()) {
 
             //if the country does not exist, create a new country record in the country database
             if (!countryDAO.doesCountryExist(country)) {
@@ -212,11 +211,6 @@ public class CreateEditCustomerController implements Initializable {
             custToUpdate.setLastUpdateBy(DataProvider.getCurrentUser());
 
             customerDAO.update(custToUpdate);
-            conn.close();
-
-        } catch (SQLException | ClassNotFoundException ex) {
-            System.out.println(ex.getMessage());
-        }
 
     }
 
@@ -224,7 +218,6 @@ public class CreateEditCustomerController implements Initializable {
 
         setVariablesFromScreen();
 
-        try (Connection conn = dc.createConnection()) {
             setVariablesFromScreen();
 
             if (!countryDAO.doesCountryExist(country)) {
@@ -243,16 +236,10 @@ public class CreateEditCustomerController implements Initializable {
             cust.setLastUpdate(this.lastUpdate);
             cust.setLastUpdateBy(this.lastUpdateBy);
             customerDAO.insert(cust);
-            conn.close();
 
-        } catch (SQLException | ClassNotFoundException ex) {
-            System.out.println(ex.getMessage());
-        }
     }
 
     private void saveNewCity() {
-        try (Connection conn = dc.createConnection()) {
-
             City city = new City();
             city.setCity(cityComboBox.getValue());
             city.setCountryId(this.countryId);
@@ -262,15 +249,9 @@ public class CreateEditCustomerController implements Initializable {
             city.setLastUpdateBy(DataProvider.getCurrentUser());
 
             cityDAO.insert(city);
-            conn.close();
-
-        } catch (SQLException | ClassNotFoundException ex) {
-            System.out.println(ex.getMessage());
-        }
     }
 
     private void saveNewCountry() {
-        try (Connection conn = dc.createConnection()) {
 
             Country country = new Country();
             country.setCountry(countryComboBox.getValue());
@@ -283,15 +264,11 @@ public class CreateEditCustomerController implements Initializable {
             
             //Sets the newly created country
             this.countryId = countryDAO.getCountryId(countryComboBox.getValue());
-            conn.close();
 
-        } catch (SQLException | ClassNotFoundException ex) {
-            System.out.println(ex.getMessage());
-        }
     }
     
     private void updateAddress(){
-        try (Connection conn = dc.createConnection()){
+
             
             Address address = new Address();
             address.setAddressId(this.addressId);
@@ -302,13 +279,7 @@ public class CreateEditCustomerController implements Initializable {
             address.setPostalCode(postalCodeTextField.getText());
             
             addressDAO.update(address);
-            
-            conn.close();
-            
-            
-        } catch (SQLException | ClassNotFoundException ex){
-            System.out.println(ex.getMessage());
-        }
+
     }
 
     @Override
