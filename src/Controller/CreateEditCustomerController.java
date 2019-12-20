@@ -24,6 +24,7 @@ import Model.Country;
 import Model.Customer;
 import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
+import Utilities.Navigator;
 import Utilities.Validator;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
@@ -36,10 +37,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 
 /**
  *
@@ -104,7 +102,7 @@ public class CreateEditCustomerController implements Initializable {
 
     @FXML
     void onActionCancel(ActionEvent event) throws IOException, SQLException {
-        displayScreen(previousPath, event);
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
     }
 
     @FXML
@@ -145,7 +143,7 @@ public class CreateEditCustomerController implements Initializable {
             this.addressId = addressDAO.getMostRecentAddressEntered();
             saveNewCustomer();
         }
-        displayScreen(previousPath, event);
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
     }
 
     //simply a validator to make sure that data can be saved and doesn't violate any rules.
@@ -263,18 +261,6 @@ public class CreateEditCustomerController implements Initializable {
         addressDAO.insert(address);
     }
 
-    //helper method to display a screen.
-    private void displayScreen(String path, ActionEvent event) throws IOException, SQLException {
-
-        Stage stage;
-        Parent scene;
-
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource(path));
-        stage.setScene(new Scene(scene));
-        conn.close();
-        stage.show();
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

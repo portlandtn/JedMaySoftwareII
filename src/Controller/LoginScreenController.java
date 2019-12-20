@@ -21,6 +21,7 @@ import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
 import Utilities.Converter;
+import Utilities.Navigator;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
@@ -31,11 +32,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Stage;
 
 /**
  *
@@ -70,7 +68,7 @@ public class LoginScreenController implements Initializable {
     void onActionShowUserDetails(ActionEvent event) throws IOException, SQLException {
         CreateEditUserController.previousPath = "/View/LoginScreen.fxml";
         CreateEditUserController.isEditing = false;
-        displayScreen("/View/CreateEditUser.fxml", event);
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource("/View/CreateEditUser.fxml")));
     }
 
     @FXML
@@ -102,7 +100,8 @@ public class LoginScreenController implements Initializable {
                 DataProvider.setIsLoggedIn(true);
                 noUserFoundLabel.setVisible(false);
                 DataProvider.setCurrentUser(userNameTextField.getText());
-                displayScreen("/View/Dashboard.fxml", event);
+                Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource("/View/Dashboard.fxml")));
+
             }
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
@@ -114,17 +113,6 @@ public class LoginScreenController implements Initializable {
         }
     }
 
-    private void displayScreen(String path, ActionEvent event) throws IOException, SQLException {
-
-        Stage stage;
-        Parent scene;
-
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource(path));
-        stage.setScene(new Scene(scene));
-        conn.close();
-        stage.show();
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

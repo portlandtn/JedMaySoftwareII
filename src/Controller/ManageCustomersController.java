@@ -20,6 +20,7 @@ package Controller;
 import DAO.CustomerDAO;
 import Model.Customer;
 import Utilities.DatabaseConnector;
+import Utilities.Navigator;
 import Utilities.Validator;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
@@ -153,14 +154,15 @@ public class ManageCustomersController implements Initializable {
     //Go Back button
     @FXML
     void onActionShowDashboard(ActionEvent event) throws IOException, SQLException {
-        displayScreen("/View/Dashboard.fxml", event);
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource("/View/Dashboard.fxml")));
     }
 
     @FXML
     void onActionAddNewCustomer(ActionEvent event) throws IOException, SQLException {
         CreateEditCustomerController.isEditing = false;
         CreateEditCustomerController.previousPath = "/View/ManageCustomers.fxml";
-        displayScreen("/View/CreateEditCustomer.fxml", event);
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource("/View/CreateEditCustomer.fxml")));
+
     }
 
     @FXML
@@ -224,18 +226,6 @@ public class ManageCustomersController implements Initializable {
         countryColumnTableView.setCellValueFactory(new PropertyValueFactory<>("country"));
         phoneColumnTableView.setCellValueFactory(new PropertyValueFactory<>("phone"));
 
-    }
-
-    private void displayScreen(String path, ActionEvent event) throws IOException, SQLException {
-
-        Stage stage;
-        Parent scene;
-
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource(path));
-        stage.setScene(new Scene(scene));
-        conn.close();
-        stage.show();
     }
 
     @Override

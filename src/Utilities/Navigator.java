@@ -20,7 +20,6 @@ package Utilities;
 import java.io.IOException;
 import java.sql.SQLException;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -28,37 +27,20 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author Jedidiah May
+ * @author Jedidiah.May
  */
-public class Validator {
 
-    //Checks to see if an array of text is empty
-    public static Boolean isTextEntered(String[] textFields) {
 
-        for (String textField : textFields) {
-            if (textField.trim().isEmpty()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    //Checks to see if two strings match each other
-    public static Boolean doStringsMatch(String text1, String text2) {
-        return text1.trim().equals(text2.trim());
-    }
+public class Navigator {
     
-    //Determines if the search string is a number for code flow.
-    public static Boolean isSearchStringNumber(String search) {
+    public static void displayScreen(ActionEvent event, Parent scene) throws IOException, SQLException {
 
-        try {
-            //Attempts to assign the string to an int variable. If there is an exception, it's not a number, and it falls through the catch.
-            int aNumber = Integer.parseInt(search);
-            return true;
-        } catch (NumberFormatException ex) {
-            return false;
-        }
+        Stage stage;
+        //Parent scene;
+
+        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        //scene = sc;
+        stage.setScene(new Scene(scene));
+        stage.show();
     }
-
-
 }

@@ -21,6 +21,7 @@ import Model.User;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
 import Utilities.DataProvider;
+import Utilities.Navigator;
 import Utilities.Validator;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
@@ -94,13 +95,13 @@ public class CreateEditUserController implements Initializable {
         } else {
             saveNewUser();
         }
-        displayScreen(previousPath, event);
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
 
     }
 
     @FXML
     void onActionGoBack(ActionEvent event) throws IOException, SQLException {
-        displayScreen(previousPath, event);
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
     }
 
 
@@ -188,18 +189,7 @@ public class CreateEditUserController implements Initializable {
         // if these three checks are good, input is valid and can be saved.
         return true;
     }
-    
-        private void displayScreen(String path, ActionEvent event) throws IOException, SQLException {
 
-        Stage stage;
-        Parent scene;
-
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource(path));
-        stage.setScene(new Scene(scene));
-        conn.close();
-        stage.show();
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
