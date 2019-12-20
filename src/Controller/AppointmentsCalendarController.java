@@ -19,7 +19,9 @@ package Controller;
 
 import DAO.AppointmentDAO;
 import Model.Appointment;
+import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
+import Utilities.Navigator;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
@@ -94,19 +96,19 @@ public class AppointmentsCalendarController implements Initializable {
     }
 
     @FXML
-    void onActionAddAppointment(ActionEvent event) throws IOException {
+    void onActionAddAppointment(ActionEvent event) throws IOException, SQLException {
         AppointmentDetailController.isEditing = false;
-        displayScreen("/View/AppointmentDetail.fxml", event);
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENT_DETAIL.getPath())));
     }
 
     @FXML
-    void onActionBack(ActionEvent event) throws IOException {
-        displayScreen("/View/Dashboard.fxml", event);
+    void onActionBack(ActionEvent event) throws IOException, SQLException {
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.DASHBOARD.getPath())));
     }
     
     @FXML
-    void onActionDisplayAppointmentDetail(ActionEvent event) throws IOException {
-        displayScreen("/View/AppointmentDetail.fxml", event);
+    void onActionDisplayAppointmentDetail(ActionEvent event) throws IOException, SQLException {
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENT_DETAIL.getPath())));
     }
 
     @FXML
@@ -126,10 +128,10 @@ public class AppointmentsCalendarController implements Initializable {
         
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/View/AppointmentDetail.fxml"));
+            loader.setLocation(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENTS_CALENDAR.getPath()));
             loader.load();
 
-            AppointmentDetailController.previousPath = "/View/AppointmentsCalendar.fxml";
+            AppointmentDetailController.previousPath = DataProvider.pathOfFXML.APPOINTMENTS_CALENDAR.getPath();
 
             AppointmentDetailController apptController = loader.getController();
             apptController.sendAppointmentDetails(calendarAppointmentTableView.getSelectionModel().getSelectedItem());
@@ -138,10 +140,9 @@ public class AppointmentsCalendarController implements Initializable {
             Parent scene = loader.getRoot();
             stage.setScene(new Scene(scene));
             stage.show();
+            Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENT_DETAIL.getPath())));
 
-            displayScreen("/View/AppointmentDetail.fxml", event);
-
-        } catch (IOException | NullPointerException ex) {
+        } catch (IOException | NullPointerException | SQLException ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -160,17 +161,6 @@ public class AppointmentsCalendarController implements Initializable {
     @FXML
     void onActionSelectWeek(ActionEvent event) {
         refreshData();
-    }
-
-    private void displayScreen(String path, ActionEvent event) throws IOException {
-
-        Stage stage;
-        Parent scene;
-
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource(path));
-        stage.setScene(new Scene(scene));
-        stage.show();
     }
 
     private void refreshData() {

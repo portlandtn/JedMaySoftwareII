@@ -18,17 +18,16 @@
 package Controller;
 
 import Utilities.DataProvider;
+import Utilities.Navigator;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
 
 /**
  *
@@ -40,42 +39,32 @@ public class DashboardController implements Initializable {
     private Button manageUsersButton;
 
     @FXML
-    void onActionLogOut(ActionEvent event) throws IOException {
+    void onActionLogOut(ActionEvent event) throws IOException, SQLException {
         DataProvider.setIsLoggedIn(false);
         DataProvider.setCurrentUser(null);
-        displayScreen("/View/LoginScreen.fxml", event);
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.LOGIN_SCREEN.getPath())));
     }
 
     @FXML
-    void onActionShowCalendar(ActionEvent event) throws IOException {
-        displayScreen("/View/AppointmentsCalendar.fxml", event);
+    void onActionShowCalendar(ActionEvent event) throws IOException, SQLException {
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENTS_CALENDAR.getPath())));
     }
 
     @FXML
-    void onActionShowCustomers(ActionEvent event) throws IOException {
-        displayScreen("/View/ManageCustomers.fxml", event);
+    void onActionShowCustomers(ActionEvent event) throws IOException, SQLException {
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.MANAGE_CUSTOMERS.getPath())));
     }
 
     @FXML
-    void onActionShowReportsDashboard(ActionEvent event) throws IOException {
-        displayScreen("/View/ReportsDashboard.fxml", event);
+    void onActionShowReportsDashboard(ActionEvent event) throws IOException, SQLException {
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.REPORTS_DASHBOARD.getPath())));
     }
 
     @FXML
-    void onActionShowManageUsersScreen(ActionEvent event) throws IOException {
-        displayScreen("/View/ManageUsers.fxml", event);
+    void onActionShowManageUsersScreen(ActionEvent event) throws IOException, SQLException {
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.MANAGE_USERS.getPath())));
     }
 
-    private void displayScreen(String path, ActionEvent event) throws IOException {
-
-        Stage stage;
-        Parent scene;
-
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource(path));
-        stage.setScene(new Scene(scene));
-        stage.show();
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

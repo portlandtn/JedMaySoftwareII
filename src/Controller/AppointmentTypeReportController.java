@@ -18,18 +18,19 @@
 package Controller;
 
 import Model.Appointment;
+import Utilities.DataProvider;
+import Utilities.Navigator;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
+
 /**
  *
  * @author Jedidiah May
@@ -81,8 +82,8 @@ public class AppointmentTypeReportController implements Initializable {
     }
 
     @FXML
-    void onActionMoreInfo(ActionEvent event) throws IOException {
-        displayScreen("/View/AppointmentsDetail.fxml", event);
+    void onActionMoreInfo(ActionEvent event) throws IOException, SQLException {
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENT_DETAIL.getPath())));
     }
 
     @FXML
@@ -108,17 +109,6 @@ public class AppointmentTypeReportController implements Initializable {
     @FXML
     void onActionSelectTermination(ActionEvent event) {
 
-    }
-
-    private void displayScreen(String path, ActionEvent event) throws IOException {
-
-        Stage stage;
-        Parent scene;
-
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource(path));
-        stage.setScene(new Scene(scene));
-        stage.show();
     }
     
     @Override

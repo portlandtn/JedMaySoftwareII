@@ -70,11 +70,12 @@ public class LoginScreenController implements Initializable {
     @FXML
     void onActionShowUserDetails(ActionEvent event) throws IOException, SQLException {
         // Sets the previous path for navigation back here from the next screen (static field)
-        CreateEditUserController.previousPath = "/View/LoginScreen.fxml";
+        CreateEditUserController.previousPath = DataProvider.pathOfFXML.LOGIN_SCREEN.getPath();
         // Static field that sets code flow based on whether or not form is for editing or creating a new user (flag)
         CreateEditUserController.isEditing = false;
         conn.close();
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource("/View/CreateEditUser.fxml")));
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.CREATE_EDIT_USER.getPath())));
+
     }
 
     // Login button is clicked.
@@ -109,7 +110,7 @@ public class LoginScreenController implements Initializable {
                 DataProvider.setIsLoggedIn(true);
                 noUserFoundLabel.setVisible(false);
                 DataProvider.setCurrentUser(userNameTextField.getText());
-                Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource("/View/Dashboard.fxml")));
+                Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.DASHBOARD.getPath())));
 
             }
         } catch (IOException ex) {

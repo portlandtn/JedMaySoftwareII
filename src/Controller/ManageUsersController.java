@@ -20,6 +20,7 @@ package Controller;
 import Model.User;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
+import Utilities.DataProvider;
 import Utilities.Navigator;
 import Utilities.Validator;
 import com.mysql.jdbc.Connection;
@@ -104,7 +105,7 @@ public class ManageUsersController implements Initializable {
 
     @FXML
     void onActionDisplayDashboard(ActionEvent event) throws IOException, SQLException {
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource("/View/Dashboard.fxml")));
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.DASHBOARD.getPath())));
     }
 
     @FXML
@@ -142,10 +143,10 @@ public class ManageUsersController implements Initializable {
 
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/View/CreateEditUser.fxml"));
+            loader.setLocation(getClass().getResource(DataProvider.pathOfFXML.CREATE_EDIT_USER.getPath()));
             loader.load();
 
-            CreateEditUserController.previousPath = "/View/ManageUsers.fxml";
+            CreateEditUserController.previousPath = DataProvider.pathOfFXML.MANAGE_USERS.getPath();
 
             CreateEditUserController userController = loader.getController();
             userController.sendUserDetails(manageUsersTableView.getSelectionModel().getSelectedItem());
@@ -168,7 +169,7 @@ public class ManageUsersController implements Initializable {
     void onActionCreateUser(ActionEvent event) throws IOException, SQLException {
         CreateEditUserController.isEditing = false;
         CreateEditUserController.previousPath = "/View/ManageUsers.fxml";
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource("/View/CreateEditUser.fxml")));
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.CREATE_EDIT_USER.getPath())));
     }
 
     @FXML

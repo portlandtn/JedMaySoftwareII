@@ -18,8 +18,11 @@
 package Controller;
 
 import Model.Appointment;
+import Utilities.DataProvider;
+import Utilities.Navigator;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -62,29 +65,18 @@ public class ScheduleReportController implements Initializable {
     private TableColumn<Appointment, Date> endColumnTableView;
 
     @FXML
-    void onActionGoBack(ActionEvent event) throws IOException {
-        displayScreen("/View/ReportsDashboard.fxml", event);
+    void onActionGoBack(ActionEvent event) throws IOException, SQLException {
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.REPORTS_DASHBOARD.getPath())));
     }
 
     @FXML
-    void onActionMoreInfo(ActionEvent event) throws IOException {
-        displayScreen("/View/AppointmentDetail.fxml", event);
+    void onActionMoreInfo(ActionEvent event) throws IOException, SQLException {
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENT_DETAIL.getPath())));
     }
 
     @FXML
     void onActionPrintReport(ActionEvent event) {
 
-    }
-
-    private void displayScreen(String path, ActionEvent event) throws IOException {
-
-        Stage stage;
-        Parent scene;
-
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource(path));
-        stage.setScene(new Scene(scene));
-        stage.show();
     }
     
     @Override

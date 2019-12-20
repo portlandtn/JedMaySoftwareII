@@ -30,17 +30,43 @@ public class DataProvider {
     private static String currentUser;
     private static Boolean isLoggedIn = false;
     
-    private static String appointmentDetailControllerPath = "/View/Dashboard.fxml";
-    private static String appointmentTypeReportControllerPath;
-    private static String appointmentsCalendarControllerPath;
-    private static String createEditCustomerControllerPath;
-    private static String createEditUserControllerPath;
-    private static String dashboardControllerPath;
-    private static String locationReportControllerPath;
-    private static String loginScreenControllerPath;
-    private static String manageCustomersControllerPath;
-    private static String reportsDashboardControllerPath;
-    private static String scheduleReportControllerPath;
+    public enum pathOfFXML {
+        APPOINTMENT_DETAIL("/View/AppointmentDetail.fxml"),
+        APPOINTMENT_TYPE_REPORT("/View/AppointmentTypeReport.fxml"),
+        APPOINTMENTS_CALENDAR("/View/AppointmentsCalendar.fxml"),
+        CREATE_EDIT_CUSTOMER("/View/CreateEditCustomer.fxml"),
+        CREATE_EDIT_USER("/View/CreateEditUser.fxml"),
+        DASHBOARD("/View/Dashboard.fxml"),
+        LOCATION_REPORT("/View/Dashboard.fxml"),
+        LOGIN_SCREEN("/View/LoginScreen.fxml"),
+        MANAGE_CUSTOMERS("/View/ManageCustomers.fxml"),
+        MANAGE_USERS("/View/ManageUsers.fxml"),
+        REPORTS_DASHBOARD("/View/ReportsDashboard.fxml"),
+        SCHEDULE_REPORT("/View/ScheduleReport.fxml");
+        
+        private String screen;
+        
+        pathOfFXML(String screen) {
+            this.screen = screen;
+        }
+        
+        public String getPath() {
+            return this.screen;
+        }
+        
+    }
+    
+//    private static String appointmentDetailControllerPath;
+//    private static String appointmentTypeReportControllerPath;
+//    private static String appointmentsCalendarControllerPath;
+//    private static String createEditCustomerControllerPath;
+//    private static String createEditUserControllerPath;
+//    private static String dashboardControllerPath;
+//    private static String locationReportControllerPath;
+//    private static String loginScreenControllerPath;
+//    private static String manageCustomersControllerPath;
+//    private static String reportsDashboardControllerPath;
+//    private static String scheduleReportControllerPath;
     
     public static final ObservableList<String> APPOINTMENT_TYPES = FXCollections.observableArrayList("Consultation", "Introduction", "Termination");
     public static final ObservableList<String> LOCATIONS = FXCollections.observableArrayList("Home", "Office");

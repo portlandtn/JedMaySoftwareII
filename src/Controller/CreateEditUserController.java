@@ -192,7 +192,7 @@ public class CreateEditUserController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+
     }
 
 }

@@ -17,8 +17,11 @@
  */
 package Controller;
 
+import Utilities.DataProvider;
+import Utilities.Navigator;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -36,34 +39,23 @@ import javafx.stage.Stage;
 public class ReportsDashboardController implements Initializable {
 
     @FXML
-    void onActionGoBack(ActionEvent event) throws IOException {
-        displayScreen("/View/Dashboard.fxml", event);
+    void onActionGoBack(ActionEvent event) throws IOException, SQLException {
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.DASHBOARD.getPath())));
     }
 
     @FXML
-    void onActionShowAppointmentByLocationReport(ActionEvent event) throws IOException {
-        displayScreen("/View/LocationReport.fxml", event);
+    void onActionShowAppointmentByLocationReport(ActionEvent event) throws IOException, SQLException {
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.LOCATION_REPORT.getPath())));
     }
 
     @FXML
-    void onActionShowAppointmentTypesReport(ActionEvent event) throws IOException {
-        displayScreen("/View/AppointmentTypeReport.fxml", event);
+    void onActionShowAppointmentTypesReport(ActionEvent event) throws IOException, SQLException {
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENT_TYPE_REPORT.getPath())));
     }
 
     @FXML
-    void onActionShowScheduleReport(ActionEvent event) throws IOException {
-        displayScreen("/View/ScheduleReport.fxml", event);
-    }
-
-    private void displayScreen(String path, ActionEvent event) throws IOException {
-
-        Stage stage;
-        Parent scene;
-
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource(path));
-        stage.setScene(new Scene(scene));
-        stage.show();
+    void onActionShowScheduleReport(ActionEvent event) throws IOException, SQLException {
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.SCHEDULE_REPORT.getPath())));
     }
     
     @Override

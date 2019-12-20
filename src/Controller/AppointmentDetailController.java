@@ -23,6 +23,7 @@ import DAO.UserDAO;
 import Model.Appointment;
 import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
+import Utilities.Navigator;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
@@ -120,8 +121,8 @@ public class AppointmentDetailController implements Initializable {
     }
 
     @FXML
-    void onActionCancel(ActionEvent event) throws IOException {
-        displayScreen(previousPath, event);
+    void onActionCancel(ActionEvent event) throws IOException, SQLException {
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
     }
 
     @FXML
@@ -130,7 +131,7 @@ public class AppointmentDetailController implements Initializable {
     }
 
     @FXML
-    void onActionSave(ActionEvent event) throws IOException {
+    void onActionSave(ActionEvent event) throws IOException, SQLException {
         
         if(!customerDAO.doesCustomerExist(customerNameComboBox.getValue())) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This customer does not exist. A new customer will have to be created. Would you like to continue?");
@@ -138,7 +139,7 @@ public class AppointmentDetailController implements Initializable {
             if(result.get() != ButtonType.OK){
                 return;
             } else {
-                displayScreen("/View/CreateEditCustomer.fxml", event);
+                Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.CREATE_EDIT_CUSTOMER.getPath())));
             }
         }
 
@@ -151,19 +152,10 @@ public class AppointmentDetailController implements Initializable {
         } else {
             saveNewAppointment();
         }
-        displayScreen(previousPath, event);
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
+
     }
 
-    private void displayScreen(String path, ActionEvent event) throws IOException {
-
-        Stage stage;
-        Parent scene;
-
-        stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        scene = FXMLLoader.load(getClass().getResource(path));
-        stage.setScene(new Scene(scene));
-        stage.show();
-    }
 
     private void updateAppointment(Appointment existingAppt) {
         
