@@ -136,6 +136,7 @@ public class AppointmentDAO extends DAO<Appointment>{
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "customerName, "
                 + "userName, "
+                + "contact, "
                 + "title, "
                 + "location, "
                 + "type, "
@@ -153,9 +154,10 @@ public class AppointmentDAO extends DAO<Appointment>{
                 Appointment appointment = new Appointment();
                 appointment.setCustomerName(result.getString("customerName"));
                 appointment.setUserName(result.getString("userName"));
-                appointment.setUserName(result.getString("title"));
+                appointment.setTitle(result.getString("title"));
                 appointment.setLocation(result.getString("location"));
-                appointment.setLocation(result.getString("type"));
+                appointment.setType(result.getString("type"));
+                appointment.setContact(result.getString("contact"));
                 appointment.setAppointmentDate(result.getDate("apptDate"));
                 appointment.setStart(result.getDate("start"));
                 appointment.setEnd(result.getDate("end"));

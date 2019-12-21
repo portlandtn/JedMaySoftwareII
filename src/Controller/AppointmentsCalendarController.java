@@ -46,8 +46,10 @@ import javafx.stage.Stage;
 public class AppointmentsCalendarController implements Initializable {
 
     DatabaseConnector dc = new DatabaseConnector();
+    Connection conn;
     AppointmentDAO appointmentDAO;
 
+    // <editor-fold defaultstate="collapsed" desc="FXML objects">
     @FXML
     private RadioButton allRadioButton;
 
@@ -59,7 +61,7 @@ public class AppointmentsCalendarController implements Initializable {
 
     @FXML
     private RadioButton weekRadioButton;
-    
+
     @FXML
     private TextField searchTextField;
 
@@ -71,6 +73,9 @@ public class AppointmentsCalendarController implements Initializable {
 
     @FXML
     private TableColumn<Appointment, String> assignedToColumnTableView;
+
+    @FXML
+    private TableColumn<Appointment, String> titleColumnTableView;
 
     @FXML
     private TableColumn<Appointment, String> locationColumnTableView;
@@ -87,9 +92,11 @@ public class AppointmentsCalendarController implements Initializable {
     @FXML
     private TableColumn<Appointment, Date> endColumnTableView;
 
+    // </editor-fold>
     public AppointmentsCalendarController() {
         try {
-            this.appointmentDAO = new AppointmentDAO(dc.createConnection());
+            this.conn = dc.createConnection();
+            this.appointmentDAO = new AppointmentDAO(conn);
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
         }
@@ -105,17 +112,12 @@ public class AppointmentsCalendarController implements Initializable {
     void onActionBack(ActionEvent event) throws IOException, SQLException {
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.DASHBOARD.getPath())));
     }
-    
-    @FXML
-    void onActionDisplayAppointmentDetail(ActionEvent event) throws IOException, SQLException {
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENT_DETAIL.getPath())));
-    }
 
     @FXML
     void onActionDeleteAppointment(ActionEvent event) {
 
     }
-    
+
     @FXML
     void onActionSearch(ActionEvent event) {
 
@@ -123,12 +125,12 @@ public class AppointmentsCalendarController implements Initializable {
 
     @FXML
     void onActionEditAppointment(ActionEvent event) {
-        
+
         AppointmentDetailController.isEditing = true;
-        
+
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENTS_CALENDAR.getPath()));
+            loader.setLocation(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENT_DETAIL.getPath()));
             loader.load();
 
             AppointmentDetailController.previousPath = DataProvider.pathOfFXML.APPOINTMENTS_CALENDAR.getPath();
@@ -147,7 +149,6 @@ public class AppointmentsCalendarController implements Initializable {
         }
     }
 
-
     @FXML
     void onActionSelectAll(ActionEvent event) {
         refreshData();
@@ -165,32 +166,26 @@ public class AppointmentsCalendarController implements Initializable {
 
     private void refreshData() {
         ObservableList<Appointment> appointments;
-        try (Connection conn = dc.createConnection()) {
 
-
-            //Setup the user table with data from the database.
-            if (allRadioButton.isSelected()) {
-                appointments = appointmentDAO.queryForAppointmentCalendar();
-            } 
-            else if (monthRadioButton.isSelected()){
-                appointments = appointmentDAO.queryForAppointmentCalendar();
-            }
-            else appointments = appointmentDAO.queryForAppointmentCalendar();
-            
-            conn.close();
-
-            calendarAppointmentTableView.setItems(appointments);
-            customerColumnTableView.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-            assignedToColumnTableView.setCellValueFactory(new PropertyValueFactory<>("assignedToUser"));
-            locationColumnTableView.setCellValueFactory(new PropertyValueFactory<>("location"));
-            contactColumnTableView.setCellValueFactory(new PropertyValueFactory<>("contact"));
-            dateColumnTableView.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
-            startColumnTableView.setCellValueFactory(new PropertyValueFactory<>("start"));
-            endColumnTableView.setCellValueFactory(new PropertyValueFactory<>("end"));
-
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println(ex.getMessage());
+        //Setup the appointment table with data from the database.
+        if (allRadioButton.isSelected()) {
+            appointments = appointmentDAO.queryForAppointmentCalendar();
+        } else if (monthRadioButton.isSelected()) {
+            appointments = appointmentDAO.queryForAppointmentCalendar();
+        } else {
+            appointments = appointmentDAO.queryForAppointmentCalendar();
         }
+
+        calendarAppointmentTableView.setItems(appointments);
+        customerColumnTableView.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        assignedToColumnTableView.setCellValueFactory(new PropertyValueFactory<>("userName"));
+        titleColumnTableView.setCellValueFactory(new PropertyValueFactory<>("title"));
+        locationColumnTableView.setCellValueFactory(new PropertyValueFactory<>("location"));
+        contactColumnTableView.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        dateColumnTableView.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
+        startColumnTableView.setCellValueFactory(new PropertyValueFactory<>("start"));
+        endColumnTableView.setCellValueFactory(new PropertyValueFactory<>("end"));
+
     }
 
     @Override

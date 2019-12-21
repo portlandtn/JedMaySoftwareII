@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="532.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AppointmentsCalendarController">
+<AnchorPane id="AnchorPane" prefHeight="532.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AppointmentsCalendarController">
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="337.0" prefWidth="309.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -43,22 +43,24 @@
                   <Insets bottom="20.0" left="250.0" top="10.0" />
                </VBox.margin>
             </HBox>
-            <TableView fx:id="calendarAppointmentTableView" maxWidth="-Infinity" prefHeight="300.0" prefWidth="825.0">
+            <TableView fx:id="calendarAppointmentTableView" maxWidth="-Infinity" prefHeight="300.0" prefWidth="950.0">
               <columns>
                 <TableColumn fx:id="customerColumnTableView" prefWidth="150.0" text="Customer" />
                 <TableColumn fx:id="assignedToColumnTableView" prefWidth="100.0" text="Assigned To" />
-                  <TableColumn fx:id="locationColumnTableView" minWidth="0.0" prefWidth="125.0" text="Location" />
-                  <TableColumn fx:id="contactColumnTableView" minWidth="2.0" prefWidth="150.0" text="Contact" />
-                  <TableColumn fx:id="dateColumnTableView" prefWidth="100.0" text="Date" />
-                  <TableColumn fx:id="startColumnTableView" prefWidth="100.0" text="Start" />
+                  <TableColumn fx:id="titleColumnTableView" minWidth="0.0" prefWidth="136.0" text="Title" />
+                  <TableColumn fx:id="locationColumnTableView" minWidth="0.0" prefWidth="134.0" text="Location" />
+                  <TableColumn fx:id="contactColumnTableView" minWidth="2.0" prefWidth="130.0" text="Contact" />
+                  <TableColumn fx:id="dateColumnTableView" prefWidth="93.0" text="Date" />
+                  <TableColumn fx:id="startColumnTableView" prefWidth="107.0" text="Start" />
                   <TableColumn fx:id="endColumnTableView" prefWidth="100.0" text="End" />
               </columns>
             </TableView>
             <HBox alignment="TOP_CENTER" prefHeight="55.0" prefWidth="825.0" spacing="15.0">
                <children>
-                  <Button minWidth="125.0" mnemonicParsing="false" onAction="#onActionAddAppointment" text="Add Appointment" />
-                  <Button minWidth="125.0" mnemonicParsing="false" onAction="#onActionEditAppointment" text="Edit Appointment" />
-                  <Button minWidth="125.0" mnemonicParsing="false" onAction="#onActionDeleteAppointment" text="Delete Appointment" />
+                  <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#onActionBack" prefWidth="75.0" text="Back" />
+                  <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#onActionAddAppointment" prefHeight="35.0" prefWidth="75.0" text="Add" />
+                  <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#onActionEditAppointment" prefHeight="35.0" prefWidth="75.0" text="View/Edit" textAlignment="CENTER" wrapText="true" />
+                  <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#onActionDeleteAppointment" prefHeight="35.0" prefWidth="75.0" text="Delete" />
                </children>
                <padding>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
@@ -66,15 +68,6 @@
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
-            </HBox>
-            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
-               <children>
-                  <Button minWidth="75.0" mnemonicParsing="false" onAction="#onActionDisplayAppointmentDetail" text="More Info" />
-                  <Button minWidth="75.0" mnemonicParsing="false" onAction="#onActionBack" text="Back" />
-               </children>
-               <padding>
-                  <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-               </padding>
             </HBox>
          </children>
          <padding>
