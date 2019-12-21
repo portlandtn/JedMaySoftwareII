@@ -24,10 +24,13 @@ import Model.Appointment;
 import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
 import Utilities.Navigator;
+import Utilities.Validator;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
@@ -45,6 +48,7 @@ import javafx.scene.control.*;
 public class AppointmentDetailController implements Initializable {
 
     DatabaseConnector dc = new DatabaseConnector();
+    Connection conn;
     AppointmentDAO appointmentDAO;
     CustomerDAO customerDAO;
     UserDAO userDAO;
@@ -68,7 +72,7 @@ public class AppointmentDetailController implements Initializable {
         urlTextField.setText(appt.getUrl());
         typeChoiceBox.setValue(appt.getType());
         dateDatePicker.setValue(LocalDate.MAX); //FIX LATER
-        startTimeCholceBox.setValue("8:00"); //FIX LATER
+        startTimeChoiceBox.setValue("8:00"); //FIX LATER
         endTimeChoiceBox.setValue("8:30"); //FIX LATER
 
         this.appointmentToUpdate = appt;
@@ -102,16 +106,17 @@ public class AppointmentDetailController implements Initializable {
     private DatePicker dateDatePicker;
 
     @FXML
-    private ChoiceBox<String> startTimeCholceBox;
+    private ChoiceBox<String> startTimeChoiceBox;
 
     @FXML
     private ChoiceBox<String> endTimeChoiceBox;
 
     public AppointmentDetailController() {
         try {
-            this.appointmentDAO = new AppointmentDAO(dc.createConnection());
-            this.customerDAO = new CustomerDAO(dc.createConnection());
-            this.userDAO = new UserDAO(dc.createConnection());
+            this.conn = dc.createConnection();
+            this.appointmentDAO = new AppointmentDAO(conn);
+            this.customerDAO = new CustomerDAO(conn);
+            this.userDAO = new UserDAO(conn);
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
         }
@@ -128,14 +133,15 @@ public class AppointmentDetailController implements Initializable {
     }
 
     @FXML
-    void onActionSave(ActionEvent event) throws IOException, SQLException {
-        
-        if(!customerDAO.doesCustomerExist(customerNameComboBox.getValue())) {
+    void onActionSave(ActionEvent event) throws IOException, SQLException, ParseException {
+
+        if (!customerDAO.doesCustomerExist(customerNameComboBox.getValue())) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This customer does not exist. A new customer will have to be created. Would you like to continue?");
             Optional<ButtonType> result = alert.showAndWait();
-            if(result.get() != ButtonType.OK){
+            if (result.get() != ButtonType.OK) {
                 return;
             } else {
+                CreateEditCustomerController.previousPath = DataProvider.pathOfFXML.APPOINTMENT_DETAIL.getPath();
                 Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.CREATE_EDIT_CUSTOMER.getPath())));
             }
         }
@@ -150,80 +156,69 @@ public class AppointmentDetailController implements Initializable {
             saveNewAppointment();
         }
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
-
     }
-
 
     private void updateAppointment(Appointment existingAppt) {
-        
-        setAppointmenetTableVariables();
-        
-        try (Connection conn = dc.createConnection()) {
-            Appointment appt = new Appointment();
-            appt.setAppointmentId(existingAppt.getAppointmentId());
-            appt.setCustomerName(this.customerName);
-            appt.setUserName(this.userName);
-            appt.setTitle(this.title);
-            appt.setDescription(this.description);
-            appt.setLocation(this.location);
-            appt.setType(this.type);
-            appt.setContact(this.contact);
-            appt.setUrl(this.url);
-            appt.setAppointmentDate(this.appointmentDate);
-            appt.setStart(this.start);
-            appt.setEnd(this.end);
-            
-            appointmentDAO.update(appt);
-            conn.close();
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
+
+        Appointment appt = new Appointment();
+        appt.setAppointmentId(existingAppt.getAppointmentId());
+        appt.setCustomerName(this.customerName);
+        appt.setUserName(this.userName);
+        appt.setTitle(this.title);
+        appt.setDescription(this.description);
+        appt.setLocation(this.location);
+        appt.setType(this.type);
+        appt.setContact(this.contact);
+        appt.setUrl(this.url);
+        appt.setAppointmentDate(this.appointmentDate);
+        appt.setStart(this.start);
+        appt.setEnd(this.end);
+
+        appointmentDAO.update(appt);
+
     }
 
-    private void saveNewAppointment() {
-        
-        setAppointmenetTableVariables();
-        
-        try (Connection conn = dc.createConnection()) {
-            Appointment appt = new Appointment();
-            appt.setCustomerName(this.customerName);
-            appt.setUserName(this.userName);
-            appt.setTitle(this.title);
-            appt.setDescription(this.description);
-            appt.setLocation(this.location);
-            appt.setType(this.type);
-            appt.setContact(this.contact);
-            appt.setUrl(this.url);
-            appt.setAppointmentDate(this.appointmentDate);
-            appt.setStart(this.start);
-            appt.setEnd(this.end);
-            
-            appointmentDAO.insert(appt);
-            conn.close();
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
+    private void saveNewAppointment() throws ParseException {
 
-    private void setAppointmenetTableVariables() {
-        this.customerName = customerNameComboBox.getValue();
-        this.userName = assignedToChoiceBox.getSelectionModel().getSelectedItem();
-        this.title = titleTextField.getText();
-        this.description = descriptionTextField.getText();
-        this.location = locationChoiceBox.getSelectionModel().getSelectedItem();
-        this.contact = contactTextField.getText();
-        this.url = urlTextField.getText();
-        this.type = typeChoiceBox.getSelectionModel().getSelectedItem();
-        this.appointmentDate = new Date(System.currentTimeMillis());
-        this.start = new Date(System.currentTimeMillis());
-        this.end = new Date(System.currentTimeMillis());
+        Appointment appt = new Appointment();
+        appt.setCustomerName(customerNameComboBox.getValue());
+        appt.setUserName(assignedToChoiceBox.getValue());
+        appt.setTitle(titleTextField.getText());
+        appt.setDescription(descriptionTextField.getText());
+        appt.setLocation(locationChoiceBox.getValue());
+        appt.setType(typeChoiceBox.getValue());
+        appt.setContact(contactTextField.getText());
+        appt.setUrl(urlTextField.getText());
+        
+        java.util.Date apptDate = java.sql.Date.valueOf(dateDatePicker.getValue());
+        appt.setAppointmentDate(apptDate);
+  
+        Date startTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(startTimeChoiceBox.getValue());
+        appt.setStart(startTime);
+        
+        Date endTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(endTimeChoiceBox.getValue());
+        appt.setEnd(endTime);
+
+        appointmentDAO.insert(appt);
+
     }
 
     private Boolean canDataBeSaved() {
         String[] textFields = new String[]{
             customerNameComboBox.getValue(),
-            titleTextField.getText()};
-        return Utilities.Validator.isTextEntered(textFields);
+            titleTextField.getText(),
+            dateDatePicker.getValue().toString(),
+            startTimeChoiceBox.getValue(),
+            endTimeChoiceBox.getValue()};
+        
+        if (!Validator.isTextEntered(textFields)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "At a minimum, you must have a Customer Name, Title, Date, Start Time, and End Time entered to save.");
+            alert.showAndWait();
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
     @Override
@@ -231,8 +226,8 @@ public class AppointmentDetailController implements Initializable {
         customerNameComboBox.setItems(customerDAO.queryAllCustomers());
         assignedToChoiceBox.setItems(userDAO.queryAllUsers());
         locationChoiceBox.setItems(DataProvider.LOCATIONS);
-        typeChoiceBox.setItems(DataProvider.LOCATIONS);
-        startTimeCholceBox.setItems(DataProvider.operatingHours);
+        typeChoiceBox.setItems(DataProvider.APPOINTMENT_TYPES);
+        startTimeChoiceBox.setItems(DataProvider.operatingHours);
         endTimeChoiceBox.setItems(DataProvider.operatingHours);
     }
 }

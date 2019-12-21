@@ -197,7 +197,7 @@ public class AppointmentDAO extends DAO<Appointment>{
 
     @Override
     public void remove(int id) {
-        try (PreparedStatement stmt = this.conn.prepareStatement("DELETE FROM appointment WHERE appointmentId = '" + id + "'")) {
+        try (PreparedStatement stmt = this.conn.prepareStatement("DELETE FROM appointment WHERE appointmentId = " + id)) {
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -219,7 +219,7 @@ public class AppointmentDAO extends DAO<Appointment>{
                     + "end = ?, "
                     + "lastUpdate = ?, "
                     + "lastUpdateBy = ? "
-                    + "WHERE address = '" + dto.getAppointmentId() + "'")) {
+                    + "WHERE address = " + dto.getAppointmentId())) {
                 stmt.setInt(1, dto.getCustomerId());
                 stmt.setInt(2, dto.getUserId());
                 stmt.setString(3, dto.getTitle());
