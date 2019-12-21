@@ -140,9 +140,10 @@ public class CreateEditCustomerController implements Initializable {
         this.cityId = cityDAO.getCityId(cityComboBox.getValue(), this.countryId);
 
         if (isEditing) {
-            // At this point, the country Id and city Id should be set.
+            // At this point, the country Id and city Id is assigned to the fields.
             // If updating, retrieve the addressId from the customerToUpdate object.
             int addrId = this.customerToUpdate.getAddressId();
+            this.addressId = addrId;
             // The address will not be new - has to exist, so it will be an update, based on the addressId.
             updateAddress(addressDAO.getAddress(addrId));
             updateExistingCustomer(this.customerToUpdate);
@@ -198,7 +199,7 @@ public class CreateEditCustomerController implements Initializable {
 
     /* 
     *  Obviously, this only takes place when updating an existing customer.
-    *  Injecting customerToUpdate, which should have address, city, and country Id's.
+    *  Injecting customerToUpdate, which should have addressId, cityId, and countryId.
     *  Address Id will never change. if a new country or city is being created as a result
     *  of updating, then new Id's will have to be associated.
     */ 
@@ -250,7 +251,7 @@ public class CreateEditCustomerController implements Initializable {
         countryDAO.insert(country);
     }
 
-    // This is only called if editing an existing customer. Address object injection
+    // This is only called if editing an existing customer. Address object passed here
     // is retrieved from addressId, which is from the customerToUpdate object.
     private void updateAddress(Address addressToUpdate) {
 
@@ -269,7 +270,6 @@ public class CreateEditCustomerController implements Initializable {
     private void saveNewAddress() {
 
         Address address = new Address();
-        address.setAddressId(this.addressId);
         address.setAddress(addressTextField.getText());
         address.setAddress2(address2TextField.getText());
         address.setCityId(this.cityId);

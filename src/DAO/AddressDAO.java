@@ -89,8 +89,8 @@ public class AddressDAO extends DAO<Address> {
                 + "address2, "
                 + "cityId, "
                 + "postalCode, "
-                + "phone, "
-                + "FROM address")) {
+                + "phone "
+                + "FROM address WHERE addressId = " + addressId)) {
             
             ResultSet result = stmt.executeQuery();
             
@@ -162,7 +162,7 @@ public class AddressDAO extends DAO<Address> {
                 + "phone = ?, "
                 + "lastUpdate = ?, "
                 + "lastUpdateBy = ? "
-                + "WHERE address = '" + dto.getAddressId() + "'")) {
+                + "WHERE addressId = " + dto.getAddressId())) {
             stmt.setString(1, dto.getAddress());
             stmt.setString(2, dto.getAddress2());
             stmt.setInt(3, dto.getCityId());

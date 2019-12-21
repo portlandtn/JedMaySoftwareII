@@ -17,6 +17,7 @@
  */
 package Controller;
 
+import DAO.AddressDAO;
 import DAO.CustomerDAO;
 import Model.Customer;
 import Utilities.DataProvider;
@@ -49,6 +50,7 @@ public class ManageCustomersController implements Initializable {
 
     DatabaseConnector dc = new DatabaseConnector();
     CustomerDAO customerDAO;
+    AddressDAO addressDAO;
     Connection conn;
     static String previousPath;
 
@@ -104,6 +106,7 @@ public class ManageCustomersController implements Initializable {
         try {
             conn = dc.createConnection();
             this.customerDAO = new CustomerDAO(conn);
+            this.addressDAO = new AddressDAO(conn);
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
         }
@@ -181,12 +184,16 @@ public class ManageCustomersController implements Initializable {
 
     }
 
+    // On delete, remove the customer, and also remove the address since it's specific to the customer.
+    // Leave the city and country available to be selected by customers in the future.
     @FXML
     void onActionDeleteCustomer(ActionEvent event) {
         Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to delete this customer?");
         ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
         if (!ButtonType.CANCEL.equals(result)) {
+            int addressId = manageCustomersTableView.getSelectionModel().getSelectedItem().getAddressId();
             customerDAO.remove(manageCustomersTableView.getSelectionModel().getSelectedItem().getCustomerId());
+            addressDAO.remove(addressId);
             refreshData();
         }
     }
