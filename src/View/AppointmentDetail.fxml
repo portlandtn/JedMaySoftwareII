@@ -68,7 +68,7 @@
                   <TextField fx:id="urlTextField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                   <ChoiceBox fx:id="typeChoiceBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                   <DatePicker fx:id="dateDatePicker" onAction="#onActionDatePicked" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                  <ChoiceBox fx:id="startTimeCholceBox" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                  <ChoiceBox fx:id="startTimeChoiceBox" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                   <ChoiceBox fx:id="endTimeChoiceBox" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
                </children>
                <VBox.margin>

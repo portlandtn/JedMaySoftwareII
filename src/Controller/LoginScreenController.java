@@ -20,6 +20,7 @@ package Controller;
 import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
+import Log.Logger;
 import Utilities.Converter;
 import Utilities.Navigator;
 import com.mysql.jdbc.Connection;
@@ -110,6 +111,7 @@ public class LoginScreenController implements Initializable {
                 DataProvider.setIsLoggedIn(true);
                 noUserFoundLabel.setVisible(false);
                 DataProvider.setCurrentUser(userNameTextField.getText());
+                Logger.logUserLogin();
                 Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.DASHBOARD.getPath())));
 
             }
