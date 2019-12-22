@@ -94,17 +94,25 @@ public class LoginScreenController implements Initializable {
     void onActionShowDashboard(ActionEvent event) throws SQLException, IOException {
 
         try {
-            
+
             //Perform the checks to see if the user can Login
-            if(!canUserLogIn()) {
-                String message = getErrorMessageForLogin();
+            if (!canUserLogIn()) {
+            String message = null;
+            if (!doUserNameAndPasswordFieldsHaveText())
+                message = LanguageConverter.translateUserNameAndPasswordCannotBeEmpty();
+            
+            else if (!doUserNameAndPasswordExistInDatabase())
+                message = LanguageConverter.translateUserNameAndPasswordAreInvalid();
+            
+            else if (!isUserActive())
+                message = LanguageConverter.translateUserNameInactive();
                 DataProvider.setIsLoggedIn(false);
                 Alert alert = new Alert(AlertType.ERROR, message);
                 alert.showAndWait();
-            }
+            } 
 
             // All checks are cleared, so the user can login and go to the dashboard.
-             else {
+            else {
                 DataProvider.setIsLoggedIn(true);
                 DataProvider.setCurrentUser(userNameTextField.getText());
                 Logger.logUserLogin();
@@ -113,6 +121,7 @@ public class LoginScreenController implements Initializable {
 
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
+
         } catch (NullPointerException ex) {
             System.out.println("Expected. User is null: " + ex.getMessage());
             DataProvider.setIsLoggedIn(false);
@@ -123,43 +132,23 @@ public class LoginScreenController implements Initializable {
     }
 
     private Boolean canUserLogIn() {
-        
-        // If username or password text fields are empty, display error message.
-        if (userNameTextField.getText().isEmpty() || passwordTextField.getText().isEmpty()) {
-            return false;
-        } 
 
-        // If userName is not found, then alert that the user does not exist.
-        else if (!userDAO.isUserNameandPasswordValid(userNameTextField.getText(), passwordTextField.getText())) {
-            return false;
-
-        // If user is inactive, warn that the user cannot log in without first being made active.
-        } else if (!userDAO.isUserActive(userNameTextField.getText())) {
-            return false;
-        }
-        else return true;
-        
-    }
-    
-    private String getErrorMessageForLogin() {
-
-        // If username or password text fields are empty, display error message.
-        if (userNameTextField.getText().isEmpty() || passwordTextField.getText().isEmpty()) {
-            return LanguageConverter.translateUserNameAndPasswordCannotBeEmpty();
-        } // If userName is not found, then alert that the user does not exist.
-        else if (!userDAO.isUserNameandPasswordValid(userNameTextField.getText(), passwordTextField.getText())) {
-            return LanguageConverter.translateUserNameAndPasswordAreInvalid();
-
-            // If user is inactive, warn that the user cannot log in without first being made active.
-        } else if (!userDAO.isUserActive(userNameTextField.getText())) {
-            return LanguageConverter.translateUserNameInactive();
-        } else {
-            return null;
-        }
+        // Are all three checks good? If so, return true. If all three are not good, return false.
+        return doUserNameAndPasswordFieldsHaveText() && doUserNameAndPasswordExistInDatabase() && isUserActive();
 
     }
-    
-    
+
+    private Boolean doUserNameAndPasswordFieldsHaveText() {
+        return !(userNameTextField.getText().isEmpty() || passwordTextField.getText().isEmpty());
+    }
+
+    private Boolean doUserNameAndPasswordExistInDatabase() {
+        return userDAO.isUserNameandPasswordValid(userNameTextField.getText(), passwordTextField.getText());
+    }
+
+    private Boolean isUserActive() {
+        return userDAO.isUserActive(userNameTextField.getText());
+    }
 
     private void translateLabelsButtons() {
         switch (DataProvider.getLanguage()) {
@@ -210,7 +199,7 @@ public class LoginScreenController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         DateTimeConverter.currentTimeZoneId = TimeZone.getDefault().getID();
         DataProvider.setStartingHours();
-        DataProvider.setLanguage("English");
+        DataProvider.setLanguage("Spanish");
         translateLabelsButtons();
     }
 
