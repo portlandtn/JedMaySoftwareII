@@ -30,13 +30,28 @@ import java.util.Calendar;
 public class Logger {
 
     public static void logUserLogin() throws IOException {
-        
+
         String filename = "src/Log/userLogins.txt";
         FileWriter fw = new FileWriter(filename, true);
 
         // Create and open file
         try (PrintWriter logFile = new PrintWriter(fw)) {
-            logFile.println("User: " + DataProvider.getCurrentUser() + " | Time: " + Calendar.getInstance().getTime());
+            logFile.println("User: " + DataProvider.getCurrentUser());
+            logFile.println("Time: " + Calendar.getInstance().getTime());
+            logFile.println();
         }
     }
+    
+    // this was an experiment. May revisit later.
+    public static void logException(Exception ex) throws IOException  {
+
+        String filename = "src/Log/exceptionLogger.txt";
+        FileWriter fw = new FileWriter(filename, true);
+
+        // Create and open file
+        try (PrintWriter logFile = new PrintWriter(fw)) {
+            logFile.println("Exception: " + ex.getMessage());
+        }
+    }
+
 }

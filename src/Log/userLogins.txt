@@ -1,5 +1,15 @@
 Log for User Logins
 ---------------------
 
-User: admin | Time: Sun Dec 22 11:45:08 CST 2019
-User: test | Time: Sun Dec 22 11:45:13 CST 2019
+User: admin
+Time: Sun Dec 22 12:43:49 CST 2019
+
+User: test
+Time: Sun Dec 22 12:43:54 CST 2019
+
+User: test
+Time: Sun Dec 22 14:12:49 CST 2019
+
+User: test
+Time: Sun Dec 22 14:26:21 CST 2019
+

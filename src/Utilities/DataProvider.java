@@ -29,6 +29,9 @@ public class DataProvider {
     
     private static String currentUser;
     private static Boolean isLoggedIn = false;
+    private static String language;
+
+
     
     public enum pathOfFXML {
         APPOINTMENT_DETAIL("/View/AppointmentDetail.fxml"),
@@ -96,6 +99,14 @@ public class DataProvider {
 
     public static void setIsLoggedIn(Boolean isLoggedIn) {
         DataProvider.isLoggedIn = isLoggedIn;
+    }
+    
+    public static String getLanguage() {
+        return language;
+    }
+
+    public static void setLanguage(String language) {
+        DataProvider.language = language;
     }
 
 }

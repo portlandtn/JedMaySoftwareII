@@ -20,6 +20,7 @@ package Controller;
 import Model.User;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
+import Log.Logger;
 import Utilities.DataProvider;
 import Utilities.Navigator;
 import Utilities.Validator;

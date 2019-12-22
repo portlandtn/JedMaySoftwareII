@@ -17,9 +17,11 @@
  */
 package DAO;
 
+import Log.Logger;
 import Model.Appointment;
 import Utilities.DataProvider;
 import com.mysql.jdbc.Connection;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -87,7 +89,7 @@ public class AppointmentDAO extends DAO<Appointment>{
         return appointments;
     }
     
-    public Appointment querySingleAppointmenet(int id){
+    public Appointment querySingleAppointmenet(int id) {
         Appointment appt = new Appointment();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "appointmentId, "

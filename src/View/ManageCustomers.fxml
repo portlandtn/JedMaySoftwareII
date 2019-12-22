@@ -53,7 +53,7 @@
                   <TableColumn fx:id="cityColumnTableView" prefWidth="100.0" text="City" />
                   <TableColumn fx:id="zipCodeColumnTableView" prefWidth="75.0" text="ZipCode" />
                   <TableColumn fx:id="countryColumnTableView" prefWidth="100.0" text="Country" />
-                  <TableColumn fx:id="phoneColumnTableView" prefWidth="125.0" text="Phone" />
+                  <TableColumn fx:id="phoneColumnTableView" prefWidth="132.0" text="Phone" />
               </columns>
                <VBox.margin>
                   <Insets top="15.0" />
@@ -61,10 +61,10 @@
             </TableView>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
                <children>
-                  <Button minWidth="150.0" mnemonicParsing="false" onAction="#onActionShowDashboard" text="Go Back" />
-                  <Button minWidth="150.0" mnemonicParsing="false" onAction="#onActionAddNewCustomer" text="Add New Customer" />
-                  <Button minWidth="150.0" mnemonicParsing="false" onAction="#onActionEditCustomer" text="Edit Customer" />
-                  <Button minWidth="150.0" mnemonicParsing="false" onAction="#onActionDeleteCustomer" text="Delete Customer" />
+                  <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#onActionShowDashboard" prefWidth="75.0" text="Back" />
+                  <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#onActionAddNewCustomer" prefWidth="75.0" text="Add" />
+                  <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#onActionEditCustomer" prefWidth="75.0" text="View/Edit" />
+                  <Button minWidth="-Infinity" mnemonicParsing="false" onAction="#onActionDeleteCustomer" prefWidth="75.0" text="Delete" />
                </children>
                <padding>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />

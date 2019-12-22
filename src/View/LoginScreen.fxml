@@ -14,12 +14,12 @@
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="337.0" prefWidth="475.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label contentDisplay="CENTER" text="Jed May Scheduler" textAlignment="CENTER">
+            <Label fx:id="titleLabel" contentDisplay="CENTER" text="Jed May Scheduler" textAlignment="CENTER">
                <font>
                   <Font size="22.0" />
                </font>
             </Label>
-            <Label fx:id="noUserFoundLabel1" text="Please Log In To Continue">
+            <Label fx:id="logInLabel" text="Please Log In To Continue">
                <font>
                   <Font size="14.0" />
                </font>
@@ -40,18 +40,10 @@
                   <Insets top="15.0" />
                </VBox.margin>
             </PasswordField>
-            <Label fx:id="noUserFoundLabel" text="User Not Found" visible="false">
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-               <font>
-                  <Font size="14.0" />
-               </font>
-            </Label>
             <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onActionShowUserDetails" text="Create User" />
-                  <Button mnemonicParsing="false" onAction="#onActionShowDashboard" text="Login" />
+                  <Button fx:id="createUserButton" mnemonicParsing="false" onAction="#onActionShowUserDetails" text="Create User" />
+                  <Button fx:id="loginButton" mnemonicParsing="false" onAction="#onActionShowDashboard" text="Login" />
                </children>
                <padding>
                   <Insets top="15.0" />

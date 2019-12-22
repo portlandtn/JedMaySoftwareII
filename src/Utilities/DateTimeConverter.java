@@ -23,7 +23,7 @@ import java.util.TimeZone;
  *
  * @author Jedidiah May
  */
-public class Converter {
+public class DateTimeConverter {
     
     public static String currentTimeZoneId;
     

@@ -20,6 +20,7 @@ package Controller;
 import Model.User;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
+import Log.Logger;
 import Utilities.DataProvider;
 import Utilities.Navigator;
 import Utilities.Validator;
@@ -97,8 +98,8 @@ public class ManageUsersController implements Initializable {
         ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
 
         if (!ButtonType.CANCEL.equals(result)) {
-                userDAO.remove(manageUsersTableView.getSelectionModel().getSelectedItem().getUserId());
-                refreshData();
+            userDAO.remove(manageUsersTableView.getSelectionModel().getSelectedItem().getUserId());
+            refreshData();
         }
 
     }
@@ -190,7 +191,6 @@ public class ManageUsersController implements Initializable {
         refreshData();
     }
 
-
     private void refreshData() {
         ObservableList<User> allUsers;
 
@@ -210,7 +210,7 @@ public class ManageUsersController implements Initializable {
         activeColumnTableView.setCellValueFactory(new PropertyValueFactory<>("active"));
 
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         refreshData();

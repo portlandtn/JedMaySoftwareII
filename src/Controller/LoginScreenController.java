@@ -21,7 +21,8 @@ import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
 import Log.Logger;
-import Utilities.Converter;
+import Utilities.DateTimeConverter;
+import Utilities.LanguageConverter;
 import Utilities.Navigator;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
@@ -48,15 +49,24 @@ public class LoginScreenController implements Initializable {
 
     // <editor-fold defaultstate="collapsed" desc="FXML objects">
     @FXML
+    private Label titleLabel;
+
+    @FXML
+    private Label logInLabel;
+
+    @FXML
     private TextField userNameTextField;
 
     @FXML
     private TextField passwordTextField;
 
     @FXML
-    private Label noUserFoundLabel;
-    // </editor-fold>
+    private Button createUserButton;
 
+    @FXML
+    private Button loginButton;
+
+    // </editor-fold>
     //Constructor
     public LoginScreenController() {
         try {
@@ -81,54 +91,127 @@ public class LoginScreenController implements Initializable {
 
     // Login button is clicked.
     @FXML
-    void onActionShowDashboard(ActionEvent event) throws SQLException {
+    void onActionShowDashboard(ActionEvent event) throws SQLException, IOException {
 
         try {
-            String userName = userDAO.getUserName(userNameTextField.getText());
-
-            // If userName is not found, then alert that the user does not exist.
-            if (userName.isEmpty()) {
-                noUserFoundLabel.setVisible(true);
+            
+            //Perform the checks to see if the user can Login
+            if(!canUserLogIn()) {
+                String message = getErrorMessageForLogin();
                 DataProvider.setIsLoggedIn(false);
-                Alert alert = new Alert(AlertType.ERROR, "The username does not exist.");
+                Alert alert = new Alert(AlertType.ERROR, message);
                 alert.showAndWait();
+            }
 
-                // If user exists, but the username and password do not match, alert the user.
-            } else if (!userDAO.isUserNameandPasswordValid(userNameTextField.getText(), passwordTextField.getText())) {
-                noUserFoundLabel.setVisible(true);
-                DataProvider.setIsLoggedIn(false);
-                Alert alert = new Alert(AlertType.ERROR, "The username and password does not match.");
-                alert.showAndWait();
-
-                // If user is inactive, warn that the user cannot log in without first being made active.
-            } else if (!userDAO.isUserActive(userNameTextField.getText())) {
-                Alert alert = new Alert(AlertType.ERROR, "While this user does exist, their account has been made inactive. "
-                        + "Please have the administrator update this account to use it for logging in.");
-                alert.showAndWait();
-                
-                // All checks are cleared, so the user can login and go to the dashboard.
-            } else {
+            // All checks are cleared, so the user can login and go to the dashboard.
+             else {
                 DataProvider.setIsLoggedIn(true);
-                noUserFoundLabel.setVisible(false);
                 DataProvider.setCurrentUser(userNameTextField.getText());
                 Logger.logUserLogin();
                 Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.DASHBOARD.getPath())));
-
             }
+
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         } catch (NullPointerException ex) {
-            noUserFoundLabel.setVisible(true);
+            System.out.println("Expected. User is null: " + ex.getMessage());
             DataProvider.setIsLoggedIn(false);
-            Alert alert = new Alert(AlertType.ERROR, "The username does not exist.");
+            String message = LanguageConverter.translateUserNameNotFound();
+            Alert alert = new Alert(AlertType.ERROR, message);
             alert.showAndWait();
+        }
+    }
+
+    private Boolean canUserLogIn() {
+        
+        // If username or password text fields are empty, display error message.
+        if (userNameTextField.getText().isEmpty() || passwordTextField.getText().isEmpty()) {
+            return false;
+        } 
+
+        // If userName is not found, then alert that the user does not exist.
+        else if (!userDAO.isUserNameandPasswordValid(userNameTextField.getText(), passwordTextField.getText())) {
+            return false;
+
+        // If user is inactive, warn that the user cannot log in without first being made active.
+        } else if (!userDAO.isUserActive(userNameTextField.getText())) {
+            return false;
+        }
+        else return true;
+        
+    }
+    
+    private String getErrorMessageForLogin() {
+
+        // If username or password text fields are empty, display error message.
+        if (userNameTextField.getText().isEmpty() || passwordTextField.getText().isEmpty()) {
+            return LanguageConverter.translateUserNameAndPasswordCannotBeEmpty();
+        } // If userName is not found, then alert that the user does not exist.
+        else if (!userDAO.isUserNameandPasswordValid(userNameTextField.getText(), passwordTextField.getText())) {
+            return LanguageConverter.translateUserNameAndPasswordAreInvalid();
+
+            // If user is inactive, warn that the user cannot log in without first being made active.
+        } else if (!userDAO.isUserActive(userNameTextField.getText())) {
+            return LanguageConverter.translateUserNameInactive();
+        } else {
+            return null;
+        }
+
+    }
+    
+    
+
+    private void translateLabelsButtons() {
+        switch (DataProvider.getLanguage()) {
+            case "English":
+                titleLabel.setText(LanguageConverter.schedulerLabel.ENGLISH.getText());
+                logInLabel.setText(LanguageConverter.pleaseLogInToContinueLabel.ENGLISH.getText());
+                loginButton.setText(LanguageConverter.loginButton.ENGLISH.getText());
+                createUserButton.setText(LanguageConverter.createUserButton.ENGLISH.getText());
+                userNameTextField.setPromptText(LanguageConverter.usernameHintText.ENGLISH.getText());
+                passwordTextField.setPromptText(LanguageConverter.passwordHintText.ENGLISH.getText());
+                break;
+            case "French":
+                titleLabel.setText(LanguageConverter.schedulerLabel.FRENCH.getText());
+                logInLabel.setText(LanguageConverter.pleaseLogInToContinueLabel.FRENCH.getText());
+                loginButton.setText(LanguageConverter.loginButton.FRENCH.getText());
+                createUserButton.setText(LanguageConverter.createUserButton.FRENCH.getText());
+                userNameTextField.setPromptText(LanguageConverter.usernameHintText.FRENCH.getText());
+                passwordTextField.setPromptText(LanguageConverter.passwordHintText.FRENCH.getText());
+                break;
+            case "Spanish":
+                titleLabel.setText(LanguageConverter.schedulerLabel.SPANISH.getText());
+                logInLabel.setText(LanguageConverter.pleaseLogInToContinueLabel.SPANISH.getText());
+                loginButton.setText(LanguageConverter.loginButton.SPANISH.getText());
+                createUserButton.setText(LanguageConverter.createUserButton.SPANISH.getText());
+                userNameTextField.setPromptText(LanguageConverter.usernameHintText.SPANISH.getText());
+                passwordTextField.setPromptText(LanguageConverter.passwordHintText.SPANISH.getText());
+                break;
+            case "German":
+                titleLabel.setText(LanguageConverter.schedulerLabel.GERMAN.getText());
+                logInLabel.setText(LanguageConverter.pleaseLogInToContinueLabel.GERMAN.getText());
+                loginButton.setText(LanguageConverter.loginButton.GERMAN.getText());
+                createUserButton.setText(LanguageConverter.createUserButton.GERMAN.getText());
+                userNameTextField.setPromptText(LanguageConverter.usernameHintText.GERMAN.getText());
+                passwordTextField.setPromptText(LanguageConverter.passwordHintText.GERMAN.getText());
+                break;
+            default:
+                titleLabel.setText(LanguageConverter.schedulerLabel.ENGLISH.getText());
+                logInLabel.setText(LanguageConverter.pleaseLogInToContinueLabel.ENGLISH.getText());
+                loginButton.setText(LanguageConverter.loginButton.ENGLISH.getText());
+                createUserButton.setText(LanguageConverter.createUserButton.ENGLISH.getText());
+                userNameTextField.setPromptText(LanguageConverter.usernameHintText.ENGLISH.getText());
+                passwordTextField.setPromptText(LanguageConverter.passwordHintText.ENGLISH.getText());
+                break;
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Converter.currentTimeZoneId = TimeZone.getDefault().getID();
+        DateTimeConverter.currentTimeZoneId = TimeZone.getDefault().getID();
         DataProvider.setStartingHours();
+        DataProvider.setLanguage("English");
+        translateLabelsButtons();
     }
 
 }

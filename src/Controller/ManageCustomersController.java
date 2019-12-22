@@ -19,6 +19,7 @@ package Controller;
 
 import DAO.AddressDAO;
 import DAO.CustomerDAO;
+import Log.Logger;
 import Model.Customer;
 import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
@@ -102,7 +103,7 @@ public class ManageCustomersController implements Initializable {
     // </editor-fold>
 
     // Constructor
-    public ManageCustomersController() {
+    public ManageCustomersController() throws IOException {
         try {
             conn = dc.createConnection();
             this.customerDAO = new CustomerDAO(conn);
@@ -187,7 +188,7 @@ public class ManageCustomersController implements Initializable {
     // On delete, remove the customer, and also remove the address since it's specific to the customer.
     // Leave the city and country available to be selected by customers in the future.
     @FXML
-    void onActionDeleteCustomer(ActionEvent event) {
+    void onActionDeleteCustomer(ActionEvent event) throws IOException {
         Alert alert = new Alert(AlertType.CONFIRMATION, "Are you sure you want to delete this customer?");
         ButtonType result = alert.showAndWait().orElse(ButtonType.CANCEL);
         if (!ButtonType.CANCEL.equals(result)) {

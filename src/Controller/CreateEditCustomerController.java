@@ -18,6 +18,7 @@
 package Controller;
 
 import DAO.*;
+import Log.Logger;
 import Model.Address;
 import Model.City;
 import Model.Country;
@@ -61,7 +62,7 @@ public class CreateEditCustomerController implements Initializable {
     Customer customerToUpdate = new Customer();
 
     // Constructor
-    public CreateEditCustomerController() {
+    public CreateEditCustomerController() throws IOException {
         try {
             conn = dc.createConnection();
             this.addressDAO = new AddressDAO(conn);
@@ -253,7 +254,7 @@ public class CreateEditCustomerController implements Initializable {
 
     // This is only called if editing an existing customer. Address object passed here
     // is retrieved from addressId, which is from the customerToUpdate object.
-    private void updateAddress(Address addressToUpdate) {
+    private void updateAddress(Address addressToUpdate) throws IOException {
 
         addressToUpdate.setAddressId(this.addressId);
         addressToUpdate.setAddress(addressTextField.getText());
@@ -267,7 +268,7 @@ public class CreateEditCustomerController implements Initializable {
     }
 
     // This takes place only when creating a new customer.
-    private void saveNewAddress() {
+    private void saveNewAddress() throws IOException {
 
         Address address = new Address();
         address.setAddress(addressTextField.getText());

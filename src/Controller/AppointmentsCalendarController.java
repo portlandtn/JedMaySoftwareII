@@ -18,6 +18,7 @@
 package Controller;
 
 import DAO.AppointmentDAO;
+import Log.Logger;
 import Model.Appointment;
 import Utilities.DataProvider;
 import Utilities.DatabaseConnector;

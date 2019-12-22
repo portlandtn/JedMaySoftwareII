@@ -17,9 +17,11 @@
  */
 package DAO;
 
+import Log.Logger;
 import Model.Address;
 import Utilities.DataProvider;
 import com.mysql.jdbc.Connection;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -79,7 +81,7 @@ public class AddressDAO extends DAO<Address> {
         return addresses;
     }
     
-    public Address getAddress(int addressId){
+    public Address getAddress(int addressId) {
         
         Address address = new Address();
         
@@ -109,7 +111,7 @@ public class AddressDAO extends DAO<Address> {
         return address;
     }
     
-    public int getMostRecentAddressEntered() {
+    public int getMostRecentAddressEntered(){
         int addressId = 0;
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT addressId FROM address ORDER BY addressID desc limit 1;")) {
             ResultSet result = stmt.executeQuery();
@@ -125,7 +127,7 @@ public class AddressDAO extends DAO<Address> {
     }
 
     @Override
-    public void insert(Address dto) {
+    public void insert(Address dto){
         try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO address ("
                 + "address, address2, cityId, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateby) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             stmt.setString(1, dto.getAddress());
