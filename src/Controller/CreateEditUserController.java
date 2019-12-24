@@ -50,11 +50,6 @@ public class CreateEditUserController implements Initializable {
     public static Boolean isEditing;
     public static String previousPath;
 
-    //Variables to be used for user object
-    private String userName, password, createdBy, lastUpdateBy;
-    private Boolean active;
-    private Date createDate, lastUpdate;
-
     private User userToUpdate;
 
     // <editor-fold defaultstate="collapsed" desc="FXML objects">
@@ -70,7 +65,7 @@ public class CreateEditUserController implements Initializable {
     @FXML
     private CheckBox activeCheckBox;
     // </editor-fold>
-    
+
     public CreateEditUserController() {
         try {
             conn = dc.createConnection();
@@ -87,9 +82,11 @@ public class CreateEditUserController implements Initializable {
 
     @FXML
     void onActionSaveUser(ActionEvent event) throws IOException, SQLException {
-        
-        if(!canDataBeSaved()) return;
-        
+
+        if (!canDataBeSaved()) {
+            return;
+        }
+
         if (isEditing) {
             updateExistingUser(this.userToUpdate);
         } else {
@@ -104,7 +101,6 @@ public class CreateEditUserController implements Initializable {
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
     }
 
-
     public void sendUserDetails(User user) {
 
         userNameTextField.setText(user.getUserName());
@@ -116,80 +112,53 @@ public class CreateEditUserController implements Initializable {
 
     private void saveNewUser() {
 
+        // If all is verified good, declare variables to construct a new User and insert into the table.
+        //setVariablesFromScreen();
+        User user = new User();
+        user.setUserName(userNameTextField.getText());
+        user.setPassword(passwordTextField.getText());
+        user.setActive(activeCheckBox.isSelected());
 
-            //if all is verified good, declare variables to construct a new User and insert into the table.
-            setVariablesFromScreen();
-            User user = new User();
-            user.setUserName(this.userName);
-            user.setPassword(this.password);
-            user.setActive(this.active);
-            user.setCreateDate(this.createDate);
-            user.setCreatedBy(this.createdBy);
-            user.setLastUpdate(this.lastUpdate);
-            user.setLastUpdateBy(this.lastUpdateBy);
-
-            userDAO.insert(user);
-
-    }
-
-    private void setVariablesFromScreen() {
-        this.userName = userNameTextField.getText();
-        this.password = passwordTextField.getText();
-        this.active = activeCheckBox.isSelected();
-        this.createDate = DataProvider.getCurrentDate();
-        this.createdBy = userNameTextField.getText();
-        this.lastUpdate = DataProvider.getCurrentDate();
-        this.lastUpdateBy = userNameTextField.getText();
+        userDAO.insert(user);
     }
 
     private void updateExistingUser(User existingUser) {
 
-            //if all is verified good, declare variables to construct a new User and update the table.
-            setVariablesFromScreen();
-            User user = new User();
-            user.setUserId(existingUser.getUserId());
-            user.setUserName(this.userName);
-            user.setPassword(this.password);
-            user.setActive(this.active);
-            user.setCreateDate(this.createDate);
-            user.setCreatedBy(this.createdBy);
-            user.setLastUpdate(this.lastUpdate);
-            user.setLastUpdateBy(this.lastUpdateBy);
+        // If all is verified good, declare variables to construct a new User and update the table.
+        //setVariablesFromScreen();
+        User user = new User();
+        user.setUserId(existingUser.getUserId());
+        user.setUserName(userNameTextField.getText());
+        user.setPassword(passwordTextField.getText());
+        user.setActive(activeCheckBox.isSelected());
 
-            userDAO.update(user);
-
+        userDAO.update(user);
     }
 
+    // Performs 3 checks to see if data can be saved.
     private Boolean canDataBeSaved() {
 
-        //Setup the string array that holds the text fields to verify that are not empty.
+        // Setup the string array that holds the text fields to verify that are not empty.
         String[] textFields = new String[]{
             userNameTextField.getText(),
             passwordTextField.getText(),
-            confirmPasswordTextField.getText()};
+            confirmPasswordTextField.getText()};   
         if (!Validator.isTextEntered(textFields)) {
             Alert alert = new Alert(AlertType.ERROR, "All text fields must have data");
             alert.showAndWait();
             return false;
         }
 
-        //verify that the two passwords entered are not empty
-        if (passwordTextField.getText().isEmpty() | confirmPasswordTextField.getText().isEmpty()) {
-            Alert alert = new Alert(AlertType.ERROR, "Password fields cannot be blank.");
-            alert.showAndWait();
-            return false;
-        }
-        //verifty that the two passwords match
-        if (!Validator.doStringsMatch(passwordTextField.getText(), confirmPasswordTextField.getText())) {
+        // Verifty that the two passwords match
+        else if (!Validator.doStringsMatch(passwordTextField.getText(), confirmPasswordTextField.getText())) {
             Alert alert = new Alert(AlertType.ERROR, "The passwords entered do not match. Please re-enter and try again.");
             alert.showAndWait();
             return false;
         }
 
-        // if these three checks are good, input is valid and can be saved.
-        return true;
+        // If these three checks are good, input is valid and can be saved.
+        else return true;
     }
-
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

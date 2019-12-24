@@ -28,6 +28,7 @@ import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 import javafx.event.ActionEvent;
@@ -61,9 +62,6 @@ public class LoginScreenController implements Initializable {
     private TextField passwordTextField;
 
     @FXML
-    private Button createUserButton;
-
-    @FXML
     private Button loginButton;
 
     // </editor-fold>
@@ -75,18 +73,6 @@ public class LoginScreenController implements Initializable {
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
         }
-    }
-
-    // This is used when creating a new user. 
-    @FXML
-    void onActionShowUserDetails(ActionEvent event) throws IOException, SQLException {
-        // Sets the previous path for navigation back here from the next screen (static field)
-        CreateEditUserController.previousPath = DataProvider.pathOfFXML.LOGIN_SCREEN.getPath();
-        // Static field that sets code flow based on whether or not form is for editing or creating a new user (flag)
-        CreateEditUserController.isEditing = false;
-        conn.close();
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.CREATE_EDIT_USER.getPath())));
-
     }
 
     // Login button is clicked.
@@ -150,13 +136,13 @@ public class LoginScreenController implements Initializable {
         return userDAO.isUserActive(userNameTextField.getText());
     }
 
+    // I don't like the way this is done, but for now, it's okay.
     private void translateLabelsButtons() {
         switch (DataProvider.getLanguage()) {
             case "English":
                 titleLabel.setText(LanguageConverter.schedulerLabel.ENGLISH.getText());
                 logInLabel.setText(LanguageConverter.pleaseLogInToContinueLabel.ENGLISH.getText());
                 loginButton.setText(LanguageConverter.loginButton.ENGLISH.getText());
-                createUserButton.setText(LanguageConverter.createUserButton.ENGLISH.getText());
                 userNameTextField.setPromptText(LanguageConverter.usernameHintText.ENGLISH.getText());
                 passwordTextField.setPromptText(LanguageConverter.passwordHintText.ENGLISH.getText());
                 break;
@@ -164,7 +150,6 @@ public class LoginScreenController implements Initializable {
                 titleLabel.setText(LanguageConverter.schedulerLabel.FRENCH.getText());
                 logInLabel.setText(LanguageConverter.pleaseLogInToContinueLabel.FRENCH.getText());
                 loginButton.setText(LanguageConverter.loginButton.FRENCH.getText());
-                createUserButton.setText(LanguageConverter.createUserButton.FRENCH.getText());
                 userNameTextField.setPromptText(LanguageConverter.usernameHintText.FRENCH.getText());
                 passwordTextField.setPromptText(LanguageConverter.passwordHintText.FRENCH.getText());
                 break;
@@ -172,7 +157,6 @@ public class LoginScreenController implements Initializable {
                 titleLabel.setText(LanguageConverter.schedulerLabel.SPANISH.getText());
                 logInLabel.setText(LanguageConverter.pleaseLogInToContinueLabel.SPANISH.getText());
                 loginButton.setText(LanguageConverter.loginButton.SPANISH.getText());
-                createUserButton.setText(LanguageConverter.createUserButton.SPANISH.getText());
                 userNameTextField.setPromptText(LanguageConverter.usernameHintText.SPANISH.getText());
                 passwordTextField.setPromptText(LanguageConverter.passwordHintText.SPANISH.getText());
                 break;
@@ -180,7 +164,6 @@ public class LoginScreenController implements Initializable {
                 titleLabel.setText(LanguageConverter.schedulerLabel.GERMAN.getText());
                 logInLabel.setText(LanguageConverter.pleaseLogInToContinueLabel.GERMAN.getText());
                 loginButton.setText(LanguageConverter.loginButton.GERMAN.getText());
-                createUserButton.setText(LanguageConverter.createUserButton.GERMAN.getText());
                 userNameTextField.setPromptText(LanguageConverter.usernameHintText.GERMAN.getText());
                 passwordTextField.setPromptText(LanguageConverter.passwordHintText.GERMAN.getText());
                 break;
@@ -188,7 +171,6 @@ public class LoginScreenController implements Initializable {
                 titleLabel.setText(LanguageConverter.schedulerLabel.ENGLISH.getText());
                 logInLabel.setText(LanguageConverter.pleaseLogInToContinueLabel.ENGLISH.getText());
                 loginButton.setText(LanguageConverter.loginButton.ENGLISH.getText());
-                createUserButton.setText(LanguageConverter.createUserButton.ENGLISH.getText());
                 userNameTextField.setPromptText(LanguageConverter.usernameHintText.ENGLISH.getText());
                 passwordTextField.setPromptText(LanguageConverter.passwordHintText.ENGLISH.getText());
                 break;
@@ -199,7 +181,8 @@ public class LoginScreenController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         DateTimeConverter.currentTimeZoneId = TimeZone.getDefault().getID();
         DataProvider.setStartingHours();
-        DataProvider.setLanguage("Spanish");
+        System.out.println(Locale.getDefault().getDisplayLanguage());
+        DataProvider.setLanguage(Locale.getDefault().getDisplayLanguage());
         translateLabelsButtons();
     }
 

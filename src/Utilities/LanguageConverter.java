@@ -109,23 +109,6 @@ public class LanguageConverter {
         }
     }
 
-    public enum createUserButton {
-        ENGLISH("Create User"),
-        SPANISH("Crear usuario"),
-        FRENCH("Créer un utilisateur"),
-        GERMAN("Benutzer erstellen");
-
-        private String message;
-
-        createUserButton(String message) {
-            this.message = message;
-        }
-
-        public String getText() {
-            return this.message;
-        }
-    }
-
     public enum pleaseLogInToContinueLabel {
         ENGLISH("Please Log In To Continue"),
         SPANISH("Por favor inicie sesión para continuar"),

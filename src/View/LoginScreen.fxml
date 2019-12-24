@@ -42,7 +42,6 @@
             </PasswordField>
             <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
                <children>
-                  <Button fx:id="createUserButton" mnemonicParsing="false" onAction="#onActionShowUserDetails" text="Create User" />
                   <Button fx:id="loginButton" mnemonicParsing="false" onAction="#onActionShowDashboard" text="Login" />
                </children>
                <padding>
