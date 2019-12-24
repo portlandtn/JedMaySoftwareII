@@ -22,13 +22,11 @@ import Utilities.DatabaseConnector;
 import DAO.UserDAO;
 import Log.Logger;
 import Utilities.DateTimeConverter;
-import Utilities.LanguageConverter;
 import Utilities.Navigator;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 import javafx.event.ActionEvent;
@@ -47,6 +45,9 @@ public class LoginScreenController implements Initializable {
     DatabaseConnector dc = new DatabaseConnector();
     Connection conn;
     UserDAO userDAO;
+    
+    // Messages for alerts
+    String usernameNotFound, usernameAndPasswordDoNotMatch, usernameIsInactive, usernameAndPasswordCannotBeEmpty;
 
     // <editor-fold defaultstate="collapsed" desc="FXML objects">
     @FXML
@@ -85,13 +86,13 @@ public class LoginScreenController implements Initializable {
             if (!canUserLogIn()) {
             String message = null;
             if (!doUserNameAndPasswordFieldsHaveText())
-                message = LanguageConverter.translateUserNameAndPasswordCannotBeEmpty();
+                message = this.usernameAndPasswordCannotBeEmpty;
             
             else if (!doUserNameAndPasswordExistInDatabase())
-                message = LanguageConverter.translateUserNameAndPasswordAreInvalid();
+                message = this.usernameAndPasswordDoNotMatch;
             
             else if (!isUserActive())
-                message = LanguageConverter.translateUserNameInactive();
+                message = this.usernameIsInactive;
                 DataProvider.setIsLoggedIn(false);
                 Alert alert = new Alert(AlertType.ERROR, message);
                 alert.showAndWait();
@@ -111,7 +112,7 @@ public class LoginScreenController implements Initializable {
         } catch (NullPointerException ex) {
             System.out.println("Expected. User is null: " + ex.getMessage());
             DataProvider.setIsLoggedIn(false);
-            String message = LanguageConverter.translateUserNameNotFound();
+            String message = this.usernameNotFound;
             Alert alert = new Alert(AlertType.ERROR, message);
             alert.showAndWait();
         }
@@ -135,55 +136,28 @@ public class LoginScreenController implements Initializable {
     private Boolean isUserActive() {
         return userDAO.isUserActive(userNameTextField.getText());
     }
-
-    // I don't like the way this is done, but for now, it's okay.
-    private void translateLabelsButtons() {
-        switch (DataProvider.getLanguage()) {
-            case "English":
-                titleLabel.setText(LanguageConverter.schedulerLabel.ENGLISH.getText());
-                logInLabel.setText(LanguageConverter.pleaseLogInToContinueLabel.ENGLISH.getText());
-                loginButton.setText(LanguageConverter.loginButton.ENGLISH.getText());
-                userNameTextField.setPromptText(LanguageConverter.usernameHintText.ENGLISH.getText());
-                passwordTextField.setPromptText(LanguageConverter.passwordHintText.ENGLISH.getText());
-                break;
-            case "French":
-                titleLabel.setText(LanguageConverter.schedulerLabel.FRENCH.getText());
-                logInLabel.setText(LanguageConverter.pleaseLogInToContinueLabel.FRENCH.getText());
-                loginButton.setText(LanguageConverter.loginButton.FRENCH.getText());
-                userNameTextField.setPromptText(LanguageConverter.usernameHintText.FRENCH.getText());
-                passwordTextField.setPromptText(LanguageConverter.passwordHintText.FRENCH.getText());
-                break;
-            case "Spanish":
-                titleLabel.setText(LanguageConverter.schedulerLabel.SPANISH.getText());
-                logInLabel.setText(LanguageConverter.pleaseLogInToContinueLabel.SPANISH.getText());
-                loginButton.setText(LanguageConverter.loginButton.SPANISH.getText());
-                userNameTextField.setPromptText(LanguageConverter.usernameHintText.SPANISH.getText());
-                passwordTextField.setPromptText(LanguageConverter.passwordHintText.SPANISH.getText());
-                break;
-            case "German":
-                titleLabel.setText(LanguageConverter.schedulerLabel.GERMAN.getText());
-                logInLabel.setText(LanguageConverter.pleaseLogInToContinueLabel.GERMAN.getText());
-                loginButton.setText(LanguageConverter.loginButton.GERMAN.getText());
-                userNameTextField.setPromptText(LanguageConverter.usernameHintText.GERMAN.getText());
-                passwordTextField.setPromptText(LanguageConverter.passwordHintText.GERMAN.getText());
-                break;
-            default:
-                titleLabel.setText(LanguageConverter.schedulerLabel.ENGLISH.getText());
-                logInLabel.setText(LanguageConverter.pleaseLogInToContinueLabel.ENGLISH.getText());
-                loginButton.setText(LanguageConverter.loginButton.ENGLISH.getText());
-                userNameTextField.setPromptText(LanguageConverter.usernameHintText.ENGLISH.getText());
-                passwordTextField.setPromptText(LanguageConverter.passwordHintText.ENGLISH.getText());
-                break;
-        }
+    
+    private void setLabels(ResourceBundle rb) {
+        titleLabel.setText(rb.getString("titleLabel"));
+        logInLabel.setText(rb.getString("logInLabel"));
+        loginButton.setText(rb.getString("loginButton"));
+        userNameTextField.setPromptText(rb.getString("userNameTextFieldPromptText"));
+        passwordTextField.setPromptText(rb.getString("passwordTextFieldPromptText"));
+    }
+    
+    private void setMessageText(ResourceBundle rb) {
+        this.usernameNotFound = rb.getString("usernameNotFound");
+        this.usernameAndPasswordDoNotMatch = rb.getString("usernameAndPasswordDoNotMatch");
+        this.usernameIsInactive = rb.getString("usernameIsInactive");
+        this.usernameAndPasswordCannotBeEmpty = rb.getString("usernameAndPasswordCannotBeEmpty");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         DateTimeConverter.currentTimeZoneId = TimeZone.getDefault().getID();
         DataProvider.setStartingHours();
-        System.out.println(Locale.getDefault().getDisplayLanguage());
-        DataProvider.setLanguage(Locale.getDefault().getDisplayLanguage());
-        translateLabelsButtons();
+        setLabels(rb);
+        setMessageText(rb);
     }
 
 }
