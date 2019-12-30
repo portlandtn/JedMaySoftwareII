@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="517.0" prefWidth="362.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.AppointmentDetailController">
+<AnchorPane id="AnchorPane" prefHeight="517.0" prefWidth="362.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CreateEditAppointmentController">
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="337.0" prefWidth="309.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -70,7 +70,7 @@
                   <DatePicker fx:id="dateDatePicker" onAction="#onActionDatePicked" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="9">
                      <children>
-                        <TextField fx:id="startTimeTextField" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="65.0" promptText="7:15" />
+                        <TextField fx:id="startTimeTextField" prefHeight="25.0" prefWidth="70.0" promptText="7:30" />
                         <ChoiceBox fx:id="startAMPMChoiceBox" prefWidth="50.0">
                            <HBox.margin>
                               <Insets left="10.0" />
@@ -80,7 +80,7 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
                      <children>
-                        <TextField fx:id="endTimeTextField" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="65.0" promptText="8:30" />
+                        <TextField fx:id="endTimeTextField" prefHeight="25.0" prefWidth="70.0" promptText="7:30" />
                         <ChoiceBox fx:id="endAMPMChoiceBox" prefWidth="50.0">
                            <HBox.margin>
                               <Insets left="10.0" />

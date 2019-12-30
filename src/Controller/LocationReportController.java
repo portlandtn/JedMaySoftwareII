@@ -68,7 +68,7 @@ public class LocationReportController implements Initializable {
 
     @FXML
     void onActionMoreInfo(ActionEvent event) throws IOException, SQLException {
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENT_DETAIL.getPath())));
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.CREATE_EDIT_APPOINTMENT.getPath())));
     }
 
     @FXML

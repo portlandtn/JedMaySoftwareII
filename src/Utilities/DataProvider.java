@@ -17,6 +17,7 @@
  */
 package Utilities;
 
+import java.time.LocalTime;
 import java.util.TimeZone;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,9 +35,9 @@ public class DataProvider {
 
     
     public enum pathOfFXML {
-        APPOINTMENT_DETAIL("/View/AppointmentDetail.fxml"),
         APPOINTMENT_TYPE_REPORT("/View/AppointmentTypeReport.fxml"),
         APPOINTMENTS_CALENDAR("/View/AppointmentsCalendar.fxml"),
+        CREATE_EDIT_APPOINTMENT("/View/CreateEditAppointment.fxml"),
         CREATE_EDIT_CUSTOMER("/View/CreateEditCustomer.fxml"),
         CREATE_EDIT_USER("/View/CreateEditUser.fxml"),
         DASHBOARD("/View/Dashboard.fxml"),
@@ -64,6 +65,11 @@ public class DataProvider {
 
 
     public static ObservableList<String> operatingHours = FXCollections.observableArrayList();
+    public final static ObservableList<String> AMPM = FXCollections.observableArrayList("AM", "PM");
+    
+    public static final LocalTime OPENING_TIME = LocalTime.of(07, 0);
+    public static final LocalTime CLOSING_TIME = LocalTime.of(19, 0);
+
 
     public static void setStartingHours() {
         final int[] HOURS = new int[]{7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};

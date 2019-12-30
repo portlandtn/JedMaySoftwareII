@@ -18,7 +18,6 @@
 package Controller;
 
 import DAO.AppointmentDAO;
-import Log.Logger;
 import Model.Appointment;
 import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
@@ -105,8 +104,9 @@ public class AppointmentsCalendarController implements Initializable {
 
     @FXML
     void onActionAddAppointment(ActionEvent event) throws IOException, SQLException {
-        AppointmentDetailController.isEditing = false;
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENT_DETAIL.getPath())));
+        CreateEditAppointmentController.isEditing = false;
+        CreateEditAppointmentController.previousPath = DataProvider.pathOfFXML.APPOINTMENTS_CALENDAR.getPath();
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.CREATE_EDIT_APPOINTMENT.getPath())));
     }
 
     @FXML
@@ -127,23 +127,23 @@ public class AppointmentsCalendarController implements Initializable {
     @FXML
     void onActionEditAppointment(ActionEvent event) {
 
-        AppointmentDetailController.isEditing = true;
+        CreateEditAppointmentController.isEditing = true;
 
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENT_DETAIL.getPath()));
+            loader.setLocation(getClass().getResource(DataProvider.pathOfFXML.CREATE_EDIT_APPOINTMENT.getPath()));
             loader.load();
 
-            AppointmentDetailController.previousPath = DataProvider.pathOfFXML.APPOINTMENTS_CALENDAR.getPath();
+            CreateEditAppointmentController.previousPath = DataProvider.pathOfFXML.APPOINTMENTS_CALENDAR.getPath();
 
-            AppointmentDetailController apptController = loader.getController();
+            CreateEditAppointmentController apptController = loader.getController();
             apptController.sendAppointmentDetails(calendarAppointmentTableView.getSelectionModel().getSelectedItem());
 
             Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
             Parent scene = loader.getRoot();
             stage.setScene(new Scene(scene));
             stage.show();
-            Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENT_DETAIL.getPath())));
+            Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.CREATE_EDIT_APPOINTMENT.getPath())));
 
         } catch (IOException | NullPointerException | SQLException ex) {
             System.out.println(ex.getMessage());

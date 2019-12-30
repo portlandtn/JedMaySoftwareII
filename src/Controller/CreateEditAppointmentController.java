@@ -20,10 +20,10 @@ package Controller;
 import DAO.AppointmentDAO;
 import DAO.CustomerDAO;
 import DAO.UserDAO;
-import Log.Logger;
 import Model.Appointment;
 import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
+import Utilities.DateTimeConverter;
 import Utilities.Navigator;
 import Utilities.Validator;
 import com.mysql.jdbc.Connection;
@@ -33,6 +33,9 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -46,7 +49,7 @@ import javafx.scene.control.*;
  *
  * @author Jedidiah May
  */
-public class AppointmentDetailController implements Initializable {
+public class CreateEditAppointmentController implements Initializable {
 
     DatabaseConnector dc = new DatabaseConnector();
     Connection conn;
@@ -73,8 +76,8 @@ public class AppointmentDetailController implements Initializable {
         urlTextField.setText(appt.getUrl());
         typeChoiceBox.setValue(appt.getType());
         dateDatePicker.setValue(LocalDate.MAX); //FIX LATER
-        startTimeChoiceBox.setValue("8:00"); //FIX LATER
-        endTimeChoiceBox.setValue("8:30"); //FIX LATER
+        startTimeTextField.setText("8:00"); //FIX LATER
+        endTimeTextField.setText("8:30"); //FIX LATER
 
         this.appointmentToUpdate = appt;
     }
@@ -107,12 +110,18 @@ public class AppointmentDetailController implements Initializable {
     private DatePicker dateDatePicker;
 
     @FXML
-    private ChoiceBox<String> startTimeChoiceBox;
+    private TextField startTimeTextField;
 
     @FXML
-    private ChoiceBox<String> endTimeChoiceBox;
+    private ChoiceBox<String> startAMPMChoiceBox;
 
-    public AppointmentDetailController() {
+    @FXML
+    private TextField endTimeTextField;
+
+    @FXML
+    private ChoiceBox<String> endAMPMChoiceBox;
+
+    public CreateEditAppointmentController() {
         try {
             this.conn = dc.createConnection();
             this.appointmentDAO = new AppointmentDAO(conn);
@@ -135,6 +144,16 @@ public class AppointmentDetailController implements Initializable {
 
     @FXML
     void onActionSave(ActionEvent event) throws IOException, SQLException, ParseException {
+        
+        try {
+            if (customerNameComboBox.getValue().isEmpty());
+            // if it's empty (null), fall through to the catch.
+        }
+        catch (NullPointerException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "You must choose or enter a new customer prior to saving.");
+            alert.showAndWait();
+            return;
+        }
 
         if (!customerDAO.doesCustomerExist(customerNameComboBox.getValue())) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This customer does not exist. A new customer will have to be created. Would you like to continue?");
@@ -142,7 +161,7 @@ public class AppointmentDetailController implements Initializable {
             if (result.get() != ButtonType.OK) {
                 return;
             } else {
-                CreateEditCustomerController.previousPath = DataProvider.pathOfFXML.APPOINTMENT_DETAIL.getPath();
+                CreateEditCustomerController.previousPath = DataProvider.pathOfFXML.CREATE_EDIT_APPOINTMENT.getPath();
                 Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.CREATE_EDIT_CUSTOMER.getPath())));
             }
         }
@@ -190,35 +209,67 @@ public class AppointmentDetailController implements Initializable {
         appt.setType(typeChoiceBox.getValue());
         appt.setContact(contactTextField.getText());
         appt.setUrl(urlTextField.getText());
+
+        String startingHour = DateTimeConverter.getHourFromTextField(startTimeTextField.getText(), startAMPMChoiceBox.getValue());
+        String startingMinute = DateTimeConverter.getMinuteFromTextField(startTimeTextField.getText());
+
+        LocalDateTime startLocalDateTime = LocalDateTime.of(
+                dateDatePicker.getValue().getYear(),
+                dateDatePicker.getValue().getMonthValue(),
+                dateDatePicker.getValue().getDayOfMonth(),
+                Integer.parseInt(startingHour),
+                Integer.parseInt(startingMinute));
         
-        java.util.Date apptDate = java.sql.Date.valueOf(dateDatePicker.getValue());
-        appt.setAppointmentDate(apptDate);
-  
-        Date startTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(startTimeChoiceBox.getValue());
-        appt.setStart(startTime);
+        Date startDate = java.sql.Timestamp.valueOf(startLocalDateTime);
         
-        Date endTime = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(endTimeChoiceBox.getValue());
-        appt.setEnd(endTime);
+        appt.setStart(startDate);
+        
+        String endingHour = DateTimeConverter.getHourFromTextField(endTimeTextField.getText(), endAMPMChoiceBox.getValue());
+        String endingMinute = DateTimeConverter.getMinuteFromTextField(endTimeTextField.getText());
+
+        LocalDateTime endLocalDateTime = LocalDateTime.of(
+                dateDatePicker.getValue().getYear(),
+                dateDatePicker.getValue().getMonthValue(),
+                dateDatePicker.getValue().getDayOfMonth(),
+                Integer.parseInt(endingHour),
+                Integer.parseInt(endingMinute));
+        
+        Date endDate = java.sql.Timestamp.valueOf(endLocalDateTime);
+
+//        java.util.Date apptDate = java.sql.Date.valueOf(dateDatePicker.getValue());
+//        appt.setAppointmentDate(apptDate);
+
+
+        appt.setEnd(endDate);
 
         appointmentDAO.insert(appt);
 
     }
 
     private Boolean canDataBeSaved() {
+        Alert alert = new Alert(Alert.AlertType.ERROR, "At a minimum, you must have a Customer Name, Title, Date, Start Time, and End Time entered to save.");
+        
+        try {
         String[] textFields = new String[]{
             customerNameComboBox.getValue(),
             titleTextField.getText(),
             dateDatePicker.getValue().toString(),
-            startTimeChoiceBox.getValue(),
-            endTimeChoiceBox.getValue()};
-        
+            startTimeTextField.getText(),
+            endTimeTextField.getText()};
+            
         if (!Validator.isTextEntered(textFields)) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "At a minimum, you must have a Customer Name, Title, Date, Start Time, and End Time entered to save.");
             alert.showAndWait();
             return false;
         } else {
             return true;
         }
+        
+        }
+        catch (NullPointerException ex) {
+            alert.showAndWait();
+            return false;
+        }
+
 
     }
 
@@ -228,7 +279,7 @@ public class AppointmentDetailController implements Initializable {
         assignedToChoiceBox.setItems(userDAO.queryAllUsers());
         locationChoiceBox.setItems(DataProvider.LOCATIONS);
         typeChoiceBox.setItems(DataProvider.APPOINTMENT_TYPES);
-        startTimeChoiceBox.setItems(DataProvider.operatingHours);
-        endTimeChoiceBox.setItems(DataProvider.operatingHours);
+        startAMPMChoiceBox.setItems(DataProvider.AMPM);
+        endAMPMChoiceBox.setItems(DataProvider.AMPM);
     }
 }

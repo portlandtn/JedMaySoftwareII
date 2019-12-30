@@ -17,11 +17,9 @@
  */
 package DAO;
 
-import Log.Logger;
 import Model.Appointment;
 import Utilities.DataProvider;
 import com.mysql.jdbc.Connection;
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

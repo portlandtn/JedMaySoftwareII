@@ -24,16 +24,29 @@ import java.util.TimeZone;
  * @author Jedidiah May
  */
 public class DateTimeConverter {
-    
+
     public static String currentTimeZoneId;
-    
-    public static void convertToGMT(){
+
+    public static void convertToGMT() {
         currentTimeZoneId = TimeZone.getDefault().getID();
         TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
     }
-    
-    public static void convertFromGMTToCurrent(){
+
+    public static void convertFromGMTToCurrent() {
         TimeZone.setDefault(TimeZone.getTimeZone(currentTimeZoneId));
     }
-    
+
+    public static String getHourFromTextField(String time, String ampm) {
+        
+        int ind = time.indexOf(":");
+        if (ampm.equals("AM"))
+            return time.substring(0, ind);
+        else return time.substring(0, ind) + 12;
+    }
+
+    public static String getMinuteFromTextField(String time) {
+        int ind = time.indexOf(":");
+        return time.substring(ind + 1, time.length());
+    }
+
 }
