@@ -42,27 +42,27 @@ public class DashboardController implements Initializable {
     void onActionLogOut(ActionEvent event) throws IOException, SQLException {
         DataProvider.setIsLoggedIn(false);
         DataProvider.setCurrentUser(null);
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.LOGIN_SCREEN.getPath())));
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.LOGIN_SCREEN.getPath())));
     }
 
     @FXML
     void onActionShowCalendar(ActionEvent event) throws IOException, SQLException {
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENTS_CALENDAR.getPath())));
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.APPOINTMENTS_CALENDAR.getPath())));
     }
 
     @FXML
     void onActionShowCustomers(ActionEvent event) throws IOException, SQLException {
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.MANAGE_CUSTOMERS.getPath())));
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.MANAGE_CUSTOMERS.getPath())));
     }
 
     @FXML
     void onActionShowReportsDashboard(ActionEvent event) throws IOException, SQLException {
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.REPORTS_DASHBOARD.getPath())));
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.REPORTS_DASHBOARD.getPath())));
     }
 
     @FXML
     void onActionShowManageUsersScreen(ActionEvent event) throws IOException, SQLException {
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.MANAGE_USERS.getPath())));
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.MANAGE_USERS.getPath())));
     }
 
 

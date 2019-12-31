@@ -36,22 +36,22 @@ public class ReportsDashboardController implements Initializable {
 
     @FXML
     void onActionGoBack(ActionEvent event) throws IOException, SQLException {
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.DASHBOARD.getPath())));
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.DASHBOARD.getPath())));
     }
 
     @FXML
     void onActionShowAppointmentByLocationReport(ActionEvent event) throws IOException, SQLException {
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.LOCATION_REPORT.getPath())));
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.LOCATION_REPORT.getPath())));
     }
 
     @FXML
     void onActionShowAppointmentTypesReport(ActionEvent event) throws IOException, SQLException {
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.APPOINTMENT_TYPE_REPORT.getPath())));
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.APPOINTMENT_TYPE_REPORT.getPath())));
     }
 
     @FXML
     void onActionShowScheduleReport(ActionEvent event) throws IOException, SQLException {
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.SCHEDULE_REPORT.getPath())));
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.SCHEDULE_REPORT.getPath())));
     }
     
     @Override

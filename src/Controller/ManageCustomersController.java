@@ -174,14 +174,14 @@ public class ManageCustomersController implements Initializable {
     //Go Back button
     @FXML
     void onActionShowDashboard(ActionEvent event) throws IOException, SQLException {
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.DASHBOARD.getPath())));
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.DASHBOARD.getPath())));
     }
 
     @FXML
     void onActionAddNewCustomer(ActionEvent event) throws IOException, SQLException {
         CreateEditCustomerController.isEditing = false;
-        CreateEditCustomerController.previousPath = DataProvider.pathOfFXML.MANAGE_CUSTOMERS.getPath();
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.CREATE_EDIT_CUSTOMER.getPath())));
+        CreateEditCustomerController.previousPath = Navigator.pathOfFXML.MANAGE_CUSTOMERS.getPath();
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.CREATE_EDIT_CUSTOMER.getPath())));
 
     }
 
@@ -209,11 +209,11 @@ public class ManageCustomersController implements Initializable {
         // Setups the controller.
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource(DataProvider.pathOfFXML.CREATE_EDIT_CUSTOMER.getPath()));
+            loader.setLocation(getClass().getResource(Navigator.pathOfFXML.CREATE_EDIT_CUSTOMER.getPath()));
             loader.load();
 
             // When the back button is pressed, this tells it where to go on the next screen (static field)
-            CreateEditCustomerController.previousPath = DataProvider.pathOfFXML.MANAGE_CUSTOMERS.getPath();
+            CreateEditCustomerController.previousPath = Navigator.pathOfFXML.MANAGE_CUSTOMERS.getPath();
 
             CreateEditCustomerController custController = loader.getController();
             custController.sendCustomerDetails(manageCustomersTableView.getSelectionModel().getSelectedItem());

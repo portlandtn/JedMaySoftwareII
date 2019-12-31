@@ -103,7 +103,7 @@ public class LoginScreenController implements Initializable {
                 DataProvider.setIsLoggedIn(true);
                 DataProvider.setCurrentUser(userNameTextField.getText());
                 Logger.logUserLogin();
-                Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.DASHBOARD.getPath())));
+                Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.DASHBOARD.getPath())));
             }
 
         } catch (IOException ex) {

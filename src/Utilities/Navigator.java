@@ -33,6 +33,32 @@ import javafx.stage.Stage;
 
 public class Navigator {
     
+    public enum pathOfFXML {
+        APPOINTMENT_TYPE_REPORT("/View/AppointmentTypeReport.fxml"),
+        APPOINTMENTS_CALENDAR("/View/AppointmentsCalendar.fxml"),
+        CREATE_EDIT_APPOINTMENT("/View/CreateEditAppointment.fxml"),
+        CREATE_EDIT_CUSTOMER("/View/CreateEditCustomer.fxml"),
+        CREATE_EDIT_USER("/View/CreateEditUser.fxml"),
+        DASHBOARD("/View/Dashboard.fxml"),
+        LOCATION_REPORT("/View/Dashboard.fxml"),
+        LOGIN_SCREEN("/View/LoginScreen.fxml"),
+        MANAGE_CUSTOMERS("/View/ManageCustomers.fxml"),
+        MANAGE_USERS("/View/ManageUsers.fxml"),
+        REPORTS_DASHBOARD("/View/ReportsDashboard.fxml"),
+        SCHEDULE_REPORT("/View/ScheduleReport.fxml");
+
+        private String screen;
+
+        pathOfFXML(String screen) {
+            this.screen = screen;
+        }
+
+        public String getPath() {
+            return this.screen;
+        }
+
+    }
+    
     public static void displayScreen(ActionEvent event, Parent scene) throws IOException, SQLException {
 
         Stage stage;

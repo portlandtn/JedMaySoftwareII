@@ -161,8 +161,8 @@ public class CreateEditAppointmentController implements Initializable {
             if (result.get() != ButtonType.OK) {
                 return;
             } else {
-                CreateEditCustomerController.previousPath = DataProvider.pathOfFXML.CREATE_EDIT_APPOINTMENT.getPath();
-                Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.CREATE_EDIT_CUSTOMER.getPath())));
+                CreateEditCustomerController.previousPath = Navigator.pathOfFXML.CREATE_EDIT_APPOINTMENT.getPath();
+                Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.CREATE_EDIT_CUSTOMER.getPath())));
             }
         }
 

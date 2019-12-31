@@ -106,7 +106,7 @@ public class ManageUsersController implements Initializable {
 
     @FXML
     void onActionDisplayDashboard(ActionEvent event) throws IOException, SQLException {
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.DASHBOARD.getPath())));
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.DASHBOARD.getPath())));
     }
 
     @FXML
@@ -144,10 +144,10 @@ public class ManageUsersController implements Initializable {
 
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource(DataProvider.pathOfFXML.CREATE_EDIT_USER.getPath()));
+            loader.setLocation(getClass().getResource(Navigator.pathOfFXML.CREATE_EDIT_USER.getPath()));
             loader.load();
 
-            CreateEditUserController.previousPath = DataProvider.pathOfFXML.MANAGE_USERS.getPath();
+            CreateEditUserController.previousPath = Navigator.pathOfFXML.MANAGE_USERS.getPath();
 
             CreateEditUserController userController = loader.getController();
             userController.sendUserDetails(manageUsersTableView.getSelectionModel().getSelectedItem());
@@ -170,7 +170,7 @@ public class ManageUsersController implements Initializable {
     void onActionCreateUser(ActionEvent event) throws IOException, SQLException {
         CreateEditUserController.isEditing = false;
         CreateEditUserController.previousPath = "/View/ManageUsers.fxml";
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(DataProvider.pathOfFXML.CREATE_EDIT_USER.getPath())));
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.CREATE_EDIT_USER.getPath())));
     }
 
     @FXML
