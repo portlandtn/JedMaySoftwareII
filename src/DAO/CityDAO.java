@@ -45,11 +45,7 @@ public class CityDAO extends DAO<City> {
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "cityId, "
                 + "city, "
-                + "countryId, "
-                + "createDate, "
-                + "createdBy, "
-                + "lastUpdate, "
-                + "lastUpdatedBy "
+                + "countryId "
                 + "FROM user")) {
 
             ResultSet result = stmt.executeQuery();
@@ -59,10 +55,6 @@ public class CityDAO extends DAO<City> {
                 city.setCityId(result.getInt("cityId"));
                 city.setCity(result.getString("city"));
                 city.setCountryId(result.getInt("countryId"));
-                city.setCreateDate(result.getDate("createDate"));
-                city.setCreatedBy(result.getString("createdBy"));
-                city.setLastUpdate(result.getDate("lastUpdate"));
-                city.setLastUpdateBy(result.getString("lastUpdateby"));
                 cities.add(city);
             }
 
@@ -156,13 +148,11 @@ public class CityDAO extends DAO<City> {
     @Override
     public void insert(City dto) {
         try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO city ("
-                + "city, countryId, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES (?, ?, ?, ?, ?, ?)")) {
+                + "city, countryId, createDate, createdBy, lastUpdate, lastUpdateBy) VALUES (?, ?, NOW(), ?, NOW(), ?)")) {
             stmt.setString(1, dto.getCity());
             stmt.setInt(2, dto.getCountryId());
-            stmt.setDate(3, DataProvider.getCurrentDate());
+            stmt.setString(3, DataProvider.getCurrentUser());
             stmt.setString(4, DataProvider.getCurrentUser());
-            stmt.setDate(5, DataProvider.getCurrentDate());
-            stmt.setString(6, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -183,12 +173,11 @@ public class CityDAO extends DAO<City> {
         try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE city SET "
                 + "city = ?, "
                 + "countryid = ?, "
-                + "lastUpdate = ?, "
+                + "lastUpdate = NOW(), "
                 + "lastUpdateBy = ? "
                 + "WHERE cityId = '" + dto.getCityId() + "'")) {
             stmt.setString(1, dto.getCity());
             stmt.setInt(2, dto.getCountryId());
-            stmt.setDate(4, DataProvider.getCurrentDate());
             stmt.setString(5, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {

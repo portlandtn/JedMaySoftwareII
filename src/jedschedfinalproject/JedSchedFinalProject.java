@@ -36,7 +36,7 @@ public class JedSchedFinalProject extends Application {
     public void start(Stage stage) throws Exception {
         Locale locale = Locale.getDefault();
         ResourceBundle rb = ResourceBundle.getBundle("i18n/Nat", locale);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/LoginScreen.fxml"), rb);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/LoginScreen.fxml"));
         Parent root = loader.load();
 
         Scene scene = new Scene(root);

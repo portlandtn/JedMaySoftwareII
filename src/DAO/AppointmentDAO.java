@@ -23,7 +23,6 @@ import com.mysql.jdbc.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -32,8 +31,6 @@ import javafx.collections.ObservableList;
  * @author Jedidiah May
  */
 public class AppointmentDAO extends DAO<Appointment>{
-    
-    Calendar calendar = Calendar.getInstance();
 
     public AppointmentDAO(Connection conn) {
         super(conn);
@@ -54,10 +51,7 @@ public class AppointmentDAO extends DAO<Appointment>{
                 + "type, "
                 + "url, "
                 + "start, "
-                + "end, "
-                + "createdBy, "
-                + "lastUpdate, "
-                + "lastUpdatedBy "
+                + "end "
                 + "FROM appointment")) {
 
             ResultSet result = stmt.executeQuery();
@@ -74,10 +68,6 @@ public class AppointmentDAO extends DAO<Appointment>{
                 appointment.setUrl(result.getString("url"));
                 appointment.setStart(result.getDate("start"));
                 appointment.setEnd(result.getDate("end"));
-                appointment.setCreateDate(result.getDate("createDate"));
-                appointment.setCreatedBy(result.getString("createdBy"));
-                appointment.setLastUpdate(result.getDate("lastUpdate"));
-                appointment.setLastUpdateBy(result.getString("lastUpdateby"));
                 appointments.add(appointment);
             }
 
@@ -174,7 +164,7 @@ public class AppointmentDAO extends DAO<Appointment>{
     public void insert(Appointment dto) {
         try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO appointment ("
                 + "customerId, userId, title, description, location, contact, type, url, start, end, createDate, createdBy, lastUpdate, lastUpdateby) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, NOW(), ?)")) {
             stmt.setInt(1, dto.getCustomerId());
             stmt.setInt(2, dto.getUserId());
             stmt.setString(3, dto.getTitle());
@@ -185,10 +175,8 @@ public class AppointmentDAO extends DAO<Appointment>{
             stmt.setString(8, dto.getUrl());
             stmt.setDate(9, (java.sql.Date) dto.getStart());
             stmt.setDate(10, (java.sql.Date) dto.getEnd());
-            stmt.setDate(11, DataProvider.getCurrentDate());
+            stmt.setString(11, DataProvider.getCurrentUser());
             stmt.setString(12, DataProvider.getCurrentUser());
-            stmt.setDate(13, DataProvider.getCurrentDate());
-            stmt.setString(14, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -217,7 +205,7 @@ public class AppointmentDAO extends DAO<Appointment>{
                     + "url = ?, "
                     + "start = ?, "
                     + "end = ?, "
-                    + "lastUpdate = ?, "
+                    + "lastUpdate = NOW(), "
                     + "lastUpdateBy = ? "
                     + "WHERE address = " + dto.getAppointmentId())) {
                 stmt.setInt(1, dto.getCustomerId());
@@ -230,8 +218,7 @@ public class AppointmentDAO extends DAO<Appointment>{
                 stmt.setString(8, dto.getUrl());
                 stmt.setDate(9, (java.sql.Date) dto.getStart());
                 stmt.setDate(10, (java.sql.Date) dto.getEnd());
-                stmt.setDate(11, DataProvider.getCurrentDate());
-                stmt.setString(12, DataProvider.getCurrentUser());
+                stmt.setString(11, DataProvider.getCurrentUser());
                 stmt.executeUpdate();
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());

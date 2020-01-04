@@ -22,7 +22,6 @@ import Utilities.DataProvider;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -31,8 +30,6 @@ import javafx.collections.ObservableList;
  * @author Jedidiah May
  */
 public class CustomerDAO extends DAO<Customer> {
-
-    Calendar calendar = Calendar.getInstance();
 
     public CustomerDAO(com.mysql.jdbc.Connection conn) {
         super(conn);
@@ -45,11 +42,7 @@ public class CustomerDAO extends DAO<Customer> {
                 + "customerId, "
                 + "customerName, "
                 + "addressId, "
-                + "active, "
-                + "createDate, "
-                + "createdBy, "
-                + "lastUpdate, "
-                + "lastUpdateBy "
+                + "active "
                 + "FROM customer ORDER BY customer.customerId")) {
 
             ResultSet result = stmt.executeQuery();
@@ -60,10 +53,6 @@ public class CustomerDAO extends DAO<Customer> {
                 customer.setCustomerName(result.getString("customerName"));
                 customer.setAddressId(result.getInt("addressId"));
                 customer.setActive(result.getBoolean("active"));
-                customer.setCreateDate(result.getDate("createDate"));
-                customer.setCreatedBy(result.getString("createdBy"));
-                customer.setLastUpdate(result.getDate("lastUpdate"));
-                customer.setLastUpdateBy(result.getString("lastUpdateby"));
                 customers.add(customer);
             }
 
@@ -281,14 +270,12 @@ public class CustomerDAO extends DAO<Customer> {
     @Override
     public void insert(Customer dto) {
         try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO customer ("
-                + "customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateby) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+                + "customerName, addressId, active, createDate, createdBy, lastUpdate, lastUpdateby) VALUES (?, ?, ?, NOW(), ?, NOW(), ?)")) {
             stmt.setString(1, dto.getCustomerName());
             stmt.setInt(2, dto.getAddressId());
             stmt.setBoolean(3, dto.getActive());
-            stmt.setDate(4, DataProvider.getCurrentDate());
+            stmt.setString(4, DataProvider.getCurrentUser());
             stmt.setString(5, DataProvider.getCurrentUser());
-            stmt.setDate(6, DataProvider.getCurrentDate());
-            stmt.setString(7, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -312,15 +299,14 @@ public class CustomerDAO extends DAO<Customer> {
                 + "customerName = ?, "
                 + "addressId = ?, "
                 + "active = ?, "
-                + "lastUpdate = ?, "
+                + "lastUpdate = NOW(), "
                 + "lastUpdateBy = ? "
                 + "WHERE customerId = '" + dto.getCustomerId() + "'")) {
 
             stmt.setString(1, dto.getCustomerName());
             stmt.setInt(2, dto.getAddressId());
             stmt.setBoolean(3, dto.getActive());
-            stmt.setDate(4, DataProvider.getCurrentDate());
-            stmt.setString(5, DataProvider.getCurrentUser());
+            stmt.setString(4, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

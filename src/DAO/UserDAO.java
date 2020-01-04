@@ -23,7 +23,6 @@ import com.mysql.jdbc.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -32,8 +31,6 @@ import javafx.collections.ObservableList;
  * @author Jedidiah May
  */
 public class UserDAO extends DAO<User> {
-
-    Calendar calendar = Calendar.getInstance();
 
     public UserDAO(Connection conn) {
         super(conn);
@@ -90,11 +87,7 @@ public class UserDAO extends DAO<User> {
                 + "userId, "
                 + "userName, "
                 + "password, "
-                + "active, "
-                + "createDate, "
-                + "createdBy, "
-                + "lastUpdate, "
-                + "lastUpdateBy "
+                + "active "
                 + "FROM user where active = " + active + "")) {
 
             ResultSet result = stmt.executeQuery();
@@ -105,10 +98,6 @@ public class UserDAO extends DAO<User> {
                 user.setUserName(result.getString("userName"));
                 user.setPassword(result.getString("password"));
                 user.setActive(result.getBoolean("active"));
-                user.setCreateDate(result.getDate("createDate"));
-                user.setCreatedBy(result.getString("createdBy"));
-                user.setLastUpdate(result.getDate("lastUpdate"));
-                user.setLastUpdateBy(result.getString("lastUpdateby"));
                 users.add(user);
             }
 
@@ -170,11 +159,7 @@ public class UserDAO extends DAO<User> {
                 + "userId, "
                 + "userName, "
                 + "password, "
-                + "active, "
-                + "createDate, "
-                + "createdBy, "
-                + "lastUpdate, "
-                + "lastUpdateBy "
+                + "active "
                 + "FROM user where userId like '" + id + "%'")) {
 
             ResultSet result = stmt.executeQuery();
@@ -185,10 +170,6 @@ public class UserDAO extends DAO<User> {
                 user.setUserName(result.getString("userName"));
                 user.setPassword(result.getString("password"));
                 user.setActive(result.getBoolean("active"));
-                user.setCreateDate(result.getDate("createDate"));
-                user.setCreatedBy(result.getString("createdBy"));
-                user.setLastUpdate(result.getDate("lastUpdate"));
-                user.setLastUpdateBy(result.getString("lastUpdateby"));
                 users.add(user);
             }
 
@@ -204,11 +185,7 @@ public class UserDAO extends DAO<User> {
                 + "userId, "
                 + "userName, "
                 + "password, "
-                + "active, "
-                + "createDate, "
-                + "createdBy, "
-                + "lastUpdate, "
-                + "lastUpdateBy "
+                + "active "
                 + "FROM user where userName like '" + user + "%'")) {
 
             ResultSet result = stmt.executeQuery();
@@ -219,10 +196,6 @@ public class UserDAO extends DAO<User> {
                 newUser.setUserName(result.getString("userName"));
                 newUser.setPassword(result.getString("password"));
                 newUser.setActive(result.getBoolean("active"));
-                newUser.setCreateDate(result.getDate("createDate"));
-                newUser.setCreatedBy(result.getString("createdBy"));
-                newUser.setLastUpdate(result.getDate("lastUpdate"));
-                newUser.setLastUpdateBy(result.getString("lastUpdateby"));
                 users.add(newUser);
             }
 
@@ -239,14 +212,13 @@ public class UserDAO extends DAO<User> {
                 + "userName = ?, "
                 + "password = ?, "
                 + "active = ?, "
-                + "lastUpdate = ?, "
+                + "lastUpdate = NOW(), "
                 + "lastUpdateBy = ? "
                 + "WHERE userId = '" + dto.getUserId() + "'")) {
             stmt.setString(1, dto.getUserName());
             stmt.setString(2, dto.getPassword());
             stmt.setBoolean(3, dto.getActive());
-            stmt.setDate(4, DataProvider.getCurrentDate());
-            stmt.setString(5, DataProvider.getCurrentUser());
+            stmt.setString(4, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -256,14 +228,12 @@ public class UserDAO extends DAO<User> {
     @Override
     public void insert(User dto) {
         try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO user ("
-                + "userName, password, active, createDate, createdBy, lastUpdate, lastUpdateby) VALUES (?, ?, ?, ?, ?, ?, ?)")) {
+                + "userName, password, active, createDate, createdBy, lastUpdate, lastUpdateby) VALUES (?, ?, ?, NOW(), ?, NOW(), ?)")) {
             stmt.setString(1, dto.getUserName());
             stmt.setString(2, dto.getPassword());
             stmt.setBoolean(3, dto.getActive());
-            stmt.setDate(4, DataProvider.getCurrentDate());
+            stmt.setString(4, DataProvider.getCurrentUser());
             stmt.setString(5, DataProvider.getCurrentUser());
-            stmt.setDate(6, DataProvider.getCurrentDate());
-            stmt.setString(7, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

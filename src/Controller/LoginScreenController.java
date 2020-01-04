@@ -27,6 +27,7 @@ import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 import javafx.event.ActionEvent;
@@ -45,7 +46,7 @@ public class LoginScreenController implements Initializable {
     DatabaseConnector dc = new DatabaseConnector();
     Connection conn;
     UserDAO userDAO;
-    
+
     // Messages for alerts
     String usernameNotFound, usernameAndPasswordDoNotMatch, usernameIsInactive, usernameAndPasswordCannotBeEmpty;
 
@@ -84,21 +85,18 @@ public class LoginScreenController implements Initializable {
 
             //Perform the checks to see if the user can Login
             if (!canUserLogIn()) {
-            String message = null;
-            if (!doUserNameAndPasswordFieldsHaveText())
-                message = this.usernameAndPasswordCannotBeEmpty;
-            
-            else if (!doUserNameAndPasswordExistInDatabase())
-                message = this.usernameAndPasswordDoNotMatch;
-            
-            else if (!isUserActive())
-                message = this.usernameIsInactive;
+                String message = null;
+                if (!doUserNameAndPasswordFieldsHaveText()) {
+                    message = this.usernameAndPasswordCannotBeEmpty;
+                } else if (!doUserNameAndPasswordExistInDatabase()) {
+                    message = this.usernameAndPasswordDoNotMatch;
+                } else if (!isUserActive()) {
+                    message = this.usernameIsInactive;
+                }
                 DataProvider.setIsLoggedIn(false);
                 Alert alert = new Alert(AlertType.ERROR, message);
                 alert.showAndWait();
-            } 
-
-            // All checks are cleared, so the user can login and go to the dashboard.
+            } // All checks are cleared, so the user can login and go to the dashboard.
             else {
                 DataProvider.setIsLoggedIn(true);
                 DataProvider.setCurrentUser(userNameTextField.getText());
@@ -136,7 +134,7 @@ public class LoginScreenController implements Initializable {
     private Boolean isUserActive() {
         return userDAO.isUserActive(userNameTextField.getText());
     }
-    
+
     private void setLabels(ResourceBundle rb) {
         titleLabel.setText(rb.getString("titleLabel"));
         logInLabel.setText(rb.getString("logInLabel"));
@@ -144,7 +142,7 @@ public class LoginScreenController implements Initializable {
         userNameTextField.setPromptText(rb.getString("userNameTextFieldPromptText"));
         passwordTextField.setPromptText(rb.getString("passwordTextFieldPromptText"));
     }
-    
+
     private void setMessageText(ResourceBundle rb) {
         this.usernameNotFound = rb.getString("usernameNotFound");
         this.usernameAndPasswordDoNotMatch = rb.getString("usernameAndPasswordDoNotMatch");
@@ -154,10 +152,10 @@ public class LoginScreenController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        DateTimeConverter.currentTimeZoneId = TimeZone.getDefault().getID();
-        DataProvider.setStartingHours();
-        setLabels(rb);
-        setMessageText(rb);
+        Locale locale = Locale.getDefault();
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("i18n/Nat", locale);
+        setLabels(resourceBundle);
+        setMessageText(resourceBundle);
     }
 
 }

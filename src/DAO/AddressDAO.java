@@ -17,15 +17,12 @@
  */
 package DAO;
 
-import Log.Logger;
 import Model.Address;
 import Utilities.DataProvider;
 import com.mysql.jdbc.Connection;
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -34,8 +31,6 @@ import javafx.collections.ObservableList;
  * @author Jedidiah May
  */
 public class AddressDAO extends DAO<Address> {
-
-    Calendar calendar = Calendar.getInstance();
 
     public AddressDAO(Connection conn) {
         super(conn);
@@ -51,11 +46,7 @@ public class AddressDAO extends DAO<Address> {
                 + "address2, "
                 + "cityId, "
                 + "postalCode, "
-                + "phone, "
-                + "createDate, "
-                + "createdBy, "
-                + "lastUpdate, "
-                + "lastUpdatedBy "
+                + "phone "
                 + "FROM address")) {
 
             ResultSet result = stmt.executeQuery();
@@ -68,10 +59,6 @@ public class AddressDAO extends DAO<Address> {
                 address.setCityId(result.getInt("cityId"));
                 address.setPostalCode(result.getString("postalCode"));
                 address.setPhone(result.getString("phone"));
-                address.setCreateDate(result.getDate("createDate"));
-                address.setCreatedBy(result.getString("createdBy"));
-                address.setLastUpdate(result.getDate("lastUpdate"));
-                address.setLastUpdateBy(result.getString("lastUpdateby"));
                 addresses.add(address);
             }
 
@@ -129,16 +116,14 @@ public class AddressDAO extends DAO<Address> {
     @Override
     public void insert(Address dto){
         try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO address ("
-                + "address, address2, cityId, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateby) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                + "address, address2, cityId, postalCode, phone, createDate, createdBy, lastUpdate, lastUpdateby) VALUES (?, ?, ?, ?, ?, NOW(), ?, NOW(), ?)")) {
             stmt.setString(1, dto.getAddress());
             stmt.setString(2, dto.getAddress2());
             stmt.setInt(3, dto.getCityId());
             stmt.setString(4, dto.getPostalCode());
             stmt.setString(5, dto.getPhone());
-            stmt.setDate(6, DataProvider.getCurrentDate());
+            stmt.setString(6, DataProvider.getCurrentUser());
             stmt.setString(7, DataProvider.getCurrentUser());
-            stmt.setDate(8, DataProvider.getCurrentDate());
-            stmt.setString(9, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -162,7 +147,7 @@ public class AddressDAO extends DAO<Address> {
                 + "cityId = ?, "
                 + "postalCode = ?, "
                 + "phone = ?, "
-                + "lastUpdate = ?, "
+                + "lastUpdate = NOW(), "
                 + "lastUpdateBy = ? "
                 + "WHERE addressId = " + dto.getAddressId())) {
             stmt.setString(1, dto.getAddress());
@@ -170,8 +155,7 @@ public class AddressDAO extends DAO<Address> {
             stmt.setInt(3, dto.getCityId());
             stmt.setString(4, dto.getPostalCode());
             stmt.setString(5, dto.getPhone());
-            stmt.setDate(6, DataProvider.getCurrentDate());
-            stmt.setString(7, DataProvider.getCurrentUser());
+            stmt.setString(6, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
