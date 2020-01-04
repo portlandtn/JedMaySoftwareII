@@ -18,7 +18,6 @@
 package Controller;
 
 import DAO.*;
-import Log.Logger;
 import Model.Address;
 import Model.City;
 import Model.Country;
@@ -57,7 +56,7 @@ public class CreateEditCustomerController implements Initializable {
     
     static String previousPath;
     static Boolean isEditing;
-    static ObservableList<String> cities; // If editing, sets up the cities for the country already set
+    static ObservableList<String> cities; // If editing, populates the cityComboBox for the country already set
 
     Customer customerToUpdate = new Customer();
 

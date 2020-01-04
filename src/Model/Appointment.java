@@ -28,7 +28,8 @@ public class Appointment implements I_POJO {
 
     private int appointmentId, customerId, userId;
     private String title, customerName, userName, location, type, description, contact, url, createdBy, lastUpdateBy;
-    private Date appointmentDate, start, end, createDate, lastUpdate;
+    private LocalDateTime appointmentDate, start, end;
+    private Date createDate, lastUpdate;
     
     
     public String getUserName() {
@@ -56,11 +57,11 @@ public class Appointment implements I_POJO {
         this.customerName = customerName;
     }
 
-    public Date getAppointmentDate() {
+    public LocalDateTime getAppointmentDate() {
         return appointmentDate;
     }
 
-    public void setAppointmentDate(Date appointmentDate) {
+    public void setAppointmentDate(LocalDateTime appointmentDate) {
         this.appointmentDate = appointmentDate;
     }
     
@@ -128,19 +129,19 @@ public class Appointment implements I_POJO {
         this.url = url;
     }
 
-    public Date getStart() {
+    public LocalDateTime getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(LocalDateTime start) {
         this.start = start;
     }
 
-    public Date getEnd() {
+    public LocalDateTime getEnd() {
         return end;
     }
 
-    public void setEnd(Date end) {
+    public void setEnd(LocalDateTime end) {
         this.end = end;
     }
 

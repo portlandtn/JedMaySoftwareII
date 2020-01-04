@@ -17,7 +17,8 @@
  */
 package Utilities;
 
-import java.util.TimeZone;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -25,28 +26,11 @@ import java.util.TimeZone;
  */
 public class DateTimeConverter {
 
-    public static String currentTimeZoneId;
-
-    public static void convertToGMT() {
-        currentTimeZoneId = TimeZone.getDefault().getID();
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
+    public static LocalDateTime getLocalDateTimeFromTimestamp(Timestamp ts) {
+        return ts.toLocalDateTime();
     }
-
-    public static void convertFromGMTToCurrent() {
-        TimeZone.setDefault(TimeZone.getTimeZone(currentTimeZoneId));
+    
+    public static Timestamp getTimeStampfromLocalDateTime(LocalDateTime ldt) {
+        return Timestamp.valueOf(ldt);
     }
-
-    public static String getHourFromTextField(String time, String ampm) {
-        
-        int ind = time.indexOf(":");
-        if (ampm.equals("AM"))
-            return time.substring(0, ind);
-        else return time.substring(0, ind) + 12;
-    }
-
-    public static String getMinuteFromTextField(String time) {
-        int ind = time.indexOf(":");
-        return time.substring(ind + 1, time.length());
-    }
-
 }
