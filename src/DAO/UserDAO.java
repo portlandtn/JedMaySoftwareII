@@ -110,13 +110,30 @@ public class UserDAO extends DAO<User> {
     //Used to return username or password to validate login credentials.
     public String getUserName(String value) {
         String result = null;
-        String query = "SELECT userName from user where userName = '" + value + "'";
+        String query = "SELECT userName FROM user WHERE userName = '" + value + "'";
 
         try (PreparedStatement stmt = this.conn.prepareStatement(query)) {
 
             ResultSet resultSet = stmt.executeQuery();
             while (resultSet.next()) {
                 result = resultSet.getString("userName");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return result;
+    }
+    
+    //Used to return the userId from a userName for inserting a new appointment
+    public int getUserId(String userName) {
+        int result = 0;
+        String query = "SELECT userId FROM user WHERE userName = '" + userName + "'";
+
+        try (PreparedStatement stmt = this.conn.prepareStatement(query)) {
+
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                result = resultSet.getInt("userId");
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

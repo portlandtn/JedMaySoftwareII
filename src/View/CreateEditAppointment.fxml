@@ -70,22 +70,12 @@
                   <DatePicker fx:id="dateDatePicker" onAction="#onActionDatePicked" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="9">
                      <children>
-                        <TextField fx:id="startTimeTextField" prefHeight="25.0" prefWidth="70.0" promptText="7:30" />
-                        <ChoiceBox fx:id="startAMPMChoiceBox" prefWidth="50.0">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </ChoiceBox>
+                        <TextField fx:id="startTimeTextField" prefHeight="25.0" prefWidth="70.0" promptText="13:15" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
                      <children>
-                        <TextField fx:id="endTimeTextField" prefHeight="25.0" prefWidth="70.0" promptText="7:30" />
-                        <ChoiceBox fx:id="endAMPMChoiceBox" prefWidth="50.0">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </ChoiceBox>
+                        <TextField fx:id="endTimeTextField" prefHeight="25.0" prefWidth="70.0" promptText="13:45" />
                      </children>
                   </HBox>
                </children>

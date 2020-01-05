@@ -33,4 +33,17 @@ public class DateTimeConverter {
     public static Timestamp getTimeStampfromLocalDateTime(LocalDateTime ldt) {
         return Timestamp.valueOf(ldt);
     }
+    
+        public static String getHourFromTextField(String time, String ampm) {
+        
+        int ind = time.indexOf(":");
+        if (ampm.equals("AM"))
+            return time.substring(0, ind);
+        else return time.substring(0, ind) + 12;
+    }
+
+    public static String getMinuteFromTextField(String time) {
+        int ind = time.indexOf(":");
+        return time.substring(ind + 1, time.length());
+    }
 }

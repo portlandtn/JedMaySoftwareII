@@ -140,6 +140,22 @@ public class CustomerDAO extends DAO<Customer> {
         return customerNames;
     }
 
+    public int getCustomerId(String customerName) {
+
+        int id = 0;
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT customerId FROM customer WHERE customerName = '" + customerName + "'")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                id = result.getInt("customerId");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return id;
+    }
+
     public ObservableList<Customer> lookupCustomer(int id) {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "

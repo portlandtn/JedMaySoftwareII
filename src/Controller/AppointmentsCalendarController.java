@@ -19,14 +19,15 @@ package Controller;
 
 import DAO.AppointmentDAO;
 import Model.Appointment;
-import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
 import Utilities.Navigator;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -84,13 +85,14 @@ public class AppointmentsCalendarController implements Initializable {
     private TableColumn<Appointment, String> contactColumnTableView;
 
     @FXML
-    private TableColumn<Appointment, Date> dateColumnTableView;
+    private TableColumn<Appointment, LocalDateTime> dateColumnTableView = new TableColumn<Appointment, LocalDateTime>("LDT");
+    
 
     @FXML
-    private TableColumn<Appointment, Date> startColumnTableView;
+    private TableColumn<Appointment, LocalDateTime> startColumnTableView;
 
     @FXML
-    private TableColumn<Appointment, Date> endColumnTableView;
+    private TableColumn<Appointment, LocalDateTime> endColumnTableView;
 
     // </editor-fold>
     public AppointmentsCalendarController() {
@@ -183,6 +185,17 @@ public class AppointmentsCalendarController implements Initializable {
         titleColumnTableView.setCellValueFactory(new PropertyValueFactory<>("title"));
         locationColumnTableView.setCellValueFactory(new PropertyValueFactory<>("location"));
         contactColumnTableView.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        //dateColumnTableView.setCellValueFactory(cellData -> cellData.getValue().getAppointmentDate().);
+//        dateColumnTableView.setCellFactory(col -> new TableCell<Appointment, LocalDateTime>() {
+//            @Override
+//            protected void updateItem(LocalDateTime item, boolean empty) {
+//                        super.updateItem(item, empty);
+//        if (empty)
+//            setText(null);
+//        else
+//            setText(String.format(item.format(formatter)));
+//            }
+//        }
         dateColumnTableView.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
         startColumnTableView.setCellValueFactory(new PropertyValueFactory<>("start"));
         endColumnTableView.setCellValueFactory(new PropertyValueFactory<>("end"));

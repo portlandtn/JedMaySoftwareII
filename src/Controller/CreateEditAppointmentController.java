@@ -30,10 +30,12 @@ import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.util.Date;
@@ -59,9 +61,8 @@ public class CreateEditAppointmentController implements Initializable {
     static String previousPath;
     static Boolean isEditing;
 
-    private int appointmentId, customerId, userId;
     private String title, customerName, userName, location, type, description, contact, url, createdBy, lastUpdateBy;
-    private Date appointmentDate, start, end, createDate, lastUpdate;
+    private LocalDateTime appointmentDate, start, end;
 
     private Appointment appointmentToUpdate = new Appointment();
 
@@ -113,13 +114,8 @@ public class CreateEditAppointmentController implements Initializable {
     private TextField startTimeTextField;
 
     @FXML
-    private ChoiceBox<String> startAMPMChoiceBox;
-
-    @FXML
     private TextField endTimeTextField;
 
-    @FXML
-    private ChoiceBox<String> endAMPMChoiceBox;
 
     public CreateEditAppointmentController() {
         try {
@@ -201,46 +197,17 @@ public class CreateEditAppointmentController implements Initializable {
     private void saveNewAppointment() throws ParseException {
 
         Appointment appt = new Appointment();
-        appt.setCustomerName(customerNameComboBox.getValue());
+        appt.setCustomerId(customerDAO.getCustomerId(customerNameComboBox.getValue()));
+        appt.setUserId(userDAO.getUserId(assignedToChoiceBox.getValue()));
         appt.setUserName(assignedToChoiceBox.getValue());
         appt.setTitle(titleTextField.getText());
         appt.setDescription(descriptionTextField.getText());
         appt.setLocation(locationChoiceBox.getValue());
         appt.setType(typeChoiceBox.getValue());
         appt.setContact(contactTextField.getText());
-        appt.setUrl(urlTextField.getText());
-
-        String startingHour = DateTimeConverter.getHourFromTextField(startTimeTextField.getText(), startAMPMChoiceBox.getValue());
-        String startingMinute = DateTimeConverter.getMinuteFromTextField(startTimeTextField.getText());
-
-        LocalDateTime startLocalDateTime = LocalDateTime.of(
-                dateDatePicker.getValue().getYear(),
-                dateDatePicker.getValue().getMonthValue(),
-                dateDatePicker.getValue().getDayOfMonth(),
-                Integer.parseInt(startingHour),
-                Integer.parseInt(startingMinute));
-        
-        Date startDate = java.sql.Timestamp.valueOf(startLocalDateTime);
-        
-        appt.setStart(startDate);
-        
-        String endingHour = DateTimeConverter.getHourFromTextField(endTimeTextField.getText(), endAMPMChoiceBox.getValue());
-        String endingMinute = DateTimeConverter.getMinuteFromTextField(endTimeTextField.getText());
-
-        LocalDateTime endLocalDateTime = LocalDateTime.of(
-                dateDatePicker.getValue().getYear(),
-                dateDatePicker.getValue().getMonthValue(),
-                dateDatePicker.getValue().getDayOfMonth(),
-                Integer.parseInt(endingHour),
-                Integer.parseInt(endingMinute));
-        
-        Date endDate = java.sql.Timestamp.valueOf(endLocalDateTime);
-
-//        java.util.Date apptDate = java.sql.Date.valueOf(dateDatePicker.getValue());
-//        appt.setAppointmentDate(apptDate);
-
-
-        appt.setEnd(endDate);
+        appt.setUrl(urlTextField.getText());       
+        appt.setStart(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(startTimeTextField.getText() + ":00")));
+        appt.setEnd(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(endTimeTextField.getText() + ":00")));
 
         appointmentDAO.insert(appt);
 
@@ -279,7 +246,5 @@ public class CreateEditAppointmentController implements Initializable {
         assignedToChoiceBox.setItems(userDAO.queryAllUsers());
         locationChoiceBox.setItems(DataProvider.LOCATIONS);
         typeChoiceBox.setItems(DataProvider.APPOINTMENT_TYPES);
-        startAMPMChoiceBox.setItems(DataProvider.AMPM);
-        endAMPMChoiceBox.setItems(DataProvider.AMPM);
     }
 }
