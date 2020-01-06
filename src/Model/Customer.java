@@ -16,6 +16,7 @@
  * Look for other projects on my github account at <https://github.com/portlandtn/>.
  */
 package Model;
+
 import java.util.Date;
 
 /**
@@ -25,7 +26,11 @@ import java.util.Date;
 public class Customer implements I_POJO {
 
     private int customerId, addressId, countryId, cityId;
+    private String customerName, address, address2, city, country, postalCode, phone, createdBy, lastUpdateBy;
+    private Boolean active;
+    private Date createDate, lastUpdate;
 
+    // <editor-fold defaultstate="collapsed" desc="Getters and Setters">
     public int getCountryId() {
         return countryId;
     }
@@ -41,7 +46,6 @@ public class Customer implements I_POJO {
     public void setCityId(int cityId) {
         this.cityId = cityId;
     }
-    private String customerName, address, address2, city, country, postalCode, phone, createdBy, lastUpdateBy;
 
     public String getAddress() {
         return address;
@@ -90,8 +94,6 @@ public class Customer implements I_POJO {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-    private Boolean active;
-    private Date createDate, lastUpdate;
 
     public int getCustomerId() {
         return customerId;
@@ -124,8 +126,8 @@ public class Customer implements I_POJO {
     public void setActive(Boolean isActive) {
         this.active = isActive;
     }
-    
-        @Override
+
+    @Override
     public String getCreatedBy() {
         return createdBy;
     }
@@ -133,11 +135,6 @@ public class Customer implements I_POJO {
     @Override
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
-    }
-
-    @Override
-    public Date getCreateDate() {
-        return createDate;
     }
 
     @Override
@@ -156,13 +153,9 @@ public class Customer implements I_POJO {
     }
 
     @Override
-    public Date getLastUpdate() {
-        return lastUpdate;
-    }
-
-    @Override
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
+    // </editor-fold>
 
 }

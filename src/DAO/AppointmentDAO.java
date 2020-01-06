@@ -32,15 +32,16 @@ import javafx.collections.ObservableList;
  *
  * @author Jedidiah May
  */
-public class AppointmentDAO extends DAO<Appointment>{
+public class AppointmentDAO extends DAO<Appointment> {
 
     public AppointmentDAO(Connection conn) {
         super(conn);
     }
-    
+
+    // <editor-fold desc="Queries">
     @Override
     public ObservableList<Appointment> query() {
-        
+
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "appointmentId, "
@@ -68,8 +69,9 @@ public class AppointmentDAO extends DAO<Appointment>{
                 appointment.setContact(result.getString("contact"));
                 appointment.setType(result.getString("type"));
                 appointment.setUrl(result.getString("url"));
-                appointment.setStart(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start")));
-                appointment.setEnd(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end")));
+                // Gets the result as a timestampe, converts the timestampe to localDateTime, then converts that from UTC to the system default localDateTime
+                appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
+                appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
                 appointments.add(appointment);
             }
 
@@ -79,6 +81,7 @@ public class AppointmentDAO extends DAO<Appointment>{
         return appointments;
     }
     
+    // Searches database by id for a single appointment. Returns only one appointment (id's are primary keys)
     public Appointment querySingleAppointmenet(int id) {
         Appointment appt = new Appointment();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
@@ -91,14 +94,13 @@ public class AppointmentDAO extends DAO<Appointment>{
                 + "url, "
                 + "contact, "
                 + "description, "
-                + "start apptDate, "
                 + "start, "
                 + "end "
                 + "FROM appointment JOIN customer ON "
                 + "customer.customerId = appointment.customerId "
                 + "JOIN user ON "
                 + "user.userId = appointment.userId")) {
-            
+
             ResultSet result = stmt.executeQuery();
 
             while (result.next()) {
@@ -111,9 +113,9 @@ public class AppointmentDAO extends DAO<Appointment>{
                 appt.setUrl(result.getString("url"));
                 appt.setContact(result.getString("contact"));
                 appt.setDescription(result.getString("description"));
-                appt.setAppointmentDate(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("apptDate")));
-                appt.setStart(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start")));
-                appt.setEnd(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end")));
+                // Gets the result as a timestampe, converts the timestampe to localDateTime, then converts that from UTC to the system default localDateTime
+                appt.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
+                appt.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
             }
 
         } catch (SQLException ex) {
@@ -122,17 +124,18 @@ public class AppointmentDAO extends DAO<Appointment>{
         return appt;
     }
     
+    // Query used to return data for a table view (joins multiple tables together)
     public ObservableList<Appointment> queryForAppointmentCalendar() {
 
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "appointmentId, "
                 + "customerName, "
                 + "userName, "
                 + "contact, "
                 + "title, "
                 + "location, "
                 + "type, "
-                + "start apptDate, "
                 + "start, "
                 + "end "
                 + "FROM appointment JOIN customer ON "
@@ -144,15 +147,58 @@ public class AppointmentDAO extends DAO<Appointment>{
 
             while (result.next()) {
                 Appointment appointment = new Appointment();
+                appointment.setAppointmentId(result.getInt("appointmentId"));
                 appointment.setCustomerName(result.getString("customerName"));
                 appointment.setUserName(result.getString("userName"));
                 appointment.setTitle(result.getString("title"));
                 appointment.setLocation(result.getString("location"));
                 appointment.setType(result.getString("type"));
                 appointment.setContact(result.getString("contact"));
-                appointment.setAppointmentDate(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("apptDate")));
-                appointment.setStart(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start")));
-                appointment.setEnd(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end")));
+                // Gets the result as a timestampe, converts the timestampe to localDateTime, then converts that from UTC to the system default localDateTime
+                appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
+                appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
+                appointments.add(appointment);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return appointments;
+    }
+    
+    // Queries the same information as above, but only returns the next month's worth of appointments.
+    public ObservableList<Appointment> queryForAppointmentCalendarMonthly() {
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "appointmentId, "
+                + "customerName, "
+                + "userName, "
+                + "contact, "
+                + "title, "
+                + "location, "
+                + "type, "
+                + "start, "
+                + "end "
+                + "FROM appointment JOIN customer ON "
+                + "customer.customerId = appointment.customerId "
+                + "JOIN user ON "
+                + "user.userId = appointment.userId "
+                + "WHERE start <= NOW() + INTERVAL 30 DAY")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Appointment appointment = new Appointment();
+                appointment.setAppointmentId(result.getInt("appointmentId"));
+                appointment.setCustomerName(result.getString("customerName"));
+                appointment.setUserName(result.getString("userName"));
+                appointment.setTitle(result.getString("title"));
+                appointment.setLocation(result.getString("location"));
+                appointment.setType(result.getString("type"));
+                appointment.setContact(result.getString("contact"));
+                // Gets the result as a timestampe, converts the timestampe to localDateTime, then converts that from UTC to the system default localDateTime
+                appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
+                appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
                 appointments.add(appointment);
             }
 
@@ -162,6 +208,130 @@ public class AppointmentDAO extends DAO<Appointment>{
         return appointments;
     }
 
+    // Query for the appointment calendar table view, but only 7 days in advance.
+    public ObservableList<Appointment> queryForAppointmentCalendarWeekly() {
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "appointmentId, "
+                + "customerName, "
+                + "userName, "
+                + "contact, "
+                + "title, "
+                + "location, "
+                + "type, "
+                + "start, "
+                + "end "
+                + "FROM appointment JOIN customer ON "
+                + "customer.customerId = appointment.customerId "
+                + "JOIN user ON "
+                + "user.userId = appointment.userId "
+                + "WHERE start <= NOW() + INTERVAL 7 DAY")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Appointment appointment = new Appointment();
+                appointment.setAppointmentId(result.getInt("appointmentId"));
+                appointment.setCustomerName(result.getString("customerName"));
+                appointment.setUserName(result.getString("userName"));
+                appointment.setTitle(result.getString("title"));
+                appointment.setLocation(result.getString("location"));
+                appointment.setType(result.getString("type"));
+                appointment.setContact(result.getString("contact"));
+                appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
+                appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
+                appointments.add(appointment);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return appointments;
+    }
+    
+    // Used to search appointments by id (search function). Should only return one record, as id's are primary keys.
+    public ObservableList<Appointment> lookupAppointment(int id) {
+
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "customerName, "
+                + "userName, "
+                + "contact, "
+                + "title, "
+                + "location, "
+                + "type, "
+                + "start, "
+                + "end "
+                + "FROM appointment JOIN customer ON "
+                + "customer.customerId = appointment.customerId "
+                + "JOIN user ON "
+                + "user.userId = appointment.userId"
+                + "WHERE appointmentId = " + id)) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Appointment appointment = new Appointment();
+                appointment.setCustomerName(result.getString("customerName"));
+                appointment.setUserName(result.getString("userName"));
+                appointment.setTitle(result.getString("title"));
+                appointment.setLocation(result.getString("location"));
+                appointment.setType(result.getString("type"));
+                appointment.setContact(result.getString("contact"));
+                appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
+                appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
+                appointments.add(appointment);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return appointments;
+    }
+
+    // Used to find appointments by title.
+    public ObservableList<Appointment> lookupAppointment(String title) {
+
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "customerName, "
+                + "userName, "
+                + "contact, "
+                + "title, "
+                + "location, "
+                + "type, "
+                + "start, "
+                + "end "
+                + "FROM appointment JOIN customer ON "
+                + "customer.customerId = appointment.customerId "
+                + "JOIN user ON "
+                + "user.userId = appointment.userId"
+                + "WHERE title like '%" + title + "%'")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Appointment appointment = new Appointment();
+                appointment.setCustomerName(result.getString("customerName"));
+                appointment.setUserName(result.getString("userName"));
+                appointment.setTitle(result.getString("title"));
+                appointment.setLocation(result.getString("location"));
+                appointment.setType(result.getString("type"));
+                appointment.setContact(result.getString("contact"));
+                appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
+                appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
+                appointments.add(appointment);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return appointments;
+    }
+    // </editor-fold>
+    
     @Override
     public void insert(Appointment dto) {
         try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO appointment ("
@@ -193,37 +363,38 @@ public class AppointmentDAO extends DAO<Appointment>{
             System.out.println(ex.getMessage());
         }
     }
-    
-        @Override
+
+    @Override
     public void update(Appointment dto) {
-            try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE appointment SET "
-                    + "customerId = ?, "
-                    + "userId = ?, "
-                    + "title = ?, "
-                    + "description = ?, "
-                    + "location = ?, "
-                    + "contact = ?, "
-                    + "type = ?, "
-                    + "url = ?, "
-                    + "start = ?, "
-                    + "end = ?, "
-                    + "lastUpdate = NOW(), "
-                    + "lastUpdateBy = ? "
-                    + "WHERE address = " + dto.getAppointmentId())) {
-                stmt.setInt(1, dto.getCustomerId());
-                stmt.setInt(2, dto.getUserId());
-                stmt.setString(3, dto.getTitle());
-                stmt.setString(4, dto.getDescription());
-                stmt.setString(5, dto.getLocation());
-                stmt.setString(6, dto.getContact());
-                stmt.setString(7, dto.getType());
-                stmt.setString(8, dto.getUrl());
-                stmt.setTimestamp(9, getTimeStampfromLocalDateTime(dto.getStart()));
-                stmt.setTimestamp(10, getTimeStampfromLocalDateTime(dto.getEnd()));
-                stmt.setString(11, DataProvider.getCurrentUser());
-                stmt.executeUpdate();
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            }
+        try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE appointment SET "
+                + "customerId = ?, "
+                + "userId = ?, "
+                + "title = ?, "
+                + "description = ?, "
+                + "location = ?, "
+                + "contact = ?, "
+                + "type = ?, "
+                + "url = ?, "
+                + "start = ?, "
+                + "end = ?, "
+                + "lastUpdate = NOW(), "
+                + "lastUpdateBy = ? "
+                + "WHERE address = " + dto.getAppointmentId())) {
+            stmt.setInt(1, dto.getCustomerId());
+            stmt.setInt(2, dto.getUserId());
+            stmt.setString(3, dto.getTitle());
+            stmt.setString(4, dto.getDescription());
+            stmt.setString(5, dto.getLocation());
+            stmt.setString(6, dto.getContact());
+            stmt.setString(7, dto.getType());
+            stmt.setString(8, dto.getUrl());
+            stmt.setTimestamp(9, getTimeStampfromLocalDateTime(dto.getStart()));
+            stmt.setTimestamp(10, getTimeStampfromLocalDateTime(dto.getEnd()));
+            stmt.setString(11, DataProvider.getCurrentUser());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
+
 }

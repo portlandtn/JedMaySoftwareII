@@ -18,7 +18,6 @@
 package Utilities;
 
 import java.time.LocalTime;
-import java.util.TimeZone;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -28,43 +27,18 @@ import javafx.collections.ObservableList;
  */
 public class DataProvider {
     
-    private static String currentUser;
-    private static Boolean isLoggedIn = false;
-    private static String language;
+    private static String currentUser; // Used to insert into database for auditing
+    private static Boolean isLoggedIn = false; // Used to validate a user hasn't logged out (extra security)
     
-
-
+    // Sets Appointment types and locations available for selection when creating apppointments
     public static final ObservableList<String> APPOINTMENT_TYPES = FXCollections.observableArrayList("Consultation", "Introduction", "Termination");
     public static final ObservableList<String> LOCATIONS = FXCollections.observableArrayList("Home", "Office");
-
-
-    public static ObservableList<String> operatingHours = FXCollections.observableArrayList();
-    public final static ObservableList<String> AMPM = FXCollections.observableArrayList("AM", "PM");
     
+    // Sets opening and llsing time for validation
     public static final LocalTime OPENING_TIME = LocalTime.of(07, 0);
     public static final LocalTime CLOSING_TIME = LocalTime.of(19, 0);
 
-
-    public static void setStartingHours() {
-        final int[] HOURS = new int[]{7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
-        final String[] MINUTES = new String[]{"00", "15", "30", "45"};
-        
-        for (int i = 0; i < HOURS.length; i++) {
-            for (String MINUTES1 : MINUTES) {
-                operatingHours.add(String.valueOf(HOURS[i] + ":" + MINUTES1));
-            }
-        }
-    }
-    
-    public static java.sql.Date getCurrentDate(){
-        java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
-        return sqlDate;
-    }
-
-    public static void setTimeZoneToGMT() {
-        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
-    }
-
+    // <editor-fold defaultstate="collapsed" desc="Getters and Setters">
     public static String getCurrentUser() {
         return currentUser;
     }
@@ -80,13 +54,6 @@ public class DataProvider {
     public static void setIsLoggedIn(Boolean isLoggedIn) {
         DataProvider.isLoggedIn = isLoggedIn;
     }
-    
-    public static String getLanguage() {
-        return language;
-    }
-
-    public static void setLanguage(String language) {
-        DataProvider.language = language;
-    }
+    // </editor-fold>
 
 }

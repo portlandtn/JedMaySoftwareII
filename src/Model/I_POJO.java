@@ -26,11 +26,9 @@ import java.util.Date;
  */
 public interface I_POJO {
 
-    Date getCreateDate();
     void setCreateDate(Date createDate);
     String getCreatedBy();
     void setCreatedBy(String createdBy);
-    Date getLastUpdate();
     void setLastUpdate(Date lastUpdate);
     String getLastUpdateBy();
     void setLastUpdateBy(String lastUpdatedBy);

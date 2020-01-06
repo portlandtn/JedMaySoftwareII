@@ -1,102 +1,12 @@
 Log for User Logins
 ---------------------
 
-User: admin
-Time: Sun Dec 22 12:43:49 CST 2019
+User: test
+Time: Mon Jan 06 13:27:35 CST 2020
+
+User: TEST
+Time: Mon Jan 06 13:34:22 CST 2020
 
 User: test
-Time: Sun Dec 22 12:43:54 CST 2019
-
-User: test
-Time: Sun Dec 22 14:12:49 CST 2019
-
-User: test
-Time: Sun Dec 22 14:26:21 CST 2019
-
-User: test
-Time: Sun Dec 22 15:10:55 CST 2019
-
-User: test
-Time: Sun Dec 22 15:12:59 CST 2019
-
-User: admin
-Time: Sun Dec 22 15:21:58 CST 2019
-
-User: admin
-Time: Sun Dec 22 15:23:10 CST 2019
-
-User: admin
-Time: Sun Dec 22 15:25:14 CST 2019
-
-User: test
-Time: Mon Dec 30 11:19:36 CST 2019
-
-User: test
-Time: Mon Dec 30 11:21:00 CST 2019
-
-User: test
-Time: Mon Dec 30 11:23:11 CST 2019
-
-User: test
-Time: Mon Dec 30 11:27:17 CST 2019
-
-User: test
-Time: Mon Dec 30 11:29:06 CST 2019
-
-User: test
-Time: Mon Dec 30 11:30:43 CST 2019
-
-User: test
-Time: Mon Dec 30 11:33:59 CST 2019
-
-User: test
-Time: Mon Dec 30 11:34:36 CST 2019
-
-User: test
-Time: Mon Dec 30 11:37:15 CST 2019
-
-User: test
-Time: Sat Jan 04 13:59:57 CST 2020
-
-User: admin
-Time: Sat Jan 04 14:01:48 CST 2020
-
-User: test
-Time: Sat Jan 04 16:42:05 CST 2020
-
-User: admin
-Time: Sat Jan 04 16:42:11 CST 2020
-
-User: test
-Time: Sat Jan 04 16:42:18 CST 2020
-
-User: test
-Time: Sat Jan 04 16:43:49 CST 2020
-
-User: admin
-Time: Sat Jan 04 16:43:54 CST 2020
-
-User: test
-Time: Sat Jan 04 17:05:43 CST 2020
-
-User: test
-Time: Sat Jan 04 17:43:18 CST 2020
-
-User: test
-Time: Sat Jan 04 19:06:35 CST 2020
-
-User: test
-Time: Sat Jan 04 19:09:57 CST 2020
-
-User: test
-Time: Sat Jan 04 19:15:03 CST 2020
-
-User: test
-Time: Sat Jan 04 19:19:06 CST 2020
-
-User: test
-Time: Sat Jan 04 19:19:55 CST 2020
-
-User: test
-Time: Sat Jan 04 19:23:19 CST 2020
+Time: Mon Jan 06 16:14:27 CST 2020
 

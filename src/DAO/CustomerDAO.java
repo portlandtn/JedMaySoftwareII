@@ -35,6 +35,7 @@ public class CustomerDAO extends DAO<Customer> {
         super(conn);
     }
 
+    // <editor-fold desc="Queries">
     @Override
     public ObservableList<Customer> query() {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
@@ -108,6 +109,7 @@ public class CustomerDAO extends DAO<Customer> {
         return customers;
     }
 
+    // Checks to see if a customer exists. If it doesn't, it will have to be inserted.
     public Boolean doesCustomerExist(String customerName) {
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "customerName "
@@ -140,6 +142,7 @@ public class CustomerDAO extends DAO<Customer> {
         return customerNames;
     }
 
+    // Simply gets the customerId from the customerName in the database.
     public int getCustomerId(String customerName) {
 
         int id = 0;
@@ -156,6 +159,7 @@ public class CustomerDAO extends DAO<Customer> {
         return id;
     }
 
+    // Used for search function. Looks up customer by customerId (should retrive one record - id = primary key).
     public ObservableList<Customer> lookupCustomer(int id) {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
@@ -198,6 +202,7 @@ public class CustomerDAO extends DAO<Customer> {
         return customers;
     }
 
+    // Returns a list of customers that match the customerName inserted (using %like%)
     public ObservableList<Customer> lookupCustomer(String customerName) {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
@@ -241,6 +246,7 @@ public class CustomerDAO extends DAO<Customer> {
         return customers;
     }
 
+    // Returns either active or inactive customers (filter based on radio boxes)
     public ObservableList<Customer> queryActiveInactive(Boolean active) {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
@@ -282,7 +288,8 @@ public class CustomerDAO extends DAO<Customer> {
         }
         return customers;
     }
-
+    // </editor-fold>
+    
     @Override
     public void insert(Customer dto) {
         try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO customer ("

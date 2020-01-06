@@ -28,10 +28,10 @@ public class Appointment implements I_POJO {
 
     private int appointmentId, customerId, userId;
     private String title, customerName, userName, location, type, description, contact, url, createdBy, lastUpdateBy;
-    private LocalDateTime appointmentDate, start, end;
+    private LocalDateTime start, end;
     private Date createDate, lastUpdate;
     
-    
+    // <editor-fold defaultstate="collapsed" desc="Getters and Setters">
     public String getUserName() {
         return userName;
     }
@@ -55,14 +55,6 @@ public class Appointment implements I_POJO {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
-    }
-
-    public LocalDateTime getAppointmentDate() {
-        return appointmentDate;
-    }
-
-    public void setAppointmentDate(LocalDateTime appointmentDate) {
-        this.appointmentDate = appointmentDate;
     }
     
     public int getCustomerId() {
@@ -157,11 +149,6 @@ public class Appointment implements I_POJO {
     }
 
     @Override
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    @Override
     public void setCreateDate(Date createdOn) {
         this.createDate = createdOn;
     }
@@ -177,12 +164,8 @@ public class Appointment implements I_POJO {
     }
 
     @Override
-    public Date getLastUpdate() {
-        return lastUpdate;
-    }
-
-    @Override
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
+    // </editor-fold>
 }

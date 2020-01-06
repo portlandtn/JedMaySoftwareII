@@ -21,14 +21,14 @@ import DAO.AppointmentDAO;
 import Model.Appointment;
 import Utilities.DatabaseConnector;
 import Utilities.Navigator;
+import Utilities.Validator;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -85,7 +85,7 @@ public class AppointmentsCalendarController implements Initializable {
     private TableColumn<Appointment, String> contactColumnTableView;
 
     @FXML
-    private TableColumn<Appointment, LocalDateTime> dateColumnTableView = new TableColumn<Appointment, LocalDateTime>("LDT");
+    private TableColumn<Appointment, LocalDateTime> dateColumnTableView;
     
 
     @FXML
@@ -118,12 +118,36 @@ public class AppointmentsCalendarController implements Initializable {
 
     @FXML
     void onActionDeleteAppointment(ActionEvent event) {
-
+        appointmentDAO.remove(calendarAppointmentTableView.getSelectionModel().getSelectedItem().getAppointmentId());
+        refreshData();
     }
 
     @FXML
     void onActionSearch(ActionEvent event) {
+        ObservableList<Appointment> appointmentSearchResultsList = FXCollections.observableArrayList();
 
+        String searchText = searchTextField.getText();
+
+        if (searchText.isEmpty()) {
+            calendarAppointmentTableView.setItems(appointmentDAO.query());
+            return;
+        }
+
+        appointmentSearchResultsList.clear();
+
+        if (Validator.isSearchStringNumber(searchTextField.getText())) {
+            appointmentSearchResultsList = appointmentDAO.lookupAppointment(Integer.parseInt(searchText));
+
+        } else {
+            appointmentSearchResultsList = appointmentDAO.lookupAppointment(searchText);
+        }
+
+        if (appointmentSearchResultsList.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "No appointment was not found.");
+            alert.showAndWait();
+        } else {
+            calendarAppointmentTableView.setItems(appointmentSearchResultsList);
+        }
     }
 
     @FXML
@@ -174,9 +198,9 @@ public class AppointmentsCalendarController implements Initializable {
         if (allRadioButton.isSelected()) {
             appointments = appointmentDAO.queryForAppointmentCalendar();
         } else if (monthRadioButton.isSelected()) {
-            appointments = appointmentDAO.queryForAppointmentCalendar();
+            appointments = appointmentDAO.queryForAppointmentCalendarMonthly();
         } else {
-            appointments = appointmentDAO.queryForAppointmentCalendar();
+            appointments = appointmentDAO.queryForAppointmentCalendarWeekly();
         }
 
         calendarAppointmentTableView.setItems(appointments);
@@ -196,7 +220,7 @@ public class AppointmentsCalendarController implements Initializable {
 //            setText(String.format(item.format(formatter)));
 //            }
 //        }
-        dateColumnTableView.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
+        dateColumnTableView.setCellValueFactory(new PropertyValueFactory<>("start"));
         startColumnTableView.setCellValueFactory(new PropertyValueFactory<>("start"));
         endColumnTableView.setCellValueFactory(new PropertyValueFactory<>("end"));
 

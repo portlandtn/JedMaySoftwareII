@@ -30,15 +30,10 @@ import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -61,13 +56,14 @@ public class CreateEditAppointmentController implements Initializable {
     static String previousPath;
     static Boolean isEditing;
 
-    private String title, customerName, userName, location, type, description, contact, url, createdBy, lastUpdateBy;
-    private LocalDateTime appointmentDate, start, end;
+    private String title, customerName, userName, location, type, description, contact, url;
+    private LocalDateTime start, end;
 
     private Appointment appointmentToUpdate = new Appointment();
 
     void sendAppointmentDetails(Appointment appt) {
 
+        // Sets up the form for editing.
         customerNameComboBox.setValue(appt.getCustomerName());
         assignedToChoiceBox.setValue(appt.getUserName());
         titleTextField.setText(appt.getTitle());
@@ -76,10 +72,11 @@ public class CreateEditAppointmentController implements Initializable {
         contactTextField.setText(appt.getContact());
         urlTextField.setText(appt.getUrl());
         typeChoiceBox.setValue(appt.getType());
-        dateDatePicker.setValue(LocalDate.MAX); //FIX LATER
-        startTimeTextField.setText("8:00"); //FIX LATER
-        endTimeTextField.setText("8:30"); //FIX LATER
+        dateDatePicker.setValue(appt.getStart().toLocalDate());
+        startTimeTextField.setText(String.valueOf(appt.getStart().getHour()) + ":" + String.valueOf(appt.getStart().getMinute()));
+        endTimeTextField.setText(String.valueOf(appt.getEnd().getHour()) + ":" + String.valueOf(appt.getEnd().getMinute()));
 
+        // Assigns the passed in object appt to the appointmentToUpdate object for editing and inserting later.
         this.appointmentToUpdate = appt;
     }
 
@@ -186,7 +183,6 @@ public class CreateEditAppointmentController implements Initializable {
         appt.setType(this.type);
         appt.setContact(this.contact);
         appt.setUrl(this.url);
-        appt.setAppointmentDate(this.appointmentDate);
         appt.setStart(this.start);
         appt.setEnd(this.end);
 
@@ -205,9 +201,12 @@ public class CreateEditAppointmentController implements Initializable {
         appt.setLocation(locationChoiceBox.getValue());
         appt.setType(typeChoiceBox.getValue());
         appt.setContact(contactTextField.getText());
-        appt.setUrl(urlTextField.getText());       
-        appt.setStart(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(startTimeTextField.getText() + ":00")));
-        appt.setEnd(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(endTimeTextField.getText() + ":00")));
+        appt.setUrl(urlTextField.getText());
+        
+        // First the start and end datetimes are built from the date picker and text entered in the start and end time fields.
+        // Then the built LocalDateTime is converted to UTC for saving in the database.
+        appt.setStart(DateTimeConverter.convertToUtc(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(startTimeTextField.getText() + ":00"))));
+        appt.setEnd(DateTimeConverter.convertToUtc(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(endTimeTextField.getText() + ":00"))));
 
         appointmentDAO.insert(appt);
 

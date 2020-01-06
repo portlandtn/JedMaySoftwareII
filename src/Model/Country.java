@@ -29,6 +29,7 @@ public class Country implements I_POJO {
     private String country, createdBy, lastUpdateBy;
     private Date createDate, lastUpdate;
 
+    // <editor-fold defaultstate="collapsed" desc="Getters and Setters">
     public int getCountryId() {
         return countryId;
     }
@@ -56,11 +57,6 @@ public class Country implements I_POJO {
     }
 
     @Override
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    @Override
     public void setCreateDate(Date createdOn) {
         this.createDate = createdOn;
     }
@@ -76,12 +72,8 @@ public class Country implements I_POJO {
     }
 
     @Override
-    public Date getLastUpdate() {
-        return lastUpdate;
-    }
-
-    @Override
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
+    // </editor-fold>
 }
