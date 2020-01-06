@@ -185,7 +185,7 @@ public class AppointmentsCalendarController implements Initializable {
         titleColumnTableView.setCellValueFactory(new PropertyValueFactory<>("title"));
         locationColumnTableView.setCellValueFactory(new PropertyValueFactory<>("location"));
         contactColumnTableView.setCellValueFactory(new PropertyValueFactory<>("contact"));
-        //dateColumnTableView.setCellValueFactory(cellData -> cellData.getValue().getAppointmentDate().);
+        //dateColumnTableView.setCellValueFactory(cellData -> cellData.getValue().getAppointmentDate().); 
 //        dateColumnTableView.setCellFactory(col -> new TableCell<Appointment, LocalDateTime>() {
 //            @Override
 //            protected void updateItem(LocalDateTime item, boolean empty) {
