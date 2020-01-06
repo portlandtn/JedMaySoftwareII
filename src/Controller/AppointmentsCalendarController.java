@@ -198,9 +198,9 @@ public class AppointmentsCalendarController implements Initializable {
         if (allRadioButton.isSelected()) {
             appointments = appointmentDAO.queryForAppointmentCalendar();
         } else if (monthRadioButton.isSelected()) {
-            appointments = appointmentDAO.queryForAppointmentCalendar();
+            appointments = appointmentDAO.queryForAppointmentCalendarMonthly();
         } else {
-            appointments = appointmentDAO.queryForAppointmentCalendar();
+            appointments = appointmentDAO.queryForAppointmentCalendarWeekly();
         }
 
         calendarAppointmentTableView.setItems(appointments);
