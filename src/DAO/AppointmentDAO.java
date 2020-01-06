@@ -32,15 +32,15 @@ import javafx.collections.ObservableList;
  *
  * @author Jedidiah May
  */
-public class AppointmentDAO extends DAO<Appointment>{
+public class AppointmentDAO extends DAO<Appointment> {
 
     public AppointmentDAO(Connection conn) {
         super(conn);
     }
-    
+
     @Override
     public ObservableList<Appointment> query() {
-        
+
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "appointmentId, "
@@ -78,7 +78,7 @@ public class AppointmentDAO extends DAO<Appointment>{
         }
         return appointments;
     }
-    
+
     public Appointment querySingleAppointmenet(int id) {
         Appointment appt = new Appointment();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
@@ -98,7 +98,7 @@ public class AppointmentDAO extends DAO<Appointment>{
                 + "customer.customerId = appointment.customerId "
                 + "JOIN user ON "
                 + "user.userId = appointment.userId")) {
-            
+
             ResultSet result = stmt.executeQuery();
 
             while (result.next()) {
@@ -121,7 +121,7 @@ public class AppointmentDAO extends DAO<Appointment>{
         }
         return appt;
     }
-    
+
     public ObservableList<Appointment> queryForAppointmentCalendar() {
 
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
@@ -139,6 +139,90 @@ public class AppointmentDAO extends DAO<Appointment>{
                 + "customer.customerId = appointment.customerId "
                 + "JOIN user ON "
                 + "user.userId = appointment.userId")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Appointment appointment = new Appointment();
+                appointment.setCustomerName(result.getString("customerName"));
+                appointment.setUserName(result.getString("userName"));
+                appointment.setTitle(result.getString("title"));
+                appointment.setLocation(result.getString("location"));
+                appointment.setType(result.getString("type"));
+                appointment.setContact(result.getString("contact"));
+                appointment.setAppointmentDate(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("apptDate")));
+                appointment.setStart(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start")));
+                appointment.setEnd(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end")));
+                appointments.add(appointment);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return appointments;
+    }
+
+    public ObservableList<Appointment> lookupAppointment(int id) {
+
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "customerName, "
+                + "userName, "
+                + "contact, "
+                + "title, "
+                + "location, "
+                + "type, "
+                + "start apptDate, "
+                + "start, "
+                + "end "
+                + "FROM appointment JOIN customer ON "
+                + "customer.customerId = appointment.customerId "
+                + "JOIN user ON "
+                + "user.userId = appointment.userId"
+                + "WHERE appointmentId = " + id)) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Appointment appointment = new Appointment();
+                appointment.setCustomerName(result.getString("customerName"));
+                appointment.setUserName(result.getString("userName"));
+                appointment.setTitle(result.getString("title"));
+                appointment.setLocation(result.getString("location"));
+                appointment.setType(result.getString("type"));
+                appointment.setContact(result.getString("contact"));
+                appointment.setAppointmentDate(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("apptDate")));
+                appointment.setStart(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start")));
+                appointment.setEnd(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end")));
+                appointments.add(appointment);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return appointments;
+    }
+
+    public ObservableList<Appointment> lookupAppointment(String title) {
+
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "customerName, "
+                + "userName, "
+                + "contact, "
+                + "title, "
+                + "location, "
+                + "type, "
+                + "start apptDate, "
+                + "start, "
+                + "end "
+                + "FROM appointment JOIN customer ON "
+                + "customer.customerId = appointment.customerId "
+                + "JOIN user ON "
+                + "user.userId = appointment.userId"
+                + "WHERE title like '%" + title + "%'")) {
 
             ResultSet result = stmt.executeQuery();
 
@@ -193,37 +277,37 @@ public class AppointmentDAO extends DAO<Appointment>{
             System.out.println(ex.getMessage());
         }
     }
-    
-        @Override
+
+    @Override
     public void update(Appointment dto) {
-            try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE appointment SET "
-                    + "customerId = ?, "
-                    + "userId = ?, "
-                    + "title = ?, "
-                    + "description = ?, "
-                    + "location = ?, "
-                    + "contact = ?, "
-                    + "type = ?, "
-                    + "url = ?, "
-                    + "start = ?, "
-                    + "end = ?, "
-                    + "lastUpdate = NOW(), "
-                    + "lastUpdateBy = ? "
-                    + "WHERE address = " + dto.getAppointmentId())) {
-                stmt.setInt(1, dto.getCustomerId());
-                stmt.setInt(2, dto.getUserId());
-                stmt.setString(3, dto.getTitle());
-                stmt.setString(4, dto.getDescription());
-                stmt.setString(5, dto.getLocation());
-                stmt.setString(6, dto.getContact());
-                stmt.setString(7, dto.getType());
-                stmt.setString(8, dto.getUrl());
-                stmt.setTimestamp(9, getTimeStampfromLocalDateTime(dto.getStart()));
-                stmt.setTimestamp(10, getTimeStampfromLocalDateTime(dto.getEnd()));
-                stmt.setString(11, DataProvider.getCurrentUser());
-                stmt.executeUpdate();
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            }
+        try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE appointment SET "
+                + "customerId = ?, "
+                + "userId = ?, "
+                + "title = ?, "
+                + "description = ?, "
+                + "location = ?, "
+                + "contact = ?, "
+                + "type = ?, "
+                + "url = ?, "
+                + "start = ?, "
+                + "end = ?, "
+                + "lastUpdate = NOW(), "
+                + "lastUpdateBy = ? "
+                + "WHERE address = " + dto.getAppointmentId())) {
+            stmt.setInt(1, dto.getCustomerId());
+            stmt.setInt(2, dto.getUserId());
+            stmt.setString(3, dto.getTitle());
+            stmt.setString(4, dto.getDescription());
+            stmt.setString(5, dto.getLocation());
+            stmt.setString(6, dto.getContact());
+            stmt.setString(7, dto.getType());
+            stmt.setString(8, dto.getUrl());
+            stmt.setTimestamp(9, getTimeStampfromLocalDateTime(dto.getStart()));
+            stmt.setTimestamp(10, getTimeStampfromLocalDateTime(dto.getEnd()));
+            stmt.setString(11, DataProvider.getCurrentUser());
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 }
