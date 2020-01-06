@@ -68,8 +68,8 @@ public class AppointmentDAO extends DAO<Appointment> {
                 appointment.setContact(result.getString("contact"));
                 appointment.setType(result.getString("type"));
                 appointment.setUrl(result.getString("url"));
-                appointment.setStart(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start")));
-                appointment.setEnd(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end")));
+                appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
+                appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
                 appointments.add(appointment);
             }
 
@@ -111,9 +111,9 @@ public class AppointmentDAO extends DAO<Appointment> {
                 appt.setUrl(result.getString("url"));
                 appt.setContact(result.getString("contact"));
                 appt.setDescription(result.getString("description"));
-                appt.setAppointmentDate(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("apptDate")));
-                appt.setStart(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start")));
-                appt.setEnd(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end")));
+                appt.setAppointmentDate(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("apptDate"))));
+                appt.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
+                appt.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
             }
 
         } catch (SQLException ex) {
@@ -150,9 +150,9 @@ public class AppointmentDAO extends DAO<Appointment> {
                 appointment.setLocation(result.getString("location"));
                 appointment.setType(result.getString("type"));
                 appointment.setContact(result.getString("contact"));
-                appointment.setAppointmentDate(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("apptDate")));
-                appointment.setStart(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start")));
-                appointment.setEnd(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end")));
+                appointment.setAppointmentDate(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("apptDate"))));
+                appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
+                appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
                 appointments.add(appointment);
             }
 
@@ -192,9 +192,9 @@ public class AppointmentDAO extends DAO<Appointment> {
                 appointment.setLocation(result.getString("location"));
                 appointment.setType(result.getString("type"));
                 appointment.setContact(result.getString("contact"));
-                appointment.setAppointmentDate(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("apptDate")));
-                appointment.setStart(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start")));
-                appointment.setEnd(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end")));
+                appointment.setAppointmentDate(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("apptDate"))));
+                appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
+                appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
                 appointments.add(appointment);
             }
 
@@ -234,9 +234,9 @@ public class AppointmentDAO extends DAO<Appointment> {
                 appointment.setLocation(result.getString("location"));
                 appointment.setType(result.getString("type"));
                 appointment.setContact(result.getString("contact"));
-                appointment.setAppointmentDate(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("apptDate")));
-                appointment.setStart(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start")));
-                appointment.setEnd(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end")));
+                appointment.setAppointmentDate(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("apptDate"))));
+                appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
+                appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
                 appointments.add(appointment);
             }
 
