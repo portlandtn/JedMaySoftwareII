@@ -28,7 +28,7 @@ public class Appointment implements I_POJO {
 
     private int appointmentId, customerId, userId;
     private String title, customerName, userName, location, type, description, contact, url, createdBy, lastUpdateBy;
-    private LocalDateTime appointmentDate, start, end;
+    private LocalDateTime start, end;
     private Date createDate, lastUpdate;
     
     
@@ -55,14 +55,6 @@ public class Appointment implements I_POJO {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
-    }
-
-    public LocalDateTime getAppointmentDate() {
-        return appointmentDate;
-    }
-
-    public void setAppointmentDate(LocalDateTime appointmentDate) {
-        this.appointmentDate = appointmentDate;
     }
     
     public int getCustomerId() {

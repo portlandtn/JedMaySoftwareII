@@ -56,8 +56,8 @@ public class CreateEditAppointmentController implements Initializable {
     static String previousPath;
     static Boolean isEditing;
 
-    private String title, customerName, userName, location, type, description, contact, url, createdBy, lastUpdateBy;
-    private LocalDateTime appointmentDate, start, end;
+    private String title, customerName, userName, location, type, description, contact, url;
+    private LocalDateTime start, end;
 
     private Appointment appointmentToUpdate = new Appointment();
 
@@ -181,7 +181,6 @@ public class CreateEditAppointmentController implements Initializable {
         appt.setType(this.type);
         appt.setContact(this.contact);
         appt.setUrl(this.url);
-        appt.setAppointmentDate(this.appointmentDate);
         appt.setStart(this.start);
         appt.setEnd(this.end);
 

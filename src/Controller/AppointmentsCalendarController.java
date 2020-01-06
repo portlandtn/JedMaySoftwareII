@@ -119,6 +119,7 @@ public class AppointmentsCalendarController implements Initializable {
     @FXML
     void onActionDeleteAppointment(ActionEvent event) {
         appointmentDAO.remove(calendarAppointmentTableView.getSelectionModel().getSelectedItem().getAppointmentId());
+        refreshData();
     }
 
     @FXML
@@ -219,7 +220,7 @@ public class AppointmentsCalendarController implements Initializable {
 //            setText(String.format(item.format(formatter)));
 //            }
 //        }
-        dateColumnTableView.setCellValueFactory(new PropertyValueFactory<>("appointmentDate"));
+        dateColumnTableView.setCellValueFactory(new PropertyValueFactory<>("start"));
         startColumnTableView.setCellValueFactory(new PropertyValueFactory<>("start"));
         endColumnTableView.setCellValueFactory(new PropertyValueFactory<>("end"));
 

@@ -91,7 +91,6 @@ public class AppointmentDAO extends DAO<Appointment> {
                 + "url, "
                 + "contact, "
                 + "description, "
-                + "start apptDate, "
                 + "start, "
                 + "end "
                 + "FROM appointment JOIN customer ON "
@@ -111,7 +110,6 @@ public class AppointmentDAO extends DAO<Appointment> {
                 appt.setUrl(result.getString("url"));
                 appt.setContact(result.getString("contact"));
                 appt.setDescription(result.getString("description"));
-                appt.setAppointmentDate(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("apptDate"))));
                 appt.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
                 appt.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
             }
@@ -126,13 +124,13 @@ public class AppointmentDAO extends DAO<Appointment> {
 
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "appointmentId, "
                 + "customerName, "
                 + "userName, "
                 + "contact, "
                 + "title, "
                 + "location, "
                 + "type, "
-                + "start apptDate, "
                 + "start, "
                 + "end "
                 + "FROM appointment JOIN customer ON "
@@ -144,13 +142,13 @@ public class AppointmentDAO extends DAO<Appointment> {
 
             while (result.next()) {
                 Appointment appointment = new Appointment();
+                appointment.setAppointmentId(result.getInt("appointmentId"));
                 appointment.setCustomerName(result.getString("customerName"));
                 appointment.setUserName(result.getString("userName"));
                 appointment.setTitle(result.getString("title"));
                 appointment.setLocation(result.getString("location"));
                 appointment.setType(result.getString("type"));
                 appointment.setContact(result.getString("contact"));
-                appointment.setAppointmentDate(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("apptDate"))));
                 appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
                 appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
                 appointments.add(appointment);
@@ -173,7 +171,6 @@ public class AppointmentDAO extends DAO<Appointment> {
                 + "title, "
                 + "location, "
                 + "type, "
-                + "start apptDate, "
                 + "start, "
                 + "end "
                 + "FROM appointment JOIN customer ON "
@@ -192,7 +189,6 @@ public class AppointmentDAO extends DAO<Appointment> {
                 appointment.setLocation(result.getString("location"));
                 appointment.setType(result.getString("type"));
                 appointment.setContact(result.getString("contact"));
-                appointment.setAppointmentDate(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("apptDate"))));
                 appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
                 appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
                 appointments.add(appointment);
@@ -215,7 +211,6 @@ public class AppointmentDAO extends DAO<Appointment> {
                 + "title, "
                 + "location, "
                 + "type, "
-                + "start apptDate, "
                 + "start, "
                 + "end "
                 + "FROM appointment JOIN customer ON "
@@ -234,7 +229,6 @@ public class AppointmentDAO extends DAO<Appointment> {
                 appointment.setLocation(result.getString("location"));
                 appointment.setType(result.getString("type"));
                 appointment.setContact(result.getString("contact"));
-                appointment.setAppointmentDate(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("apptDate"))));
                 appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
                 appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
                 appointments.add(appointment);
