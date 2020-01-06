@@ -36,6 +36,7 @@ public class AddressDAO extends DAO<Address> {
         super(conn);
     }
 
+    // <editor-fold desc="Queries">
     @Override
     public ObservableList<Address> query() {
 
@@ -68,6 +69,7 @@ public class AddressDAO extends DAO<Address> {
         return addresses;
     }
     
+    // Searches the database for an address by addressId and only returns the one record
     public Address getAddress(int addressId) {
         
         Address address = new Address();
@@ -98,6 +100,7 @@ public class AddressDAO extends DAO<Address> {
         return address;
     }
     
+    // Method used to determine the most recently saved address. This is used when creating a new customer.
     public int getMostRecentAddressEntered(){
         int addressId = 0;
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT addressId FROM address ORDER BY addressID desc limit 1;")) {
@@ -112,6 +115,8 @@ public class AddressDAO extends DAO<Address> {
         }
         return addressId;
     }
+    
+    // </editor-fold>
 
     @Override
     public void insert(Address dto){

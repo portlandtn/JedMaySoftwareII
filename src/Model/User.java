@@ -30,7 +30,7 @@ public class User implements I_POJO {
     private Boolean active;
     private Date createDate, lastUpdate;
 
-    
+    // <editor-fold defaultstate="collapsed" desc="Getters and Setters">
     public int getUserId() {
         return userId;
     }
@@ -74,11 +74,6 @@ public class User implements I_POJO {
     }
 
     @Override
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    @Override
     public void setCreateDate(Date createdOn) {
         this.createDate = createdOn;
     }
@@ -94,13 +89,8 @@ public class User implements I_POJO {
     }
 
     @Override
-    public Date getLastUpdate() {
-        return lastUpdate;
-    }
-
-    @Override
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
-
+    // </editor-fold>
 }

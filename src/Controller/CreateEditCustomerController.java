@@ -208,7 +208,6 @@ public class CreateEditCustomerController implements Initializable {
         custToUpdate.setCustomerName(customerNameTextField.getText());
         custToUpdate.setAddressId(this.addressId);
         custToUpdate.setActive(activeCheckBox.isSelected());
-        custToUpdate.setLastUpdate(DataProvider.getCurrentDate());
         custToUpdate.setLastUpdateBy(DataProvider.getCurrentUser());
 
         customerDAO.update(custToUpdate);

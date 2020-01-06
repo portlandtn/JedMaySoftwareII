@@ -38,6 +38,7 @@ public class AppointmentDAO extends DAO<Appointment> {
         super(conn);
     }
 
+    // <editor-fold desc="Queries">
     @Override
     public ObservableList<Appointment> query() {
 
@@ -68,6 +69,7 @@ public class AppointmentDAO extends DAO<Appointment> {
                 appointment.setContact(result.getString("contact"));
                 appointment.setType(result.getString("type"));
                 appointment.setUrl(result.getString("url"));
+                // Gets the result as a timestampe, converts the timestampe to localDateTime, then converts that from UTC to the system default localDateTime
                 appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
                 appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
                 appointments.add(appointment);
@@ -78,7 +80,8 @@ public class AppointmentDAO extends DAO<Appointment> {
         }
         return appointments;
     }
-
+    
+    // Searches database by id for a single appointment. Returns only one appointment (id's are primary keys)
     public Appointment querySingleAppointmenet(int id) {
         Appointment appt = new Appointment();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
@@ -110,6 +113,7 @@ public class AppointmentDAO extends DAO<Appointment> {
                 appt.setUrl(result.getString("url"));
                 appt.setContact(result.getString("contact"));
                 appt.setDescription(result.getString("description"));
+                // Gets the result as a timestampe, converts the timestampe to localDateTime, then converts that from UTC to the system default localDateTime
                 appt.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
                 appt.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
             }
@@ -119,7 +123,8 @@ public class AppointmentDAO extends DAO<Appointment> {
         }
         return appt;
     }
-
+    
+    // Query used to return data for a table view (joins multiple tables together)
     public ObservableList<Appointment> queryForAppointmentCalendar() {
 
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
@@ -149,6 +154,7 @@ public class AppointmentDAO extends DAO<Appointment> {
                 appointment.setLocation(result.getString("location"));
                 appointment.setType(result.getString("type"));
                 appointment.setContact(result.getString("contact"));
+                // Gets the result as a timestampe, converts the timestampe to localDateTime, then converts that from UTC to the system default localDateTime
                 appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
                 appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
                 appointments.add(appointment);
@@ -160,6 +166,7 @@ public class AppointmentDAO extends DAO<Appointment> {
         return appointments;
     }
     
+    // Queries the same information as above, but only returns the next month's worth of appointments.
     public ObservableList<Appointment> queryForAppointmentCalendarMonthly() {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
@@ -189,6 +196,7 @@ public class AppointmentDAO extends DAO<Appointment> {
                 appointment.setLocation(result.getString("location"));
                 appointment.setType(result.getString("type"));
                 appointment.setContact(result.getString("contact"));
+                // Gets the result as a timestampe, converts the timestampe to localDateTime, then converts that from UTC to the system default localDateTime
                 appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
                 appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
                 appointments.add(appointment);
@@ -200,6 +208,7 @@ public class AppointmentDAO extends DAO<Appointment> {
         return appointments;
     }
 
+    // Query for the appointment calendar table view, but only 7 days in advance.
     public ObservableList<Appointment> queryForAppointmentCalendarWeekly() {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
@@ -239,7 +248,8 @@ public class AppointmentDAO extends DAO<Appointment> {
         }
         return appointments;
     }
-
+    
+    // Used to search appointments by id (search function). Should only return one record, as id's are primary keys.
     public ObservableList<Appointment> lookupAppointment(int id) {
 
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
@@ -280,6 +290,7 @@ public class AppointmentDAO extends DAO<Appointment> {
         return appointments;
     }
 
+    // Used to find appointments by title.
     public ObservableList<Appointment> lookupAppointment(String title) {
 
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
@@ -319,7 +330,8 @@ public class AppointmentDAO extends DAO<Appointment> {
         }
         return appointments;
     }
-
+    // </editor-fold>
+    
     @Override
     public void insert(Appointment dto) {
         try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO appointment ("

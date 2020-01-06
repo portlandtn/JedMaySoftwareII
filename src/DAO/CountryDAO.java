@@ -35,30 +35,31 @@ public class CountryDAO extends DAO<Country> {
     public CountryDAO(Connection conn) {
         super(conn);
     }
-    
-        @Override
+
+    // <editor-fold desc="Queries">
+    @Override
     public ObservableList<Country> query() {
-            ObservableList<Country> countries = FXCollections.observableArrayList();
-            try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
-                    + "countryId, "
-                    + "country "
-                    + "FROM country")) {
+        ObservableList<Country> countries = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "countryId, "
+                + "country "
+                + "FROM country")) {
 
-                ResultSet result = stmt.executeQuery();
+            ResultSet result = stmt.executeQuery();
 
-                while (result.next()) {
-                    Country country = new Country();
-                    country.setCountryId(result.getInt("countryId"));
-                    country.setCountry(result.getString("country"));
-                    countries.add(country);
-                }
-
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
+            while (result.next()) {
+                Country country = new Country();
+                country.setCountryId(result.getInt("countryId"));
+                country.setCountry(result.getString("country"));
+                countries.add(country);
             }
-            return countries;
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return countries;
     }
-    
+
     //Returns only a list of String of countries to populate combo boxes
     public ObservableList<String> queryAllCountries() {
         ObservableList<String> countries = FXCollections.observableArrayList();
@@ -75,20 +76,22 @@ public class CountryDAO extends DAO<Country> {
         }
         return countries;
     }
-    
-    public Boolean doesCountryExist(String country){
+
+    // Checks to see if the country exists. If it does not, it'll have to be inserted into the table.
+    public Boolean doesCountryExist(String country) {
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT country FROM country WHERE country = '" + country + "'")) {
-            
+
             ResultSet result = stmt.executeQuery();
-            
+
             return result.next();
-            
-        } catch (SQLException ex){
+
+        } catch (SQLException ex) {
             ex.getMessage();
         }
         return false;
     }
-    
+
+    // Simply retrieves countryId from the countryName (might be able to combine with the query above)
     public int getCountryId(String countryName) {
 
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT countryId FROM country WHERE country = '" + countryName + "'")) {
@@ -105,7 +108,8 @@ public class CountryDAO extends DAO<Country> {
 
         return 0;
     }
-
+    // </editor-fold>
+    
     @Override
     public void insert(Country dto) {
         try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO country ("
@@ -127,7 +131,7 @@ public class CountryDAO extends DAO<Country> {
             System.out.println(ex.getMessage());
         }
     }
-    
+
     @Override
     public void update(Country dto) {
         try (PreparedStatement stmt = this.conn.prepareStatement("UPDATE country SET "

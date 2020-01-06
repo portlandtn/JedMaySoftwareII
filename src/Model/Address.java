@@ -28,6 +28,8 @@ public class Address implements I_POJO {
     private int addressId, cityId;
     private String address, address2, postalCode, phone, createdBy, lastUpdateBy;
     private Date createDate, lastUpdate;
+    
+    // <editor-fold defaultstate="collapsed" desc="Getters and Setters">
 
     public int getAddressId() {
         return addressId;
@@ -88,11 +90,6 @@ public class Address implements I_POJO {
     }
 
     @Override
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    @Override
     public void setCreateDate(Date createdOn) {
         this.createDate = createdOn;
     }
@@ -108,13 +105,9 @@ public class Address implements I_POJO {
     }
 
     @Override
-    public Date getLastUpdate() {
-        return lastUpdate;
-    }
-
-    @Override
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
+    // </editor-fold>
 
 }

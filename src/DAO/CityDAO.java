@@ -38,7 +38,8 @@ public class CityDAO extends DAO<City> {
     public CityDAO(Connection conn) {
         super(conn);
     }
-
+    
+    // <editor-fold desc="Queries">
     @Override
     public ObservableList<City> query() {
         ObservableList<City> cities = FXCollections.observableArrayList();
@@ -64,6 +65,8 @@ public class CityDAO extends DAO<City> {
         return cities;
     }
 
+    // Used to find a city id based on cityName and countryId. If this combination doesn't exist (even if the cityName already does),
+    // then a new record have to be created.
     public int getCityId(String cityName, int countryId) {
 
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT cityId FROM city WHERE city = '" + cityName + "' AND countryId = " + countryId )) {
@@ -81,22 +84,7 @@ public class CityDAO extends DAO<City> {
         return 0;
     }
 
-    public ObservableList<String> queryCities() {
-        ObservableList<String> cities = FXCollections.observableArrayList();
-        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT DISTINCT city FROM city GROUP BY city")) {
-
-            ResultSet result = stmt.executeQuery();
-
-            while (result.next()) {
-                cities.add(result.getString("city"));
-            }
-
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-        return cities;
-    }
-
+    // Returns city names, based on the country selected. This is used for populating combo box.
     public ObservableList<String> queryCities(String countryName) {
         ObservableList<String> cities = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT DISTINCT city FROM city "
@@ -116,6 +104,7 @@ public class CityDAO extends DAO<City> {
         return cities;
     }
 
+    // Checks to see if city exists. If it does not, it will have to be inserted. (Might be able to combine with query above.
     public Boolean doesCityExist(String city, int countryId) {
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT city FROM city JOIN country ON city.countryId = country.countryId"
                 + " WHERE city = '" + city + "'"
@@ -131,20 +120,7 @@ public class CityDAO extends DAO<City> {
         return false;
     }
 
-    public int getCountryIdFromCity(String city, String country) {
-
-        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT country.countryId FROM city JOIN country ON city.countryId = country.countryId"
-                + "WHERE city = '" + city + "'" + " AND country.country = '" + country + "'")) {
-
-            ResultSet result = stmt.executeQuery();
-            return result.getInt("country.countryId");
-
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-            return 0;
-        }
-    }
-
+    // </editor-fold>
     @Override
     public void insert(City dto) {
         try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO city ("

@@ -37,6 +37,7 @@ public class UserDAO extends DAO<User> {
 
     }
 
+    // <editor-fold desc="Queries">
     @Override
     public ObservableList<User> query() {
         ObservableList<User> users = FXCollections.observableArrayList();
@@ -221,7 +222,8 @@ public class UserDAO extends DAO<User> {
         }
         return users;
     }
-
+    // </editor-fold>
+    
     @Override
     public void update(User dto) {
 
