@@ -159,6 +159,86 @@ public class AppointmentDAO extends DAO<Appointment> {
         }
         return appointments;
     }
+    
+    public ObservableList<Appointment> queryForAppointmentCalendarMonthly() {
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "appointmentId, "
+                + "customerName, "
+                + "userName, "
+                + "contact, "
+                + "title, "
+                + "location, "
+                + "type, "
+                + "start, "
+                + "end "
+                + "FROM appointment JOIN customer ON "
+                + "customer.customerId = appointment.customerId "
+                + "JOIN user ON "
+                + "user.userId = appointment.userId "
+                + "WHERE start <= NOW() + INTERVAL 30 DAY")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Appointment appointment = new Appointment();
+                appointment.setAppointmentId(result.getInt("appointmentId"));
+                appointment.setCustomerName(result.getString("customerName"));
+                appointment.setUserName(result.getString("userName"));
+                appointment.setTitle(result.getString("title"));
+                appointment.setLocation(result.getString("location"));
+                appointment.setType(result.getString("type"));
+                appointment.setContact(result.getString("contact"));
+                appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
+                appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
+                appointments.add(appointment);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return appointments;
+    }
+
+    public ObservableList<Appointment> queryForAppointmentCalendarWeekly() {
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "appointmentId, "
+                + "customerName, "
+                + "userName, "
+                + "contact, "
+                + "title, "
+                + "location, "
+                + "type, "
+                + "start, "
+                + "end "
+                + "FROM appointment JOIN customer ON "
+                + "customer.customerId = appointment.customerId "
+                + "JOIN user ON "
+                + "user.userId = appointment.userId "
+                + "WHERE start <= NOW() + INTERVAL 7 DAY")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Appointment appointment = new Appointment();
+                appointment.setAppointmentId(result.getInt("appointmentId"));
+                appointment.setCustomerName(result.getString("customerName"));
+                appointment.setUserName(result.getString("userName"));
+                appointment.setTitle(result.getString("title"));
+                appointment.setLocation(result.getString("location"));
+                appointment.setType(result.getString("type"));
+                appointment.setContact(result.getString("contact"));
+                appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
+                appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
+                appointments.add(appointment);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return appointments;
+    }
 
     public ObservableList<Appointment> lookupAppointment(int id) {
 
@@ -304,4 +384,5 @@ public class AppointmentDAO extends DAO<Appointment> {
             System.out.println(ex.getMessage());
         }
     }
+
 }

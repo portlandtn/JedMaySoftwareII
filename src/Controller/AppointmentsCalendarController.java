@@ -85,7 +85,7 @@ public class AppointmentsCalendarController implements Initializable {
     private TableColumn<Appointment, String> contactColumnTableView;
 
     @FXML
-    private TableColumn<Appointment, LocalDateTime> dateColumnTableView = new TableColumn<Appointment, LocalDateTime>("LDT");
+    private TableColumn<Appointment, LocalDateTime> dateColumnTableView;
     
 
     @FXML
@@ -198,9 +198,9 @@ public class AppointmentsCalendarController implements Initializable {
         if (allRadioButton.isSelected()) {
             appointments = appointmentDAO.queryForAppointmentCalendar();
         } else if (monthRadioButton.isSelected()) {
-            appointments = appointmentDAO.queryForAppointmentCalendar();
+            appointments = appointmentDAO.queryForAppointmentCalendarMonthly();
         } else {
-            appointments = appointmentDAO.queryForAppointmentCalendar();
+            appointments = appointmentDAO.queryForAppointmentCalendarWeekly();
         }
 
         calendarAppointmentTableView.setItems(appointments);
