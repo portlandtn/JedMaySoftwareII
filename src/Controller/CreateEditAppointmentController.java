@@ -63,6 +63,7 @@ public class CreateEditAppointmentController implements Initializable {
 
     void sendAppointmentDetails(Appointment appt) {
 
+        // Sets up the form for editing.
         customerNameComboBox.setValue(appt.getCustomerName());
         assignedToChoiceBox.setValue(appt.getUserName());
         titleTextField.setText(appt.getTitle());
@@ -71,10 +72,11 @@ public class CreateEditAppointmentController implements Initializable {
         contactTextField.setText(appt.getContact());
         urlTextField.setText(appt.getUrl());
         typeChoiceBox.setValue(appt.getType());
-        dateDatePicker.setValue(LocalDate.MAX); //FIX LATER
-        startTimeTextField.setText("8:00"); //FIX LATER
-        endTimeTextField.setText("8:30"); //FIX LATER
+        dateDatePicker.setValue(appt.getStart().toLocalDate());
+        startTimeTextField.setText(String.valueOf(appt.getStart().getHour()) + ":" + String.valueOf(appt.getStart().getMinute()));
+        endTimeTextField.setText(String.valueOf(appt.getEnd().getHour()) + ":" + String.valueOf(appt.getEnd().getMinute()));
 
+        // Assigns the passed in object appt to the appointmentToUpdate object for editing and inserting later.
         this.appointmentToUpdate = appt;
     }
 
