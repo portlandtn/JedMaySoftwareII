@@ -19,6 +19,8 @@ package Utilities;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 
 /**
  *
@@ -29,21 +31,16 @@ public class DateTimeConverter {
     public static LocalDateTime getLocalDateTimeFromTimestamp(Timestamp ts) {
         return ts.toLocalDateTime();
     }
-    
+
     public static Timestamp getTimeStampfromLocalDateTime(LocalDateTime ldt) {
         return Timestamp.valueOf(ldt);
     }
-    
-        public static String getHourFromTextField(String time, String ampm) {
-        
-        int ind = time.indexOf(":");
-        if (ampm.equals("AM"))
-            return time.substring(0, ind);
-        else return time.substring(0, ind) + 12;
+
+    public static LocalDateTime convertToUtc(LocalDateTime time) {
+        return time.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
     }
 
-    public static String getMinuteFromTextField(String time) {
-        int ind = time.indexOf(":");
-        return time.substring(ind + 1, time.length());
+    public static LocalDateTime convertFromUTCToLocalTime(LocalDateTime time) {
+        return time.atZone(ZoneOffset.UTC).withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
     }
 }
