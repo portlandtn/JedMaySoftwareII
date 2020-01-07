@@ -57,26 +57,19 @@ public class CreateEditAppointmentController implements Initializable {
     static boolean isEditing;
 
     private Appointment appointmentToUpdate = new Appointment();
-
-    void sendAppointmentDetails(Appointment appt) {
-
-        // Sets up the form for editing with information from the passed appointment object.
-        customerNameComboBox.setValue(appt.getCustomerName());
-        assignedToChoiceBox.setValue(appt.getUserName());
-        titleTextField.setText(appt.getTitle());
-        descriptionTextField.setText(appt.getDescription());
-        locationChoiceBox.setValue(appt.getLocation());
-        contactTextField.setText(appt.getContact());
-        urlTextField.setText(appt.getUrl());
-        typeChoiceBox.setValue(appt.getType());
-        dateDatePicker.setValue(appt.getStart().toLocalDate());
-        startTimeTextField.setText(DateTimeConverter.getTextFromLocalDateTime(appt.getStart()));
-        endTimeTextField.setText(DateTimeConverter.getTextFromLocalDateTime(appt.getEnd()));
-
-        // Assigns the passed in object appt to the appointmentToUpdate object for editing and inserting later.
-        this.appointmentToUpdate = appt;
+    
+    public CreateEditAppointmentController() {
+        try {
+            this.conn = dc.createConnection();
+            this.appointmentDAO = new AppointmentDAO(conn);
+            this.customerDAO = new CustomerDAO(conn);
+            this.userDAO = new UserDAO(conn);
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
+    // <editor-fold defaultstate="collapsed" desc="FXML Objects">
     @FXML
     private ComboBox<String> customerNameComboBox;
 
@@ -109,17 +102,7 @@ public class CreateEditAppointmentController implements Initializable {
 
     @FXML
     private TextField endTimeTextField;
-
-    public CreateEditAppointmentController() {
-        try {
-            this.conn = dc.createConnection();
-            this.appointmentDAO = new AppointmentDAO(conn);
-            this.customerDAO = new CustomerDAO(conn);
-            this.userDAO = new UserDAO(conn);
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
+    // </editor-fold>
 
     @FXML
     void onActionCancel(ActionEvent event) throws IOException, SQLException {
@@ -131,10 +114,9 @@ public class CreateEditAppointmentController implements Initializable {
 
     }
 
-
     @FXML
     void onActionSave(ActionEvent event) throws IOException, SQLException, ParseException {
-        
+
         // Pretty decent-sized validator. Must pass all checks before data can be saved.
         if (!canDataBeSaved()) {
             return;
@@ -159,6 +141,25 @@ public class CreateEditAppointmentController implements Initializable {
             saveNewAppointment();
         }
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
+    }
+    
+    void sendAppointmentDetails(Appointment appt) {
+
+        // Sets up the form for editing with information from the passed appointment object.
+        customerNameComboBox.setValue(appt.getCustomerName());
+        assignedToChoiceBox.setValue(appt.getUserName());
+        titleTextField.setText(appt.getTitle());
+        descriptionTextField.setText(appt.getDescription());
+        locationChoiceBox.setValue(appt.getLocation());
+        contactTextField.setText(appt.getContact());
+        urlTextField.setText(appt.getUrl());
+        typeChoiceBox.setValue(appt.getType());
+        dateDatePicker.setValue(appt.getStart().toLocalDate());
+        startTimeTextField.setText(DateTimeConverter.getTextFromLocalDateTime(appt.getStart()));
+        endTimeTextField.setText(DateTimeConverter.getTextFromLocalDateTime(appt.getEnd()));
+
+        // Assigns the passed in object appt to the appointmentToUpdate object for editing and inserting later.
+        this.appointmentToUpdate = appt;
     }
 
     private String setStringToBlankIfNull(String text) {
@@ -209,7 +210,7 @@ public class CreateEditAppointmentController implements Initializable {
         appt.setContact(contactTextField.getText());
         appt.setUrl(urlTextField.getText());
 
-        // First the start and end datetimes are built from the date picker and text entered in the start and end time fields.
+        // First the start and end datetimes are built from the date picker and the text entered in the start and end time fields.
         // Then the built LocalDateTime is converted to UTC for saving in the database.
         appt.setStart(DateTimeConverter.convertToUtc(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(startTimeTextField.getText() + ":00"))));
         appt.setEnd(DateTimeConverter.convertToUtc(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(endTimeTextField.getText() + ":00"))));
@@ -219,7 +220,7 @@ public class CreateEditAppointmentController implements Initializable {
     }
 
     private boolean canDataBeSaved() {
-        
+
         // Checks to see if all required text is entered.
         try {
             String[] textFields = new String[]{
@@ -232,15 +233,14 @@ public class CreateEditAppointmentController implements Initializable {
 
             if (Validator.isTextEntered(textFields)) {
                 // Intentionally left blank. If any of the fields are null, then the code falls through to the catch block and handled there.
-            } 
-            
+            }
+
             // Checks if the customer field is blank. If it is, warn the user.
             if (customerNameComboBox.getValue() == null) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "You must choose an existing or enter a new customer prior to saving.");
                 alert.showAndWait();
                 return false;
             }
-
 
             if (!Validator.isTimeInCorrectFormat(startTimeTextField.getText()) || !Validator.isTimeInCorrectFormat(endTimeTextField.getText())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "The start and end time must be entered in 24-hour format with a leading '0'. (i.e. '08:15')");
@@ -251,7 +251,7 @@ public class CreateEditAppointmentController implements Initializable {
             // Lambda that checks if the time is within operating hours.
             I_Validator isTimeWithinOperatingHours = (String start, String end)
                     -> !(LocalTime.parse(start + ":00").isBefore(DataProvider.OPENING_TIME) || LocalTime.parse(end + ":00").isAfter(DataProvider.CLOSING_TIME));
-            
+
             if (!isTimeWithinOperatingHours.validate(startTimeTextField.getText(), endTimeTextField.getText())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "The start and end time must be within the office hours. ("
                         + DataProvider.OPENING_TIME + " and " + DataProvider.CLOSING_TIME + ").");
@@ -265,24 +265,22 @@ public class CreateEditAppointmentController implements Initializable {
                 alert.showAndWait();
                 return false;
             }
-            
+
             // Lambda that checks if the start time is before the end time.
             I_Validator isStartTimeBeforeEndTime = (String start, String end)
                     -> !(LocalTime.parse(end + ":00").isBefore(LocalTime.parse(start + ":00")));
-            
+
             if (!isStartTimeBeforeEndTime.validate(startTimeTextField.getText(), endTimeTextField.getText())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "The start time entered is before the end time entered. Please correct in order to save.");
                 alert.showAndWait();
                 return false;
             }
-            
+
             if (!Validator.isDateSelectedAfterToday(dateDatePicker.getValue())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "The date selected is in the past and cannot be selected for an appointment.");
                 alert.showAndWait();
                 return false;
-            }
-            
-            else {
+            } else {
                 return true;
             }
 
