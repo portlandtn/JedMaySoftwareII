@@ -20,6 +20,7 @@ package DAO;
 import Model.User;
 import Utilities.DataProvider;
 import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -148,7 +149,13 @@ public class UserDAO extends DAO<User> {
                 + "userName, password from user where userName = '" + userName + "'"
                 + " and password = '" + password + "'")) {
             result = stmt.executeQuery();
-            return result.next();
+            
+            // This is the only way to make sure case matches. If both match, it will return true.
+            while (result.next()){
+                String user = result.getString("userName");
+                String pass = result.getString("password");
+                return userName.equals(user) && password.equals(pass);
+            }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
