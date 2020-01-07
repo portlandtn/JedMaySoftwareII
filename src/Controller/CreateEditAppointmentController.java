@@ -266,9 +266,9 @@ public class CreateEditAppointmentController implements Initializable {
                 return false;
             }
 
-            // Lambda that checks if the start time is before the end time.
+            // Lambda that checks if the start time is before the end time, or if they're equal
             I_Validator isStartTimeBeforeEndTime = (String start, String end)
-                    -> !(LocalTime.parse(end + ":00").isBefore(LocalTime.parse(start + ":00")));
+                    -> !(LocalTime.parse(end + ":00").isBefore(LocalTime.parse(start + ":00")) || LocalTime.parse(end + ":00").equals(LocalTime.parse((start + ":00"))));
 
             if (!isStartTimeBeforeEndTime.validate(startTimeTextField.getText(), endTimeTextField.getText())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "The start time entered is before the end time entered. Please correct in order to save.");
