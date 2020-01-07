@@ -31,8 +31,8 @@ public class ValidatorUnitTests {
         
         String[] testStringArray = new String[] {"yes", "no", "maybe so"};
         
-        Boolean expectedResult = true;
-        Boolean actualResult = Validator.isTextEntered(testStringArray);
+        boolean expectedResult = true;
+        boolean actualResult = Validator.isTextEntered(testStringArray);
         
         assertEquals(expectedResult, actualResult);
     }
@@ -42,8 +42,8 @@ public class ValidatorUnitTests {
         
         String[] testStringArray = new String[] {"yes",""};
         
-        Boolean expectedResult = false;
-        Boolean actualResult = Validator.isTextEntered(testStringArray);
+        boolean expectedResult = false;
+        boolean actualResult = Validator.isTextEntered(testStringArray);
         
         assertEquals(expectedResult, actualResult);
     }
@@ -54,8 +54,8 @@ public class ValidatorUnitTests {
         String string1 = "testing";
         String string2 = "testing";
 
-        Boolean expectedResult = true;
-        Boolean actualResult = Validator.doStringsMatch(string1,string2);
+        boolean expectedResult = true;
+        boolean actualResult = Validator.doStringsMatch(string1,string2);
 
         assertEquals(expectedResult, actualResult);
     }
@@ -66,8 +66,8 @@ public class ValidatorUnitTests {
         String string1 = "testing";
         String string2 = "test";
 
-        Boolean expectedResult = false;
-        Boolean actualResult = Validator.doStringsMatch(string1, string2);
+        boolean expectedResult = false;
+        boolean actualResult = Validator.doStringsMatch(string1, string2);
 
         assertEquals(expectedResult, actualResult);
     }

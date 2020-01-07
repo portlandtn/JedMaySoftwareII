@@ -110,7 +110,7 @@ public class CustomerDAO extends DAO<Customer> {
     }
 
     // Checks to see if a customer exists. If it doesn't, it will have to be inserted.
-    public Boolean doesCustomerExist(String customerName) {
+    public boolean doesCustomerExist(String customerName) {
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "customerName "
                 + "FROM customer WHERE customerName = '" + customerName + "'")) {
@@ -122,7 +122,7 @@ public class CustomerDAO extends DAO<Customer> {
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
-        return null;
+        return false;
     }
 
     //Returns list of string to populate combo boxes
@@ -247,7 +247,7 @@ public class CustomerDAO extends DAO<Customer> {
     }
 
     // Returns either active or inactive customers (filter based on radio boxes)
-    public ObservableList<Customer> queryActiveInactive(Boolean active) {
+    public ObservableList<Customer> queryActiveInactive(boolean active) {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "customerId, "

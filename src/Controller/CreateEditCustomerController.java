@@ -55,7 +55,7 @@ public class CreateEditCustomerController implements Initializable {
     private int addressId, cityId, countryId;
     
     static String previousPath;
-    static Boolean isEditing;
+    static boolean isEditing;
     static ObservableList<String> cities; // If editing, populates the cityComboBox for the country already set
 
     Customer customerToUpdate = new Customer();
@@ -160,7 +160,7 @@ public class CreateEditCustomerController implements Initializable {
     }
 
     // Validation to make sure that data can be saved and doesn't violate any rules.
-    private Boolean canDataBeSaved() {
+    private boolean canDataBeSaved() {
 
         //Setup the string array that holds the text fields to verify that they are not empty.
         String[] textFields = new String[]{

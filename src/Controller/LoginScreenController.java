@@ -118,19 +118,19 @@ public class LoginScreenController implements Initializable {
         }
     }
 
-    private Boolean canUserLogIn(String[] userNameAndPassword) {
+    private boolean canUserLogIn(String[] userNameAndPassword) {
         // If all three checks are good, return true. If all three are not good, return false.
         // Used the validator for the first check since a DAO wouldn't be required.
         return Validator.isTextEntered(userNameAndPassword) && doUserNameAndPasswordExistInDatabase() && isUserActive();
     }
     
     // Check #2
-    private Boolean doUserNameAndPasswordExistInDatabase() {
+    private boolean doUserNameAndPasswordExistInDatabase() {
         return userDAO.isUserNameandPasswordValid(userNameTextField.getText(), passwordTextField.getText());
     }
     
     // Check #3
-    private Boolean isUserActive() {
+    private boolean isUserActive() {
         return userDAO.isUserActive(userNameTextField.getText());
     }
 

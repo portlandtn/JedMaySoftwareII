@@ -44,7 +44,7 @@ public class CreateEditUserController implements Initializable {
     Connection conn;
     UserDAO userDAO;
 
-    public static Boolean isEditing;
+    public static boolean isEditing;
     public static String previousPath;
 
     private User userToUpdate;
@@ -133,7 +133,7 @@ public class CreateEditUserController implements Initializable {
     }
 
     // Performs 3 checks to see if data can be saved.
-    private Boolean canDataBeSaved() {
+    private boolean canDataBeSaved() {
 
         // Setup the string array that holds the text fields to verify that are not empty.
         String[] textFields = new String[]{

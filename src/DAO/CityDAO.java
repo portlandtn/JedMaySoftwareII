@@ -105,7 +105,7 @@ public class CityDAO extends DAO<City> {
     }
 
     // Checks to see if city exists. If it does not, it will have to be inserted. (Might be able to combine with query above.
-    public Boolean doesCityExist(String city, int countryId) {
+    public boolean doesCityExist(String city, int countryId) {
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT city FROM city JOIN country ON city.countryId = country.countryId"
                 + " WHERE city = '" + city + "'"
                 + " AND city.countryId = " + countryId + ";")) {

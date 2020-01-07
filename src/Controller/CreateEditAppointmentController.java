@@ -24,6 +24,7 @@ import Model.Appointment;
 import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
 import Utilities.DateTimeConverter;
+import Utilities.I_Validator;
 import Utilities.Navigator;
 import Utilities.Validator;
 import com.mysql.jdbc.Connection;
@@ -31,7 +32,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
@@ -54,7 +54,7 @@ public class CreateEditAppointmentController implements Initializable {
     CustomerDAO customerDAO;
     UserDAO userDAO;
     static String previousPath;
-    static Boolean isEditing;
+    static boolean isEditing;
 
     private Appointment appointmentToUpdate = new Appointment();
 
@@ -218,8 +218,8 @@ public class CreateEditAppointmentController implements Initializable {
 
     }
 
-    private Boolean canDataBeSaved() {
-
+    private boolean canDataBeSaved() {
+        
         // Checks to see if all required text is entered.
         try {
             String[] textFields = new String[]{
@@ -248,7 +248,11 @@ public class CreateEditAppointmentController implements Initializable {
                 return false;
             }
 
-            if (!Validator.isTimeWithinOperatingHours(startTimeTextField.getText(), endTimeTextField.getText())) {
+            // Lambda that checks if the time is within operating hours.
+            I_Validator isTimeWithinOperatingHours = (String start, String end)
+                    -> !(LocalTime.parse(start + ":00").isBefore(DataProvider.OPENING_TIME) || LocalTime.parse(end + ":00").isAfter(DataProvider.CLOSING_TIME));
+            
+            if (!isTimeWithinOperatingHours.validate(startTimeTextField.getText(), endTimeTextField.getText())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "The start and end time must be within the office hours. ("
                         + DataProvider.OPENING_TIME + " and " + DataProvider.CLOSING_TIME + ").");
                 alert.showAndWait();
@@ -262,7 +266,11 @@ public class CreateEditAppointmentController implements Initializable {
                 return false;
             }
             
-            if (!Validator.isStartTimeBeforeEndTime(startTimeTextField.getText(), endTimeTextField.getText())) {
+            // Lambda that checks if the start time is before the end time.
+            I_Validator isStartTimeBeforeEndTime = (String start, String end)
+                    -> !(LocalTime.parse(end + ":00").isBefore(LocalTime.parse(start + ":00")));
+            
+            if (!isStartTimeBeforeEndTime.validate(startTimeTextField.getText(), endTimeTextField.getText())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "The start time entered is before the end time entered. Please correct in order to save.");
                 alert.showAndWait();
                 return false;

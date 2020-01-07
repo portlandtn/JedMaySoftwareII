@@ -27,7 +27,7 @@ public class User implements I_POJO {
 
     private String userName, password, createdBy, lastUpdateBy;
     private int userId;
-    private Boolean active;
+    private boolean active;
     private Date createDate, lastUpdate;
 
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters">
@@ -55,11 +55,11 @@ public class User implements I_POJO {
         this.password = password;
     }
 
-    public Boolean getActive() {
+    public boolean getActive() {
         return active;
     }
 
-    public void setActive(Boolean active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
     

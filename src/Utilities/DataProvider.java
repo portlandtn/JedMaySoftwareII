@@ -28,7 +28,7 @@ import javafx.collections.ObservableList;
 public class DataProvider {
     
     private static String currentUser; // Used to insert into database for auditing
-    private static Boolean isLoggedIn = false; // Used to validate a user hasn't logged out (extra security)
+    private static boolean isLoggedIn = false; // Used to validate a user hasn't logged out (extra security)
     
     // Sets Appointment types and locations available for selection when creating apppointments
     public static final ObservableList<String> APPOINTMENT_TYPES = FXCollections.observableArrayList("Consultation", "Introduction", "Termination");
@@ -47,11 +47,11 @@ public class DataProvider {
         DataProvider.currentUser = currentUser;
     }
 
-    public static Boolean getIsLoggedIn() {
+    public static boolean getIsLoggedIn() {
         return isLoggedIn;
     }
 
-    public static void setIsLoggedIn(Boolean isLoggedIn) {
+    public static void setIsLoggedIn(boolean isLoggedIn) {
         DataProvider.isLoggedIn = isLoggedIn;
     }
     // </editor-fold>

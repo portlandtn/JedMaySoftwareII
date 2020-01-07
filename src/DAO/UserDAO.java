@@ -20,7 +20,6 @@ package DAO;
 import Model.User;
 import Utilities.DataProvider;
 import com.mysql.jdbc.Connection;
-import com.mysql.jdbc.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -83,7 +82,7 @@ public class UserDAO extends DAO<User> {
         return users;
     }
 
-    public ObservableList<User> queryActiveInactiveUsers(Boolean active) {
+    public ObservableList<User> queryActiveInactiveUsers(boolean active) {
         ObservableList<User> users = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "userId, "
@@ -143,7 +142,7 @@ public class UserDAO extends DAO<User> {
         return result;
     }
 
-    public Boolean isUserNameandPasswordValid(String userName, String password) {
+    public boolean isUserNameandPasswordValid(String userName, String password) {
         ResultSet result;
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "userName, password from user where userName = '" + userName + "'"
@@ -162,7 +161,7 @@ public class UserDAO extends DAO<User> {
         return false;
     }
 
-    public Boolean isUserActive(String userName) {
+    public boolean isUserActive(String userName) {
         ResultSet result;
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "active from user where userName = '" + userName + "'")) {

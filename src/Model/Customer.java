@@ -27,7 +27,7 @@ public class Customer implements I_POJO {
 
     private int customerId, addressId, countryId, cityId;
     private String customerName, address, address2, city, country, postalCode, phone, createdBy, lastUpdateBy;
-    private Boolean active;
+    private boolean active;
     private Date createDate, lastUpdate;
 
     // <editor-fold defaultstate="collapsed" desc="Getters and Setters">
@@ -119,11 +119,11 @@ public class Customer implements I_POJO {
         this.addressId = addressId;
     }
 
-    public Boolean getActive() {
+    public boolean getActive() {
         return active;
     }
 
-    public void setActive(Boolean isActive) {
+    public void setActive(boolean isActive) {
         this.active = isActive;
     }
 

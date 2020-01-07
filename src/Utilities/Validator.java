@@ -19,7 +19,6 @@ package Utilities;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,7 +29,7 @@ import java.util.regex.Pattern;
 public class Validator {
 
     //Checks to see if an array of text is empty
-    public static Boolean isTextEntered(String[] textFields) {
+    public static boolean isTextEntered(String[] textFields) {
 
         for (String textField : textFields) {
             if (textField.trim().isEmpty()) {
@@ -41,12 +40,12 @@ public class Validator {
     }
 
     //Checks to see if two strings match each other
-    public static Boolean doStringsMatch(String text1, String text2) {
+    public static boolean doStringsMatch(String text1, String text2) {
         return text1.trim().equals(text2.trim());
     }
     
     //Determines if the search string is a number for code flow.
-    public static Boolean isSearchStringNumber(String search) {
+    public static boolean isSearchStringNumber(String search) {
 
         try {
             //Attempts to assign the string to an int variable. If there is an exception, it's not a number, and it falls through the catch.
@@ -58,7 +57,7 @@ public class Validator {
     }
     
     // Uses Regex to determine if the time is in the correct format
-    public static Boolean isTimeInCorrectFormat(String time) {
+    public static boolean isTimeInCorrectFormat(String time) {
         
         String regex = "^[0-1][0-9]:[0-5][0-9]";
         Pattern pattern = Pattern.compile(regex);
@@ -66,25 +65,15 @@ public class Validator {
         Matcher matcher = pattern.matcher(time);
         return matcher.matches();
     }
-    
-    // Validates the hours entered against the operating hours setup on the DataProvider class.
-    public static boolean isTimeWithinOperatingHours(String start, String end) {
-        return !(LocalTime.parse(start + ":00").isBefore(DataProvider.OPENING_TIME) || LocalTime.parse(end + ":00").isAfter(DataProvider.CLOSING_TIME));
-    }
-    
-    // Ensures the start time is before the end time
-    public static boolean isStartTimeBeforeEndTime(String start, String end) {
-        return !(LocalTime.parse(end + ":00").isBefore(LocalTime.parse(start + ":00")));
-    }
 
     // Ensures the date selected is not a weekend.
     public static boolean isDateSelectedAWeekday(DayOfWeek date) {
         return !(date == DayOfWeek.SATURDAY || date == DayOfWeek.SUNDAY);
     }
     
-    // Ensures the date selected will take place in the future (shouldn't insert appointments prior today
+    // Ensures the date selected will take place in the future (shouldn't insert appointments prior today)
     public static boolean isDateSelectedAfterToday(LocalDate date) {
-        return !(date.isAfter(LocalDate.now()));
+        return date.isAfter(LocalDate.now());
     }
 
 }

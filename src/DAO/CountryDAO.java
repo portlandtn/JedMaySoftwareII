@@ -78,7 +78,7 @@ public class CountryDAO extends DAO<Country> {
     }
 
     // Checks to see if the country exists. If it does not, it'll have to be inserted into the table.
-    public Boolean doesCountryExist(String country) {
+    public boolean doesCountryExist(String country) {
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT country FROM country WHERE country = '" + country + "'")) {
 
             ResultSet result = stmt.executeQuery();
