@@ -169,9 +169,8 @@ public class AppointmentsCalendarController implements Initializable {
             Parent scene = loader.getRoot();
             stage.setScene(new Scene(scene));
             stage.show();
-            Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.CREATE_EDIT_APPOINTMENT.getPath())));
 
-        } catch (IOException | NullPointerException | SQLException ex) {
+        } catch (IOException | NullPointerException ex) {
             System.out.println(ex.getMessage());
         }
     }

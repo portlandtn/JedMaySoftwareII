@@ -18,6 +18,7 @@
 package Utilities;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -42,5 +43,10 @@ public class DateTimeConverter {
 
     public static LocalDateTime convertFromUTCToLocalTime(LocalDateTime time) {
         return time.atZone(ZoneOffset.UTC).withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    public static String getTextFromLocalDateTime(LocalDateTime time) {
+        DecimalFormat timeFormat = new DecimalFormat("00");
+        return timeFormat.format(Double.valueOf(time.getHour())) + ":" + timeFormat.format(Double.valueOf(time.getMinute()));
     }
 }

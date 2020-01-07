@@ -379,7 +379,7 @@ public class AppointmentDAO extends DAO<Appointment> {
                 + "end = ?, "
                 + "lastUpdate = NOW(), "
                 + "lastUpdateBy = ? "
-                + "WHERE address = " + dto.getAppointmentId())) {
+                + "WHERE appointmentId = " + dto.getAppointmentId())) {
             stmt.setInt(1, dto.getCustomerId());
             stmt.setInt(2, dto.getUserId());
             stmt.setString(3, dto.getTitle());

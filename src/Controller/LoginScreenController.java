@@ -21,15 +21,14 @@ import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
 import Log.Logger;
-import Utilities.DateTimeConverter;
 import Utilities.Navigator;
+import Utilities.Validator;
 import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.TimeZone;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -82,11 +81,13 @@ public class LoginScreenController implements Initializable {
     void onActionShowDashboard(ActionEvent event) throws SQLException, IOException {
 
         try {
-
+            String[] userNameAndPassword = {userNameTextField.getText(), passwordTextField.getText()};
             //Perform the checks to see if the user can Login
-            if (!canUserLogIn()) {
+            if (!canUserLogIn(userNameAndPassword)) {
+                // If the user didn't pass the checks, the message string is customized to explain why. If the userName is null, it falls through to the catch 
+                // and uses that message string there.
                 String message = null;
-                if (!doUserNameAndPasswordFieldsHaveText()) {
+                if (!Validator.isTextEntered(userNameAndPassword)) {
                     message = this.usernameAndPasswordCannotBeEmpty;
                 } else if (!doUserNameAndPasswordExistInDatabase()) {
                     message = this.usernameAndPasswordDoNotMatch;
@@ -96,7 +97,8 @@ public class LoginScreenController implements Initializable {
                 DataProvider.setIsLoggedIn(false);
                 Alert alert = new Alert(AlertType.ERROR, message);
                 alert.showAndWait();
-            } // All checks are cleared, so the user can login and go to the dashboard.
+            } 
+            // Otherwise, all checks are cleared, so the user can login and go to the dashboard.
             else {
                 DataProvider.setIsLoggedIn(true);
                 DataProvider.setCurrentUser(userNameTextField.getText());
@@ -116,25 +118,23 @@ public class LoginScreenController implements Initializable {
         }
     }
 
-    private Boolean canUserLogIn() {
-
-        // Are all three checks good? If so, return true. If all three are not good, return false.
-        return doUserNameAndPasswordFieldsHaveText() && doUserNameAndPasswordExistInDatabase() && isUserActive();
-
+    private Boolean canUserLogIn(String[] userNameAndPassword) {
+        // If all three checks are good, return true. If all three are not good, return false.
+        // Used the validator for the first check since a DAO wouldn't be required.
+        return Validator.isTextEntered(userNameAndPassword) && doUserNameAndPasswordExistInDatabase() && isUserActive();
     }
-
-    private Boolean doUserNameAndPasswordFieldsHaveText() {
-        return !(userNameTextField.getText().isEmpty() || passwordTextField.getText().isEmpty());
-    }
-
+    
+    // Check #2
     private Boolean doUserNameAndPasswordExistInDatabase() {
         return userDAO.isUserNameandPasswordValid(userNameTextField.getText(), passwordTextField.getText());
     }
-
+    
+    // Check #3
     private Boolean isUserActive() {
         return userDAO.isUserActive(userNameTextField.getText());
     }
 
+    // Sets labels based on the regional language setting selected.
     private void setLabels(ResourceBundle rb) {
         titleLabel.setText(rb.getString("titleLabel"));
         logInLabel.setText(rb.getString("logInLabel"));
@@ -143,6 +143,7 @@ public class LoginScreenController implements Initializable {
         passwordTextField.setPromptText(rb.getString("passwordTextFieldPromptText"));
     }
 
+    // Sets message text based on the regional language selected
     private void setMessageText(ResourceBundle rb) {
         this.usernameNotFound = rb.getString("usernameNotFound");
         this.usernameAndPasswordDoNotMatch = rb.getString("usernameAndPasswordDoNotMatch");
@@ -153,6 +154,7 @@ public class LoginScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         Locale locale = Locale.getDefault();
+        // Even though a resource bundle is passed in, this overrides it on initialize (needed when the user logs out).
         ResourceBundle resourceBundle = ResourceBundle.getBundle("i18n/Nat", locale);
         setLabels(resourceBundle);
         setMessageText(resourceBundle);

@@ -56,14 +56,11 @@ public class CreateEditAppointmentController implements Initializable {
     static String previousPath;
     static Boolean isEditing;
 
-    private String title, customerName, userName, location, type, description, contact, url;
-    private LocalDateTime start, end;
-
     private Appointment appointmentToUpdate = new Appointment();
 
     void sendAppointmentDetails(Appointment appt) {
 
-        // Sets up the form for editing.
+        // Sets up the form for editing with information from the passed appointment object.
         customerNameComboBox.setValue(appt.getCustomerName());
         assignedToChoiceBox.setValue(appt.getUserName());
         titleTextField.setText(appt.getTitle());
@@ -73,8 +70,8 @@ public class CreateEditAppointmentController implements Initializable {
         urlTextField.setText(appt.getUrl());
         typeChoiceBox.setValue(appt.getType());
         dateDatePicker.setValue(appt.getStart().toLocalDate());
-        startTimeTextField.setText(String.valueOf(appt.getStart().getHour()) + ":" + String.valueOf(appt.getStart().getMinute()));
-        endTimeTextField.setText(String.valueOf(appt.getEnd().getHour()) + ":" + String.valueOf(appt.getEnd().getMinute()));
+        startTimeTextField.setText(DateTimeConverter.getTextFromLocalDateTime(appt.getStart()));
+        endTimeTextField.setText(DateTimeConverter.getTextFromLocalDateTime(appt.getEnd()));
 
         // Assigns the passed in object appt to the appointmentToUpdate object for editing and inserting later.
         this.appointmentToUpdate = appt;
@@ -113,7 +110,6 @@ public class CreateEditAppointmentController implements Initializable {
     @FXML
     private TextField endTimeTextField;
 
-
     public CreateEditAppointmentController() {
         try {
             this.conn = dc.createConnection();
@@ -137,13 +133,12 @@ public class CreateEditAppointmentController implements Initializable {
 
     @FXML
     void onActionSave(ActionEvent event) throws IOException, SQLException, ParseException {
-        
+
         try {
             if (customerNameComboBox.getValue().isEmpty());
             // if it's empty (null), fall through to the catch.
-        }
-        catch (NullPointerException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "You must choose or enter a new customer prior to saving.");
+        } catch (NullPointerException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "You must choose an existing or enter a new customer prior to saving.");
             alert.showAndWait();
             return;
         }
@@ -171,20 +166,34 @@ public class CreateEditAppointmentController implements Initializable {
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
     }
 
-    private void updateAppointment(Appointment existingAppt) {
+    private String setStringToBlankIfNull(String text) {
+        if (text != null) {
+            return text;
+        }
+        else return "";
 
-        Appointment appt = new Appointment();
-        appt.setAppointmentId(existingAppt.getAppointmentId());
-        appt.setCustomerName(this.customerName);
-        appt.setUserName(this.userName);
-        appt.setTitle(this.title);
-        appt.setDescription(this.description);
-        appt.setLocation(this.location);
-        appt.setType(this.type);
-        appt.setContact(this.contact);
-        appt.setUrl(this.url);
-        appt.setStart(this.start);
-        appt.setEnd(this.end);
+    }
+
+    private void updateAppointment(Appointment appt) {
+
+        // And due to some weird limitation by the database, null url, description, and contact are allowed on insertions, but not on updates.
+        // So, must input blank text string to make it work.
+        String desc = setStringToBlankIfNull(descriptionTextField.getText());
+        String url = setStringToBlankIfNull(urlTextField.getText());
+        String contact = setStringToBlankIfNull(contactTextField.getText());
+
+        appt.setUserName(assignedToChoiceBox.getValue());
+        appt.setTitle(titleTextField.getText());
+        appt.setDescription(desc);
+        appt.setLocation(locationChoiceBox.getValue());
+        appt.setType(typeChoiceBox.getValue());
+        appt.setContact(contact);
+        appt.setUrl(url);
+
+        // First the start and end datetimes are built from the date picker and text entered in the start and end time fields.
+        // Then the built LocalDateTime is converted to UTC for saving in the database.
+        appt.setStart(DateTimeConverter.convertToUtc(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(startTimeTextField.getText() + ":00"))));
+        appt.setEnd(DateTimeConverter.convertToUtc(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(endTimeTextField.getText() + ":00"))));
 
         appointmentDAO.update(appt);
 
@@ -202,7 +211,7 @@ public class CreateEditAppointmentController implements Initializable {
         appt.setType(typeChoiceBox.getValue());
         appt.setContact(contactTextField.getText());
         appt.setUrl(urlTextField.getText());
-        
+
         // First the start and end datetimes are built from the date picker and text entered in the start and end time fields.
         // Then the built LocalDateTime is converted to UTC for saving in the database.
         appt.setStart(DateTimeConverter.convertToUtc(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(startTimeTextField.getText() + ":00"))));
@@ -214,28 +223,27 @@ public class CreateEditAppointmentController implements Initializable {
 
     private Boolean canDataBeSaved() {
         Alert alert = new Alert(Alert.AlertType.ERROR, "At a minimum, you must have a Customer Name, Title, Date, Start Time, and End Time entered to save.");
-        
-        try {
-        String[] textFields = new String[]{
-            customerNameComboBox.getValue(),
-            titleTextField.getText(),
-            dateDatePicker.getValue().toString(),
-            startTimeTextField.getText(),
-            endTimeTextField.getText()};
-            
-        if (!Validator.isTextEntered(textFields)) {
-            alert.showAndWait();
-            return false;
-        } else {
-            return true;
-        }
-        
-        }
-        catch (NullPointerException ex) {
-            alert.showAndWait();
-            return false;
-        }
 
+        try {
+            String[] textFields = new String[]{
+                customerNameComboBox.getValue(),
+                titleTextField.getText(),
+                dateDatePicker.getValue().toString(),
+                startTimeTextField.getText(),
+                endTimeTextField.getText()};
+
+            if (!Validator.isTextEntered(textFields)) {
+                alert.showAndWait();
+                return false;
+            } else {
+                return true;
+            }
+
+        } catch (NullPointerException ex) {
+            alert.showAndWait();
+            System.out.println(ex.getMessage());
+            return false;
+        }
 
     }
 
