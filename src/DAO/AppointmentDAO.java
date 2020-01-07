@@ -20,7 +20,6 @@ package DAO;
 import Model.Appointment;
 import Utilities.DataProvider;
 import Utilities.DateTimeConverter;
-import static Utilities.DateTimeConverter.getTimeStampfromLocalDateTime;
 import com.mysql.jdbc.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -154,7 +153,7 @@ public class AppointmentDAO extends DAO<Appointment> {
                 appointment.setLocation(result.getString("location"));
                 appointment.setType(result.getString("type"));
                 appointment.setContact(result.getString("contact"));
-                // Gets the result as a timestampe, converts the timestampe to localDateTime, then converts that from UTC to the system default localDateTime
+                // Gets the result as a timestampe, converts the timestamp to localDateTime, then converts that from UTC to the system default localDateTime
                 appointment.setStart(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
                 appointment.setEnd(DateTimeConverter.convertFromUTCToLocalTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
                 appointments.add(appointment);
@@ -345,8 +344,8 @@ public class AppointmentDAO extends DAO<Appointment> {
             stmt.setString(6, dto.getContact());
             stmt.setString(7, dto.getType());
             stmt.setString(8, dto.getUrl());
-            stmt.setTimestamp(9, getTimeStampfromLocalDateTime(dto.getStart()));
-            stmt.setTimestamp(10, getTimeStampfromLocalDateTime(dto.getEnd()));
+            stmt.setTimestamp(9, DateTimeConverter.getTimeStampfromLocalDateTime(dto.getStart()));
+            stmt.setTimestamp(10, DateTimeConverter.getTimeStampfromLocalDateTime(dto.getEnd()));
             stmt.setString(11, DataProvider.getCurrentUser());
             stmt.setString(12, DataProvider.getCurrentUser());
             stmt.executeUpdate();
@@ -388,8 +387,8 @@ public class AppointmentDAO extends DAO<Appointment> {
             stmt.setString(6, dto.getContact());
             stmt.setString(7, dto.getType());
             stmt.setString(8, dto.getUrl());
-            stmt.setTimestamp(9, getTimeStampfromLocalDateTime(dto.getStart()));
-            stmt.setTimestamp(10, getTimeStampfromLocalDateTime(dto.getEnd()));
+            stmt.setTimestamp(9, DateTimeConverter.getTimeStampfromLocalDateTime(dto.getStart()));
+            stmt.setTimestamp(10, DateTimeConverter.getTimeStampfromLocalDateTime(dto.getEnd()));
             stmt.setString(11, DataProvider.getCurrentUser());
             stmt.executeUpdate();
         } catch (SQLException ex) {

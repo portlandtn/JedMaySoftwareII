@@ -57,27 +57,32 @@ public class Validator {
         }
     }
     
+    // Uses Regex to determine if the time is in the correct format
     public static Boolean isTimeInCorrectFormat(String time) {
         
-        String regex = "^[0-2][0-9]:[0-5][0-9]";
+        String regex = "^[0-1][0-9]:[0-5][0-9]";
         Pattern pattern = Pattern.compile(regex);
         
         Matcher matcher = pattern.matcher(time);
         return matcher.matches();
     }
     
+    // Validates the hours entered against the operating hours setup on the DataProvider class.
     public static boolean isTimeWithinOperatingHours(String start, String end) {
         return !(LocalTime.parse(start + ":00").isBefore(DataProvider.OPENING_TIME) || LocalTime.parse(end + ":00").isAfter(DataProvider.CLOSING_TIME));
     }
     
+    // Ensures the start time is before the end time
     public static boolean isStartTimeBeforeEndTime(String start, String end) {
         return !(LocalTime.parse(end + ":00").isBefore(LocalTime.parse(start + ":00")));
     }
 
+    // Ensures the date selected is not a weekend.
     public static boolean isDateSelectedAWeekday(DayOfWeek date) {
         return !(date == DayOfWeek.SATURDAY || date == DayOfWeek.SUNDAY);
     }
     
+    // Ensures the date selected will take place in the future (shouldn't insert appointments prior today
     public static boolean isDateSelectedAfterToday(LocalDate date) {
         return !(date.isAfter(LocalDate.now()));
     }
