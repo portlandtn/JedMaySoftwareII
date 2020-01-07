@@ -131,20 +131,19 @@ public class CreateEditAppointmentController implements Initializable {
 
     }
 
+
     @FXML
     void onActionSave(ActionEvent event) throws IOException, SQLException, ParseException {
-
-        try {
-            if (customerNameComboBox.getValue().isEmpty());
-            // if it's empty (null), fall through to the catch.
-        } catch (NullPointerException ex) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "You must choose an existing or enter a new customer prior to saving.");
-            alert.showAndWait();
+        
+        // Pretty decent-sized validator. Must pass all checks before data can be saved.
+        if (!canDataBeSaved()) {
             return;
         }
 
+        // Checks if the customer exists. If it does not, it warns the user and gives an option to create the user prior to saving.
         if (!customerDAO.doesCustomerExist(customerNameComboBox.getValue())) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This customer does not exist. A new customer will have to be created. Would you like to continue?");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "This customer does not exist. A new customer will have to be created. "
+                    + "Would you like to continue creating this customer?");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() != ButtonType.OK) {
                 return;
@@ -152,10 +151,6 @@ public class CreateEditAppointmentController implements Initializable {
                 CreateEditCustomerController.previousPath = Navigator.pathOfFXML.CREATE_EDIT_APPOINTMENT.getPath();
                 Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.CREATE_EDIT_CUSTOMER.getPath())));
             }
-        }
-
-        if (!canDataBeSaved()) {
-            return;
         }
 
         if (isEditing) {
@@ -169,8 +164,9 @@ public class CreateEditAppointmentController implements Initializable {
     private String setStringToBlankIfNull(String text) {
         if (text != null) {
             return text;
+        } else {
+            return "";
         }
-        else return "";
 
     }
 
@@ -223,24 +219,75 @@ public class CreateEditAppointmentController implements Initializable {
     }
 
     private Boolean canDataBeSaved() {
-        Alert alert = new Alert(Alert.AlertType.ERROR, "At a minimum, you must have a Customer Name, Title, Date, Start Time, and End Time entered to save.");
 
+        // Checks to see if all required text is entered.
         try {
             String[] textFields = new String[]{
                 customerNameComboBox.getValue(),
+                assignedToChoiceBox.getValue(),
                 titleTextField.getText(),
                 dateDatePicker.getValue().toString(),
                 startTimeTextField.getText(),
                 endTimeTextField.getText()};
 
-            if (!Validator.isTextEntered(textFields)) {
+            if (Validator.isTextEntered(textFields)) {
+                // Intentionally left blank. If any of the fields are null, then the code falls through to the catch block and handled there.
+            } 
+            
+            // Checks if the customer field is blank. If it is, warn the user.
+            if (customerNameComboBox.getValue() == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "You must choose an existing or enter a new customer prior to saving.");
                 alert.showAndWait();
                 return false;
-            } else {
+            }
+
+
+            if (!Validator.isTimeInCorrectFormat(startTimeTextField.getText()) || !Validator.isTimeInCorrectFormat(endTimeTextField.getText())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "The start and end time must be entered in 24-hour format with a leading '0'. (i.e. '08:15')");
+                alert.showAndWait();
+                return false;
+            }
+
+            if (!Validator.isTimeWithinOperatingHours(startTimeTextField.getText(), endTimeTextField.getText())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "The start and end time must be within the office hours. ("
+                        + DataProvider.OPENING_TIME + " and " + DataProvider.CLOSING_TIME + ").");
+                alert.showAndWait();
+                return false;
+            }
+
+            if (!Validator.isDateSelectedAWeekday(dateDatePicker.getValue().getDayOfWeek())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "The valid days of operation are Monday Through Friday. "
+                        + "The date selected is on a " + dateDatePicker.getValue().getDayOfWeek() + ".");
+                alert.showAndWait();
+                return false;
+            }
+            
+            if (!Validator.isStartTimeBeforeEndTime(startTimeTextField.getText(), endTimeTextField.getText())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "The start time entered is before the end time entered. Please correct in order to save.");
+                alert.showAndWait();
+                return false;
+            }
+            
+            if (!Validator.isDateSelectedAfterToday(dateDatePicker.getValue())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "The date selected is in the past and cannot be selected for an appointment.");
+                alert.showAndWait();
+                return false;
+            }
+            
+            else {
                 return true;
             }
 
         } catch (NullPointerException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "At a minimum, you must have the following entered to save:\n"
+                    + "Customer Name\n"
+                    + "Assigned User\n"
+                    + "Title\n"
+                    + "Location\n"
+                    + "Type\n"
+                    + "Date\n"
+                    + "Start Time\n"
+                    + "End Time");
             alert.showAndWait();
             System.out.println(ex.getMessage());
             return false;

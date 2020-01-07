@@ -17,6 +17,8 @@
  */
 package jedschedfinalproject;
 
+import Utilities.Navigator;
+import Utilities.Validator;
 import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -34,9 +36,7 @@ public class JedSchedFinalProject extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Locale locale = Locale.getDefault();
-        ResourceBundle rb = ResourceBundle.getBundle("i18n/Nat", locale);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/View/LoginScreen.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(Navigator.pathOfFXML.LOGIN_SCREEN.getPath()));
         Parent root = loader.load();
 
         Scene scene = new Scene(root);
@@ -51,9 +51,7 @@ public class JedSchedFinalProject extends Application {
      * @throws java.lang.ClassNotFoundException
      */
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
-
         launch(args);
-
     }
 
 }

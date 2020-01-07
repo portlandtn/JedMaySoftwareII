@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="517.0" prefWidth="362.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CreateEditAppointmentController">
+<AnchorPane id="AnchorPane" prefHeight="517.0" prefWidth="410.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.CreateEditAppointmentController">
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="337.0" prefWidth="309.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -31,8 +31,8 @@
             </Label>
             <GridPane hgap="5.0" vgap="10.0">
               <columnConstraints>
-                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="224.0" minWidth="10.0" prefWidth="105.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="377.0" minWidth="10.0" prefWidth="222.0" />
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="224.0" minWidth="10.0" prefWidth="107.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="377.0" minWidth="10.0" prefWidth="278.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -70,17 +70,27 @@
                   <DatePicker fx:id="dateDatePicker" onAction="#onActionDatePicked" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="9">
                      <children>
-                        <TextField fx:id="startTimeTextField" prefHeight="25.0" prefWidth="70.0" promptText="13:15" />
+                        <TextField fx:id="startTimeTextField" minWidth="-Infinity" prefHeight="25.0" prefWidth="50.0" promptText="13:15" />
+                        <Label alignment="CENTER" text="Office is open Monday Through Friday">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Label>
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="10">
                      <children>
-                        <TextField fx:id="endTimeTextField" prefHeight="25.0" prefWidth="70.0" promptText="13:45" />
+                        <TextField fx:id="endTimeTextField" prefHeight="25.0" prefWidth="50.0" promptText="13:45" />
+                        <Label alignment="CENTER" text="Office Hours: 07:00 - 19:00">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Label>
                      </children>
                   </HBox>
                </children>
                <VBox.margin>
-                  <Insets left="15.0" right="15.0" top="15.0" />
+                  <Insets left="10.0" right="10.0" top="15.0" />
                </VBox.margin>
             </GridPane>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="332.0" spacing="30.0">

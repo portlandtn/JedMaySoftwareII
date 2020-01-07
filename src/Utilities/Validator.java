@@ -17,6 +17,12 @@
  */
 package Utilities;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  *
  * @author Jedidiah May
@@ -49,6 +55,31 @@ public class Validator {
         } catch (NumberFormatException ex) {
             return false;
         }
+    }
+    
+    public static Boolean isTimeInCorrectFormat(String time) {
+        
+        String regex = "^[0-2][0-9]:[0-5][0-9]";
+        Pattern pattern = Pattern.compile(regex);
+        
+        Matcher matcher = pattern.matcher(time);
+        return matcher.matches();
+    }
+    
+    public static boolean isTimeWithinOperatingHours(String start, String end) {
+        return !(LocalTime.parse(start + ":00").isBefore(DataProvider.OPENING_TIME) || LocalTime.parse(end + ":00").isAfter(DataProvider.CLOSING_TIME));
+    }
+    
+    public static boolean isStartTimeBeforeEndTime(String start, String end) {
+        return !(LocalTime.parse(end + ":00").isBefore(LocalTime.parse(start + ":00")));
+    }
+
+    public static boolean isDateSelectedAWeekday(DayOfWeek date) {
+        return !(date == DayOfWeek.SATURDAY || date == DayOfWeek.SUNDAY);
+    }
+    
+    public static boolean isDateSelectedAfterToday(LocalDate date) {
+        return !(date.isAfter(LocalDate.now()));
     }
 
 }
