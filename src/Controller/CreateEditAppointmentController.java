@@ -182,7 +182,8 @@ public class CreateEditAppointmentController implements Initializable {
         String url = setStringToBlankIfNull(urlTextField.getText());
         String contact = setStringToBlankIfNull(contactTextField.getText());
 
-        appt.setUserName(assignedToChoiceBox.getValue());
+        appt.setUserId(userDAO.getUserId(assignedToChoiceBox.getValue()));
+        appt.setCustomerId(customerDAO.getCustomerId(customerNameComboBox.getValue()));
         appt.setTitle(titleTextField.getText());
         appt.setDescription(desc);
         appt.setLocation(locationChoiceBox.getValue());
