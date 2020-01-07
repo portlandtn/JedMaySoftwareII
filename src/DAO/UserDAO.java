@@ -66,11 +66,11 @@ public class UserDAO extends DAO<User> {
         return users;
     }
 
-    public ObservableList<String> queryAllUsers() {
+    public ObservableList<String> queryAllActiveUsersForComboBox() {
         ObservableList<String> users = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "userName "
-                + "FROM user")) {
+                + "FROM user where Active = true")) {
 
             ResultSet result = stmt.executeQuery();
 

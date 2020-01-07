@@ -242,7 +242,7 @@ public class CreateEditAppointmentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         customerNameComboBox.setItems(customerDAO.queryAllCustomers());
-        assignedToChoiceBox.setItems(userDAO.queryAllUsers());
+        assignedToChoiceBox.setItems(userDAO.queryAllActiveUsersForComboBox());
         locationChoiceBox.setItems(DataProvider.LOCATIONS);
         typeChoiceBox.setItems(DataProvider.APPOINTMENT_TYPES);
     }
