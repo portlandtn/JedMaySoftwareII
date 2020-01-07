@@ -57,7 +57,7 @@ public class CreateEditAppointmentController implements Initializable {
     static boolean isEditing;
 
     private Appointment appointmentToUpdate = new Appointment();
-    
+
     public CreateEditAppointmentController() {
         try {
             this.conn = dc.createConnection();
@@ -142,7 +142,7 @@ public class CreateEditAppointmentController implements Initializable {
         }
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
     }
-    
+
     void sendAppointmentDetails(Appointment appt) {
 
         // Sets up the form for editing with information from the passed appointment object.
@@ -235,12 +235,20 @@ public class CreateEditAppointmentController implements Initializable {
                 // Intentionally left blank. If any of the fields are null, then the code falls through to the catch block and handled there.
             }
 
+            // Lambda listener that checks when the control loses focus. Should apply this to all controls for validation.
+            titleTextField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+                if (!isNowFocused) {
+                    System.out.println("test");
+                    if (customerNameComboBox.getValue() == null) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "You must choose an existing or enter a new customer prior to saving.");
+                        alert.showAndWait();
+                        //return false;
+                    }
+                }
+            });
+
             // Checks if the customer field is blank. If it is, warn the user.
-            if (customerNameComboBox.getValue() == null) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "You must choose an existing or enter a new customer prior to saving.");
-                alert.showAndWait();
-                return false;
-            }
+
 
             if (!Validator.isTimeInCorrectFormat(startTimeTextField.getText()) || !Validator.isTimeInCorrectFormat(endTimeTextField.getText())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "The start and end time must be entered in 24-hour format with a leading '0'. (i.e. '08:15')");
@@ -300,12 +308,71 @@ public class CreateEditAppointmentController implements Initializable {
         }
 
     }
+    
+    // Listener and alert for Combo Boxes (user, location, type)
+    private void setupListenersAndAlerts(ComboBox control, String alertMessage) {
+        control.focusedProperty().addListener((a, b, focused) -> {
+            if (!focused) {
+                if (control.getValue() == null) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, alertMessage);
+                    alert.showAndWait();
+                }
+            }
+        });
+
+    }
+    
+    // Listener and alert for textfields (title, description, url, 
+    private void setupListenersAndAlerts(TextField control, String alertMessage) {
+        control.focusedProperty().addListener((a, b, focused) -> {
+            if (!focused) {
+                if (control.getText() == null) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, alertMessage);
+                    alert.showAndWait();
+                }
+            }
+        });
+
+    }
+    
+    // Listener and alert for ChoiceBoxes
+    private void setupListenersAndAlerts(ChoiceBox control, String alertMessage) {
+        control.focusedProperty().addListener((a, b, focused) -> {
+            if (!focused) {
+                if (control.getValue() == null) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, alertMessage);
+                    alert.showAndWait();
+                }
+            }
+        });
+
+    }
+    
+    // Listener and alert for DatePickers
+    private void setupListenersAndAlerts(DatePicker control, String alertMessage) {
+        control.focusedProperty().addListener((a, b, focused) -> {
+            if (!focused) {
+                if (control.getValue() == null) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, alertMessage);
+                    alert.showAndWait();
+                }
+            }
+        });
+
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         customerNameComboBox.setItems(customerDAO.queryAllCustomers());
         assignedToChoiceBox.setItems(userDAO.queryAllActiveUsersForComboBox());
+        assignedToChoiceBox.setValue(DataProvider.getCurrentUser());
         locationChoiceBox.setItems(DataProvider.LOCATIONS);
+        locationChoiceBox.setValue(DataProvider.LOCATIONS.get(0));
         typeChoiceBox.setItems(DataProvider.APPOINTMENT_TYPES);
+        typeChoiceBox.setValue(DataProvider.APPOINTMENT_TYPES.get(0));
+        
+        setupListenersAndAlerts(customerNameComboBox, "You must choose an existing or enter a new customer prior to saving. This is a required field");
+        setupListenersAndAlerts(titleTextField, "Title is required (cannot be blank).");
+        
     }
 }
