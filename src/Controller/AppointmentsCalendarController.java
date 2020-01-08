@@ -135,7 +135,7 @@ public class AppointmentsCalendarController implements Initializable {
 
         appointmentSearchResultsList.clear();
 
-        if (Validator.isSearchStringNumber(searchTextField.getText())) {
+        if (Validator.searchStringIsANumber(searchTextField.getText())) {
             appointmentSearchResultsList = appointmentDAO.lookupAppointment(Integer.parseInt(searchText));
 
         } else {

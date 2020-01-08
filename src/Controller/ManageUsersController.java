@@ -120,7 +120,7 @@ public class ManageUsersController implements Initializable {
 
         userSearchResultsList.clear();
 
-        if (Validator.isSearchStringNumber(searchTextField.getText())) {
+        if (Validator.searchStringIsANumber(searchTextField.getText())) {
             userSearchResultsList = userDAO.lookupUser(Integer.parseInt(searchText));
 
         } else {

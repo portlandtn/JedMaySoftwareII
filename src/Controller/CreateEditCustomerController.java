@@ -170,7 +170,7 @@ public class CreateEditCustomerController implements Initializable {
             countryComboBox.getValue(),
             postalCodeTextField.getText()};
 
-        if (!Validator.isTextEntered(textFields)) {
+        if (!Validator.textIsEntered(textFields)) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "At a minimum, you must have a Customer Name, Address, City, Country, and Postal Code entered to save.");
             alert.showAndWait();
             return false;

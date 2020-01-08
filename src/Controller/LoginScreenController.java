@@ -87,7 +87,7 @@ public class LoginScreenController implements Initializable {
                 // If the user didn't pass the checks, the message string is customized to explain why. If the userName is null, it falls through to the catch 
                 // and uses that message string there.
                 String message = null;
-                if (!Validator.isTextEntered(userNameAndPassword)) {
+                if (!Validator.textIsEntered(userNameAndPassword)) {
                     message = this.usernameAndPasswordCannotBeEmpty;
                 } else if (!doUserNameAndPasswordExistInDatabase()) {
                     message = this.usernameAndPasswordDoNotMatch;
@@ -121,7 +121,7 @@ public class LoginScreenController implements Initializable {
     private boolean canUserLogIn(String[] userNameAndPassword) {
         // If all three checks are good, return true. If all three are not good, return false.
         // Used the validator for the first check since a DAO wouldn't be required.
-        return Validator.isTextEntered(userNameAndPassword) && doUserNameAndPasswordExistInDatabase() && isUserActive();
+        return Validator.textIsEntered(userNameAndPassword) && doUserNameAndPasswordExistInDatabase() && isUserActive();
     }
     
     // Check #2

@@ -28,8 +28,8 @@ import java.util.regex.Pattern;
  */
 public class Validator {
 
-    //Checks to see if an array of text is empty
-    public static boolean isTextEntered(String[] textFields) {
+    // Checks to see if an array of text is empty
+    public static boolean textIsEntered(String[] textFields) {
 
         for (String textField : textFields) {
             if (textField.trim().isEmpty()) {
@@ -39,16 +39,17 @@ public class Validator {
         return true;
     }
 
-    //Checks to see if two strings match each other
-    public static boolean doStringsMatch(String text1, String text2) {
+    // Checks to see if two strings match each other
+    // This is simple enough to not have a method, but there are future options available now (if other requirements are necessary)
+    public static boolean stringDoMatch(String text1, String text2) {
         return text1.trim().equals(text2.trim());
     }
     
-    //Determines if the search string is a number for code flow.
-    public static boolean isSearchStringNumber(String search) {
+    // Determines if the search string is a number for code flow.
+    public static boolean searchStringIsANumber(String search) {
 
         try {
-            //Attempts to assign the string to an int variable. If there is an exception, it's not a number, and it falls through the catch.
+            // Attempts to assign the string to an int variable. If there is an exception, it's not a number, and it falls through the catch.
             int aNumber = Integer.parseInt(search);
             return true;
         } catch (NumberFormatException ex) {
@@ -57,7 +58,9 @@ public class Validator {
     }
     
     // Uses Regex to determine if the time is in the correct format
-    public static boolean isTimeInCorrectFormat(String time) {
+    public static boolean timeIsInCorrectFormat(String time) {
+        if (time == null || time.isEmpty())
+            return true;
         
         String regex = "^[0-1][0-9]:[0-5][0-9]";
         Pattern pattern = Pattern.compile(regex);
@@ -67,13 +70,27 @@ public class Validator {
     }
 
     // Ensures the date selected is not a weekend.
-    public static boolean isDateSelectedAWeekday(DayOfWeek date) {
-        return !(date == DayOfWeek.SATURDAY || date == DayOfWeek.SUNDAY);
+    public static boolean dateIsWeekday(DayOfWeek day) {
+        return !(day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY);
     }
     
     // Ensures the date selected will take place in the future (shouldn't insert appointments prior today)
-    public static boolean isDateSelectedAfterToday(LocalDate date) {
+    public static boolean dateIsAfterCurrentDate(LocalDate date) {
         return date.isAfter(LocalDate.now());
+    }
+    
+    // Ensures the date selected will take place in the future (shouldn't insert appointments prior today)
+    public static boolean dateisInCorrectFormat(LocalDate date) {
+        if (date ==  null) {
+            return true;
+        }
+        
+        String regex = "(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[012])-((18|19|20|21)\\\\d\\\\d)";
+
+        Pattern pattern = Pattern.compile(regex);
+
+        Matcher matcher = pattern.matcher(date.toString());
+        return matcher.matches();
     }
 
 }

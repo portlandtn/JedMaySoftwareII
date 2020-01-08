@@ -231,27 +231,28 @@ public class CreateEditAppointmentController implements Initializable {
                 startTimeTextField.getText(),
                 endTimeTextField.getText()};
 
-            if (Validator.isTextEntered(textFields)) {
+            if (Validator.textIsEntered(textFields)) {
                 // Intentionally left blank. If any of the fields are null, then the code falls through to the catch block and handled there.
             }
 
-            // Lambda listener that checks when the control loses focus. Should apply this to all controls for validation.
-            titleTextField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
-                if (!isNowFocused) {
-                    System.out.println("test");
-                    if (customerNameComboBox.getValue() == null) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR, "You must choose an existing or enter a new customer prior to saving.");
-                        alert.showAndWait();
-                        //return false;
-                    }
-                }
-            });
-
             // Checks if the customer field is blank. If it is, warn the user.
-
-
-            if (!Validator.isTimeInCorrectFormat(startTimeTextField.getText()) || !Validator.isTimeInCorrectFormat(endTimeTextField.getText())) {
+            if (customerNameComboBox.getValue() == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "You must choose an existing or enter a new customer prior to saving.");
+                alert.showAndWait();
+                return false;
+            }
+            
+            // Ensures the time is in the correct format. 
+            if (!Validator.timeIsInCorrectFormat(startTimeTextField.getText()) || !Validator.timeIsInCorrectFormat(endTimeTextField.getText())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "The start and end time must be entered in 24-hour format with a leading '0'. (i.e. '08:15')");
+                alert.showAndWait();
+                return false;
+            }
+
+            // Ensures the date is in the correct format (if the calendar wasn't used for the input.
+            if (!Validator.dateisInCorrectFormat(dateDatePicker.getValue())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "The date has not been input in the correct format. Please use the calendar option "
+                        + "to choose the date to ensure it is in the correct format, or enter it in the following format (01/27/2019).");
                 alert.showAndWait();
                 return false;
             }
@@ -260,16 +261,10 @@ public class CreateEditAppointmentController implements Initializable {
             I_Validator isTimeWithinOperatingHours = (String start, String end)
                     -> !(LocalTime.parse(start + ":00").isBefore(DataProvider.OPENING_TIME) || LocalTime.parse(end + ":00").isAfter(DataProvider.CLOSING_TIME));
 
+            // Ensures the time is within operating hours (07:00 - 19:00)
             if (!isTimeWithinOperatingHours.validate(startTimeTextField.getText(), endTimeTextField.getText())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "The start and end time must be within the office hours. ("
                         + DataProvider.OPENING_TIME + " and " + DataProvider.CLOSING_TIME + ").");
-                alert.showAndWait();
-                return false;
-            }
-
-            if (!Validator.isDateSelectedAWeekday(dateDatePicker.getValue().getDayOfWeek())) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "The valid days of operation are Monday Through Friday. "
-                        + "The date selected is on a " + dateDatePicker.getValue().getDayOfWeek() + ".");
                 alert.showAndWait();
                 return false;
             }
@@ -278,13 +273,22 @@ public class CreateEditAppointmentController implements Initializable {
             I_Validator isStartTimeBeforeEndTime = (String start, String end)
                     -> !(LocalTime.parse(end + ":00").isBefore(LocalTime.parse(start + ":00")) || LocalTime.parse(end + ":00").equals(LocalTime.parse((start + ":00"))));
 
+            // Ensures the date selected is a weekday (operating days are Monday through Friday
+            if (!Validator.dateIsWeekday(dateDatePicker.getValue().getDayOfWeek())) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "The valid days of operation are Monday Through Friday. "
+                        + "The date selected is on a " + dateDatePicker.getValue().getDayOfWeek() + ".");
+                alert.showAndWait();
+                return false;
+            }
+            // Ensures the start time is before the end time (and also not equal)
             if (!isStartTimeBeforeEndTime.validate(startTimeTextField.getText(), endTimeTextField.getText())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "The start time entered is before the end time entered. Please correct in order to save.");
                 alert.showAndWait();
                 return false;
             }
 
-            if (!Validator.isDateSelectedAfterToday(dateDatePicker.getValue())) {
+            // Ensures the user can't create an appointment in the past.
+            if (!Validator.dateIsAfterCurrentDate(dateDatePicker.getValue())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "The date selected is in the past and cannot be selected for an appointment.");
                 alert.showAndWait();
                 return false;
@@ -292,6 +296,7 @@ public class CreateEditAppointmentController implements Initializable {
                 return true;
             }
 
+            //This is the catch from the first validation. If the customer name is null, it will fall through to this catch.
         } catch (NullPointerException ex) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "At a minimum, you must have the following entered to save:\n"
                     + "Customer Name\n"
@@ -308,57 +313,31 @@ public class CreateEditAppointmentController implements Initializable {
         }
 
     }
-    
-    // Listener and alert for Combo Boxes (user, location, type)
-    private void setupListenersAndAlerts(ComboBox control, String alertMessage) {
+
+    // Listener and alert to verify time is input in the correct format
+    private void setupListenerAndAlerts(TextField control) {
         control.focusedProperty().addListener((a, b, focused) -> {
             if (!focused) {
-                if (control.getValue() == null) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, alertMessage);
+                if (!Validator.timeIsInCorrectFormat(control.getText())) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "The time has not been input in the correct format. Please ensure the format is in "
+                            + "24 hour format (i.e. 07:00)");
                     alert.showAndWait();
                 }
             }
         });
-
     }
-    
-    // Listener and alert for textfields (title, description, url, 
-    private void setupListenersAndAlerts(TextField control, String alertMessage) {
+
+    // Listener and alert to verify date is input in the correct format
+    private void setupListenerAndAlerts(DatePicker control) {
         control.focusedProperty().addListener((a, b, focused) -> {
             if (!focused) {
-                if (control.getText() == null) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, alertMessage);
+                if (!Validator.dateisInCorrectFormat(control.getValue())) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "The date has not been input in the correct format. Please use the calendar option "
+                            + "to choose the date to ensure it is in the correct format, or enter it in the following format (01/27/2019).");
                     alert.showAndWait();
                 }
             }
         });
-
-    }
-    
-    // Listener and alert for ChoiceBoxes
-    private void setupListenersAndAlerts(ChoiceBox control, String alertMessage) {
-        control.focusedProperty().addListener((a, b, focused) -> {
-            if (!focused) {
-                if (control.getValue() == null) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, alertMessage);
-                    alert.showAndWait();
-                }
-            }
-        });
-
-    }
-    
-    // Listener and alert for DatePickers
-    private void setupListenersAndAlerts(DatePicker control, String alertMessage) {
-        control.focusedProperty().addListener((a, b, focused) -> {
-            if (!focused) {
-                if (control.getValue() == null) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, alertMessage);
-                    alert.showAndWait();
-                }
-            }
-        });
-
     }
 
     @Override
@@ -370,9 +349,11 @@ public class CreateEditAppointmentController implements Initializable {
         locationChoiceBox.setValue(DataProvider.LOCATIONS.get(0));
         typeChoiceBox.setItems(DataProvider.APPOINTMENT_TYPES);
         typeChoiceBox.setValue(DataProvider.APPOINTMENT_TYPES.get(0));
-        
-        setupListenersAndAlerts(customerNameComboBox, "You must choose an existing or enter a new customer prior to saving. This is a required field");
-        setupListenersAndAlerts(titleTextField, "Title is required (cannot be blank).");
-        
+
+        // These listeners are used to provide instant feedback on the time and date formats, prior to saving.
+        // Even if they're ignored, save will not happen if the formats are not correct.
+        setupListenerAndAlerts(startTimeTextField);
+        setupListenerAndAlerts(endTimeTextField);
+        setupListenerAndAlerts(dateDatePicker);
     }
 }

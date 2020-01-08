@@ -20,6 +20,7 @@ package Utilities;
 import java.io.IOException;
 import java.sql.SQLException;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -67,4 +68,5 @@ public class Navigator {
         stage.setScene(new Scene(scene));
         stage.show();
     }
+    
 }

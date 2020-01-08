@@ -153,7 +153,7 @@ public class ManageCustomersController implements Initializable {
 
         // Checks to see if the search string is only a number. If it is a number, it's going to lookup
         // the customer Id, rather than the customer name.
-        if (Validator.isSearchStringNumber(searchTextField.getText())) {
+        if (Validator.searchStringIsANumber(searchTextField.getText())) {
             customerSearchResultsList = customerDAO.lookupCustomer(Integer.parseInt(searchText));
 
         } else {

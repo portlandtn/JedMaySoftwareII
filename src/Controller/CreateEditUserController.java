@@ -140,14 +140,14 @@ public class CreateEditUserController implements Initializable {
             userNameTextField.getText(),
             passwordTextField.getText(),
             confirmPasswordTextField.getText()};   
-        if (!Validator.isTextEntered(textFields)) {
+        if (!Validator.textIsEntered(textFields)) {
             Alert alert = new Alert(AlertType.ERROR, "All text fields must have data");
             alert.showAndWait();
             return false;
         }
 
         // Verifty that the two passwords match
-        else if (!Validator.doStringsMatch(passwordTextField.getText(), confirmPasswordTextField.getText())) {
+        else if (!Validator.stringDoMatch(passwordTextField.getText(), confirmPasswordTextField.getText())) {
             Alert alert = new Alert(AlertType.ERROR, "The passwords entered do not match. Please re-enter and try again.");
             alert.showAndWait();
             return false;
