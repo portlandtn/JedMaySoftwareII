@@ -52,7 +52,16 @@ public class AppointmentsCalendarController implements Initializable {
     DatabaseConnector dc = new DatabaseConnector();
     Connection conn;
     AppointmentDAO appointmentDAO;
-
+    
+    public AppointmentsCalendarController() {
+        try {
+            this.conn = dc.createConnection();
+            this.appointmentDAO = new AppointmentDAO(conn);
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="FXML objects">
     @FXML
     private RadioButton allRadioButton;
@@ -97,15 +106,9 @@ public class AppointmentsCalendarController implements Initializable {
     private TableColumn<Appointment, LocalDateTime> endColumnTableView;
 
     // </editor-fold>
-    public AppointmentsCalendarController() {
-        try {
-            this.conn = dc.createConnection();
-            this.appointmentDAO = new AppointmentDAO(conn);
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
 
+
+    // <editor-fold desc="Standard FXML Methods">
     @FXML
     void onActionAddAppointment(ActionEvent event) throws IOException, SQLException {
         CreateEditAppointmentController.isEditing = false;
@@ -191,6 +194,7 @@ public class AppointmentsCalendarController implements Initializable {
     void onActionSelectWeek(ActionEvent event) {
         refreshData();
     }
+    // </editor-fold>
 
     private void refreshData() {
 

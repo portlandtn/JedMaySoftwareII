@@ -48,7 +48,16 @@ public class CreateEditUserController implements Initializable {
     public static String previousPath;
 
     private User userToUpdate;
-
+    
+    public CreateEditUserController() {
+        try {
+            conn = dc.createConnection();
+            this.userDAO = new UserDAO(conn);
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="FXML objects">
     @FXML
     private TextField userNameTextField;
@@ -63,15 +72,7 @@ public class CreateEditUserController implements Initializable {
     private CheckBox activeCheckBox;
     // </editor-fold>
 
-    public CreateEditUserController() {
-        try {
-            conn = dc.createConnection();
-            this.userDAO = new UserDAO(conn);
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
-
+    // <editor-fold desc="Standard FXML Methods">
     @FXML
     void onActionActive_Inactive(ActionEvent event) {
 
@@ -97,7 +98,8 @@ public class CreateEditUserController implements Initializable {
     void onActionGoBack(ActionEvent event) throws IOException, SQLException {
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
     }
-
+    // </editor-fold>
+    
     public void sendUserDetails(User user) {
 
         userNameTextField.setText(user.getUserName());

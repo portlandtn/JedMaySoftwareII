@@ -88,6 +88,7 @@ public class ManageUsersController implements Initializable {
     private TableColumn<User, Boolean> activeColumnTableView;
     // </editor-fold>
 
+    // <editor-fold desc="Standard FXML Methods">
     @FXML
     void onActionDeleteUser(ActionEvent event) {
 
@@ -188,7 +189,8 @@ public class ManageUsersController implements Initializable {
         searchTextField.setText("");
         refreshData();
     }
-
+    // </editor-fold>
+    
     private void refreshData() {
         ObservableList<User> allUsers;
 

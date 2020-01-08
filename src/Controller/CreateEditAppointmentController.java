@@ -104,6 +104,8 @@ public class CreateEditAppointmentController implements Initializable {
     private TextField endTimeTextField;
     // </editor-fold>
 
+    // <editor-fold desc="Standard FXML Methods">
+    
     @FXML
     void onActionCancel(ActionEvent event) throws IOException, SQLException {
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
@@ -142,7 +144,7 @@ public class CreateEditAppointmentController implements Initializable {
         }
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
     }
-
+    // </editor-fold>
     void sendAppointmentDetails(Appointment appt) {
 
         // Sets up the form for editing with information from the passed appointment object.

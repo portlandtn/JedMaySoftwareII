@@ -35,9 +35,12 @@ import javafx.scene.control.Button;
  */
 public class DashboardController implements Initializable {
 
+    // <editor-fold defaultstate="collapsed" desc="FXML Objects">
     @FXML
     private Button manageUsersButton;
-
+    // </editor-fold>
+    
+    // <editor-fold desc="Standard FXML Methods">
     @FXML
     void onActionLogOut(ActionEvent event) throws IOException, SQLException {
         DataProvider.setIsLoggedIn(false);
@@ -64,7 +67,7 @@ public class DashboardController implements Initializable {
     void onActionShowManageUsersScreen(ActionEvent event) throws IOException, SQLException {
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.MANAGE_USERS.getPath())));
     }
-
+    // </editor-fold>
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

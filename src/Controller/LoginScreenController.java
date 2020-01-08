@@ -48,7 +48,17 @@ public class LoginScreenController implements Initializable {
 
     // Messages for alerts
     String usernameNotFound, usernameAndPasswordDoNotMatch, usernameIsInactive, usernameAndPasswordCannotBeEmpty;
-
+    
+    //Constructor
+    public LoginScreenController() {
+        try {
+            conn = dc.createConnection();
+            this.userDAO = new UserDAO(conn);
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="FXML objects">
     @FXML
     private Label titleLabel;
@@ -66,16 +76,8 @@ public class LoginScreenController implements Initializable {
     private Button loginButton;
 
     // </editor-fold>
-    //Constructor
-    public LoginScreenController() {
-        try {
-            conn = dc.createConnection();
-            this.userDAO = new UserDAO(conn);
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
 
+    // <editor-fold desc="Standard FXML Methods">
     // Login button is clicked.
     @FXML
     void onActionShowDashboard(ActionEvent event) throws SQLException, IOException {
@@ -117,6 +119,7 @@ public class LoginScreenController implements Initializable {
             alert.showAndWait();
         }
     }
+    // </editor-fold>
 
     private boolean canUserLogIn(String[] userNameAndPassword) {
         // If all three checks are good, return true. If all three are not good, return false.

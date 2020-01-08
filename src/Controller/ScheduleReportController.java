@@ -37,6 +37,8 @@ import javafx.scene.control.*;
  */
 public class ScheduleReportController implements Initializable {
 
+    // <editor-fold defaultstate="collapsed" desc="FXML Objects">
+
     @FXML
     private ChoiceBox<String> userChoiceBox;
 
@@ -61,6 +63,7 @@ public class ScheduleReportController implements Initializable {
     @FXML
     private TableColumn<Appointment, Date> endColumnTableView;
 
+    // <editor-fold desc="Standard FXML Methods">
     @FXML
     void onActionGoBack(ActionEvent event) throws IOException, SQLException {
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.REPORTS_DASHBOARD.getPath())));
@@ -75,6 +78,7 @@ public class ScheduleReportController implements Initializable {
     void onActionPrintReport(ActionEvent event) {
 
     }
+    // </editor-fold>
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {

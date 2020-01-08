@@ -34,6 +34,7 @@ import javafx.fxml.Initializable;
  */
 public class ReportsDashboardController implements Initializable {
 
+    // <editor-fold desc="Standard FXML Methods">
     @FXML
     void onActionGoBack(ActionEvent event) throws IOException, SQLException {
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.DASHBOARD.getPath())));
@@ -53,6 +54,7 @@ public class ReportsDashboardController implements Initializable {
     void onActionShowScheduleReport(ActionEvent event) throws IOException, SQLException {
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.SCHEDULE_REPORT.getPath())));
     }
+    // </editor-fold>
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {

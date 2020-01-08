@@ -99,6 +99,7 @@ public class CreateEditCustomerController implements Initializable {
     private CheckBox activeCheckBox;
     // </editor-fold>
 
+    // <editor-fold desc="Standard FXML Methods">
     // Cancel - go back to the previous screen.
     @FXML
     void onActionCancel(ActionEvent event) throws IOException, SQLException {
@@ -158,6 +159,7 @@ public class CreateEditCustomerController implements Initializable {
         conn.close();
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
     }
+    // </editor-fold>
 
     // Validation to make sure that data can be saved and doesn't violate any rules.
     private boolean canDataBeSaved() {

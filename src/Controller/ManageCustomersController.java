@@ -19,9 +19,7 @@ package Controller;
 
 import DAO.AddressDAO;
 import DAO.CustomerDAO;
-import Log.Logger;
 import Model.Customer;
-import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
 import Utilities.Navigator;
 import Utilities.Validator;
@@ -113,6 +111,7 @@ public class ManageCustomersController implements Initializable {
         }
     }
 
+    // <editor-fold desc="Standard FXML Methods">
     // Active radio button selected, show only active customers.
     @FXML
     void onActionActiveSelected(ActionEvent event) {
@@ -231,6 +230,7 @@ public class ManageCustomersController implements Initializable {
         }
 
     }
+    // </editor-fold>
 
     // This sets up the table. When radio buttons are selected, or when the form is initialized, this is called.
     private void refreshData() {

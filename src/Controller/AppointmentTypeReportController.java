@@ -37,6 +37,7 @@ import javafx.scene.control.*;
  */
 public class AppointmentTypeReportController implements Initializable {
 
+    // <editor-fold defaultstate="collapsed" desc="FXML Objects">
     @FXML
     private RadioButton allRadioButton;
 
@@ -75,7 +76,9 @@ public class AppointmentTypeReportController implements Initializable {
 
     @FXML
     private TableColumn<Appointment, Date> endColumnTableView;
-
+    // </editor-fold>
+    
+    // <editor-fold desc="Standard FXML Methods">
     @FXML
     void onActionGoBack(ActionEvent event) throws IOException, SQLException {
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.REPORTS_DASHBOARD.getPath())));
@@ -110,7 +113,7 @@ public class AppointmentTypeReportController implements Initializable {
     void onActionSelectTermination(ActionEvent event) {
 
     }
-    
+    // </editor-fold>
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
