@@ -77,13 +77,13 @@ public class AppointmentTypeReportController implements Initializable {
     private TableColumn<Appointment, Date> endColumnTableView;
 
     @FXML
-    void onActionGoBack(ActionEvent event) {
-
+    void onActionGoBack(ActionEvent event) throws IOException, SQLException {
+        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.REPORTS_DASHBOARD.getPath())));
     }
 
     @FXML
     void onActionMoreInfo(ActionEvent event) throws IOException, SQLException {
-        Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.CREATE_EDIT_APPOINTMENT.getPath())));
+        //Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.CREATE_EDIT_APPOINTMENT.getPath())));
     }
 
     @FXML

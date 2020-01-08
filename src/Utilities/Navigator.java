@@ -20,7 +20,6 @@ package Utilities;
 import java.io.IOException;
 import java.sql.SQLException;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -41,7 +40,7 @@ public class Navigator {
         CREATE_EDIT_CUSTOMER("/View/CreateEditCustomer.fxml"),
         CREATE_EDIT_USER("/View/CreateEditUser.fxml"),
         DASHBOARD("/View/Dashboard.fxml"),
-        LOCATION_REPORT("/View/Dashboard.fxml"),
+        LOCATION_REPORT("/View/LocationReport.fxml"),
         LOGIN_SCREEN("/View/LoginScreen.fxml"),
         MANAGE_CUSTOMERS("/View/ManageCustomers.fxml"),
         MANAGE_USERS("/View/ManageUsers.fxml"),

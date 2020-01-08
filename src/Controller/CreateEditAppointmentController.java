@@ -117,7 +117,7 @@ public class CreateEditAppointmentController implements Initializable {
     @FXML
     void onActionSave(ActionEvent event) throws IOException, SQLException, ParseException {
 
-        // Pretty decent-sized validator. Must pass all checks before data can be saved.
+        // Massive validator method. Must pass all checks before data can be saved.
         if (!canDataBeSaved()) {
             return;
         }
@@ -162,6 +162,7 @@ public class CreateEditAppointmentController implements Initializable {
         this.appointmentToUpdate = appt;
     }
 
+    // This is a necessary method to set null values to "" so that the database will save them (only required on update, not insertion).
     private String setStringToBlankIfNull(String text) {
         if (text != null) {
             return text;
@@ -219,6 +220,14 @@ public class CreateEditAppointmentController implements Initializable {
 
     }
 
+    /* Massive validation check that verifies the following:
+    *  Is text entered in the requried fields? (customer name, assigned to, title, date, start, end.
+    *  Start and time format
+    *  Operating Hours
+    *  Operating Day Of Week
+    *  Can't create appointments in the past
+    *  Can't set end time equal to or before start time
+    */
     private boolean canDataBeSaved() {
 
         // Checks to see if all required text is entered.
@@ -245,14 +254,6 @@ public class CreateEditAppointmentController implements Initializable {
             // Ensures the time is in the correct format. 
             if (!Validator.timeIsInCorrectFormat(startTimeTextField.getText()) || !Validator.timeIsInCorrectFormat(endTimeTextField.getText())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "The start and end time must be entered in 24-hour format with a leading '0'. (i.e. '08:15')");
-                alert.showAndWait();
-                return false;
-            }
-
-            // Ensures the date is in the correct format (if the calendar wasn't used for the input.
-            if (!Validator.dateisInCorrectFormat(dateDatePicker.getValue())) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "The date has not been input in the correct format. Please use the calendar option "
-                        + "to choose the date to ensure it is in the correct format, or enter it in the following format (01/27/2019).");
                 alert.showAndWait();
                 return false;
             }
@@ -327,19 +328,6 @@ public class CreateEditAppointmentController implements Initializable {
         });
     }
 
-    // Listener and alert to verify date is input in the correct format
-    private void setupListenerAndAlerts(DatePicker control) {
-        control.focusedProperty().addListener((a, b, focused) -> {
-            if (!focused) {
-                if (!Validator.dateisInCorrectFormat(control.getValue())) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "The date has not been input in the correct format. Please use the calendar option "
-                            + "to choose the date to ensure it is in the correct format, or enter it in the following format (01/27/2019).");
-                    alert.showAndWait();
-                }
-            }
-        });
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         customerNameComboBox.setItems(customerDAO.queryAllCustomers());
@@ -350,10 +338,9 @@ public class CreateEditAppointmentController implements Initializable {
         typeChoiceBox.setItems(DataProvider.APPOINTMENT_TYPES);
         typeChoiceBox.setValue(DataProvider.APPOINTMENT_TYPES.get(0));
 
-        // These listeners are used to provide instant feedback on the time and date formats, prior to saving.
+        // These listeners are used to provide instant feedback on the time formats, prior to saving.
         // Even if they're ignored, save will not happen if the formats are not correct.
         setupListenerAndAlerts(startTimeTextField);
         setupListenerAndAlerts(endTimeTextField);
-        setupListenerAndAlerts(dateDatePicker);
     }
 }

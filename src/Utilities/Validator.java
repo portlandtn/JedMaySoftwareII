@@ -74,23 +74,9 @@ public class Validator {
         return !(day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY);
     }
     
-    // Ensures the date selected will take place in the future (shouldn't insert appointments prior today)
+    // Ensures the date selected will take place in the future (shouldn't insert appointments prior to today)
     public static boolean dateIsAfterCurrentDate(LocalDate date) {
         return date.isAfter(LocalDate.now());
-    }
-    
-    // Ensures the date selected will take place in the future (shouldn't insert appointments prior today)
-    public static boolean dateisInCorrectFormat(LocalDate date) {
-        if (date ==  null) {
-            return true;
-        }
-        
-        String regex = "(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[012])-((18|19|20|21)\\\\d\\\\d)";
-
-        Pattern pattern = Pattern.compile(regex);
-
-        Matcher matcher = pattern.matcher(date.toString());
-        return matcher.matches();
     }
 
 }

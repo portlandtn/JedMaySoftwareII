@@ -26,7 +26,10 @@ import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -86,7 +89,6 @@ public class AppointmentsCalendarController implements Initializable {
 
     @FXML
     private TableColumn<Appointment, LocalDateTime> dateColumnTableView;
-    
 
     @FXML
     private TableColumn<Appointment, LocalDateTime> startColumnTableView;
@@ -191,9 +193,10 @@ public class AppointmentsCalendarController implements Initializable {
     }
 
     private void refreshData() {
+
         ObservableList<Appointment> appointments;
 
-        //Setup the appointment table with data from the database.
+        //Setup the appointment table with data from the database, based on the view selected.
         if (allRadioButton.isSelected()) {
             appointments = appointmentDAO.queryForAppointmentCalendar();
         } else if (monthRadioButton.isSelected()) {
@@ -208,22 +211,68 @@ public class AppointmentsCalendarController implements Initializable {
         titleColumnTableView.setCellValueFactory(new PropertyValueFactory<>("title"));
         locationColumnTableView.setCellValueFactory(new PropertyValueFactory<>("location"));
         contactColumnTableView.setCellValueFactory(new PropertyValueFactory<>("contact"));
-        //dateColumnTableView.setCellValueFactory(cellData -> cellData.getValue().getAppointmentDate().); 
-//        dateColumnTableView.setCellFactory(col -> new TableCell<Appointment, LocalDateTime>() {
-//            @Override
-//            protected void updateItem(LocalDateTime item, boolean empty) {
-//                        super.updateItem(item, empty);
-//        if (empty)
-//            setText(null);
-//        else
-//            setText(String.format(item.format(formatter)));
-//            }
-//        }
-        dateColumnTableView.setCellValueFactory(new PropertyValueFactory<>("start"));
         startColumnTableView.setCellValueFactory(new PropertyValueFactory<>("start"));
-        endColumnTableView.setCellValueFactory(new PropertyValueFactory<>("end"));
 
+        // To format the columns appropriately, used Lambdas to override the updateItem method of CellFactory with the new format. 
+        // This was done for the three datetime columns below.
+        startColumnTableView.setCellFactory(column -> {
+            TableCell<Appointment, LocalDateTime> cell = new TableCell<Appointment, LocalDateTime>() {
+                private SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+
+                @Override
+                protected void updateItem(LocalDateTime item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setText(null);
+                    } else {
+                        this.setText(format.format(Date.from(item.atZone(ZoneId.systemDefault()).toInstant())));
+
+                    }
+                }
+            };
+            return cell;
+        });
+
+        endColumnTableView.setCellValueFactory(new PropertyValueFactory<>("end"));
+        endColumnTableView.setCellFactory(column -> {
+            TableCell<Appointment, LocalDateTime> cell = new TableCell<Appointment, LocalDateTime>() {
+                private SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+
+                @Override
+                protected void updateItem(LocalDateTime item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setText(null);
+                    } else {
+                        this.setText(format.format(Date.from(item.atZone(ZoneId.systemDefault()).toInstant())));
+
+                    }
+                }
+            };
+            return cell;
+        });
+
+        dateColumnTableView.setCellValueFactory(new PropertyValueFactory<>("start"));
+
+        dateColumnTableView.setCellFactory(column -> {
+            TableCell<Appointment, LocalDateTime> cell = new TableCell<Appointment, LocalDateTime>() {
+                private SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+
+                @Override
+                protected void updateItem(LocalDateTime item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setText(null);
+                    } else {
+                        this.setText(format.format(Date.from(item.atZone(ZoneId.systemDefault()).toInstant())));
+
+                    }
+                }
+            };
+            return cell;
+        });
     }
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

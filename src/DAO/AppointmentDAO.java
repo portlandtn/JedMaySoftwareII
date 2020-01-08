@@ -265,7 +265,7 @@ public class AppointmentDAO extends DAO<Appointment> {
                 + "FROM appointment JOIN customer ON "
                 + "customer.customerId = appointment.customerId "
                 + "JOIN user ON "
-                + "user.userId = appointment.userId"
+                + "user.userId = appointment.userId "
                 + "WHERE appointmentId = " + id)) {
 
             ResultSet result = stmt.executeQuery();
@@ -306,7 +306,7 @@ public class AppointmentDAO extends DAO<Appointment> {
                 + "FROM appointment JOIN customer ON "
                 + "customer.customerId = appointment.customerId "
                 + "JOIN user ON "
-                + "user.userId = appointment.userId"
+                + "user.userId = appointment.userId "
                 + "WHERE title like '%" + title + "%'")) {
 
             ResultSet result = stmt.executeQuery();
