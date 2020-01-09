@@ -436,7 +436,7 @@ public class AppointmentDAO extends DAO<Appointment> {
         return false;
     }
 
-    // Query for the location report for the current month.
+    // Query for overlapping appointments. If you edit an existing appointment, it's checking itself. Will have to exclude that at some point.
     public boolean queryForDoAppointmentsOverlapForUser(String user, LocalDateTime startTime, LocalDateTime endTime) {
 
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
@@ -448,6 +448,29 @@ public class AppointmentDAO extends DAO<Appointment> {
                 + "OR "
                 + "(end > '" + DateTimeConverter.getTimeStampfromLocalDateTime(startTime) + "' "
                 + "AND end <= '" + DateTimeConverter.getTimeStampfromLocalDateTime(endTime) + "')")) {
+
+            ResultSet result = stmt.executeQuery();
+            return result.next();
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return false;
+    }
+
+    // Query for overlapping appointments. If you edit an existing appointment, it's checking itself. Will have to exclude that at some point.
+    public boolean queryForDoAppointmentsOverlapForUser(String user, LocalDateTime startTime, LocalDateTime endTime, int apptId) {
+
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "start "
+                + "FROM appointment JOIN user ON appointment.userId = user.userId "
+                + "WHERE userName = '" + user + "' "
+                + "AND (start >= '" + DateTimeConverter.getTimeStampfromLocalDateTime(startTime) + "' "
+                + "AND start < '" + DateTimeConverter.getTimeStampfromLocalDateTime(endTime) + "') "
+                + "OR "
+                + "(end > '" + DateTimeConverter.getTimeStampfromLocalDateTime(startTime) + "' "
+                + "AND end <= '" + DateTimeConverter.getTimeStampfromLocalDateTime(endTime) + "') "
+                + "AND appointmentId <> " + apptId)) {
 
             ResultSet result = stmt.executeQuery();
             return result.next();

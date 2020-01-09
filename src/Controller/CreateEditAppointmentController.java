@@ -105,7 +105,6 @@ public class CreateEditAppointmentController implements Initializable {
     // </editor-fold>
 
     // <editor-fold desc="Standard FXML Methods">
-    
     @FXML
     void onActionCancel(ActionEvent event) throws IOException, SQLException {
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
@@ -144,6 +143,7 @@ public class CreateEditAppointmentController implements Initializable {
         }
         Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(previousPath)));
     }
+
     // </editor-fold>
     void sendAppointmentDetails(Appointment appt) {
 
@@ -229,7 +229,7 @@ public class CreateEditAppointmentController implements Initializable {
     *  Operating Day Of Week
     *  Can't create appointments in the past
     *  Can't set end time equal to or before start time
-    */
+     */
     private boolean canDataBeSaved() {
 
         // Checks to see if all required text is entered.
@@ -252,7 +252,7 @@ public class CreateEditAppointmentController implements Initializable {
                 alert.showAndWait();
                 return false;
             }
-            
+
             // Ensures the time is in the correct format. 
             if (!Validator.timeIsInCorrectFormat(startTimeTextField.getText()) || !Validator.timeIsInCorrectFormat(endTimeTextField.getText())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "The start and end time must be entered in 24-hour format with a leading '0'. (i.e. '08:15')");
@@ -289,17 +289,27 @@ public class CreateEditAppointmentController implements Initializable {
                 alert.showAndWait();
                 return false;
             }
-            
-            
-            // Ensures the user can't create an appointment that overlaps.
-            if (appointmentDAO.queryForDoAppointmentsOverlapForUser(assignedToChoiceBox.getValue(),
-                    DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(startTimeTextField.getText() + ":00"))),
-                    DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(endTimeTextField.getText() + ":00"))))) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "This appointment overlaps with an existing appointment. Please change the date/time range and try again.");
-                alert.showAndWait();
-                return false;
-            }
 
+            // Ensures the user can't create an appointment that overlaps.
+            // If editing, you have to omit the current appointment from the validation.
+            if (isEditing) {
+                if (appointmentDAO.queryForDoAppointmentsOverlapForUser(assignedToChoiceBox.getValue(),
+                        DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(startTimeTextField.getText() + ":00"))),
+                        DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(endTimeTextField.getText() + ":00"))),
+                        this.appointmentToUpdate.getAppointmentId())) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "This appointment overlaps with an existing appointment. Please change the date/time range and try again.");
+                    alert.showAndWait();
+                    return false;
+                }
+            } else {
+                if (appointmentDAO.queryForDoAppointmentsOverlapForUser(assignedToChoiceBox.getValue(),
+                        DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(startTimeTextField.getText() + ":00"))),
+                        DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(endTimeTextField.getText() + ":00"))))) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "This appointment overlaps with an existing appointment. Please change the date/time range and try again.");
+                    alert.showAndWait();
+                    return false;
+                }
+            }
             // Ensures the user can't create an appointment in the past.
             if (!Validator.dateIsAfterCurrentDate(dateDatePicker.getValue())) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "The date selected is in the past and cannot be selected for an appointment.");
@@ -308,8 +318,6 @@ public class CreateEditAppointmentController implements Initializable {
             } else {
                 return true;
             }
-            
-
 
             //This is the catch from the first validation. If the customer name is null, it will fall through to this catch.
         } catch (NullPointerException ex) {
