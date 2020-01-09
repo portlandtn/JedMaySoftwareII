@@ -34,7 +34,7 @@ public class DataProvider {
     public static final ObservableList<String> APPOINTMENT_TYPES = FXCollections.observableArrayList("Consultation", "Introduction", "Termination");
     public static final ObservableList<String> LOCATIONS = FXCollections.observableArrayList("Home", "Office");
     
-    // Sets opening and llsing time for validation
+    // Sets opening and closing time for validation
     public static final LocalTime OPENING_TIME = LocalTime.of(07, 0);
     public static final LocalTime CLOSING_TIME = LocalTime.of(19, 0);
 

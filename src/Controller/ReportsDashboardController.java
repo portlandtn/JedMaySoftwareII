@@ -17,7 +17,6 @@
  */
 package Controller;
 
-import Utilities.DataProvider;
 import Utilities.Navigator;
 import java.io.IOException;
 import java.net.URL;

@@ -52,7 +52,7 @@ public class AppointmentsCalendarController implements Initializable {
     DatabaseConnector dc = new DatabaseConnector();
     Connection conn;
     AppointmentDAO appointmentDAO;
-    
+
     public AppointmentsCalendarController() {
         try {
             this.conn = dc.createConnection();
@@ -61,7 +61,7 @@ public class AppointmentsCalendarController implements Initializable {
             System.out.println(ex.getMessage());
         }
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="FXML objects">
     @FXML
     private RadioButton allRadioButton;
@@ -106,8 +106,6 @@ public class AppointmentsCalendarController implements Initializable {
     private TableColumn<Appointment, LocalDateTime> endColumnTableView;
 
     // </editor-fold>
-
-
     // <editor-fold desc="Standard FXML Methods">
     @FXML
     void onActionAddAppointment(ActionEvent event) throws IOException, SQLException {
@@ -140,12 +138,7 @@ public class AppointmentsCalendarController implements Initializable {
 
         appointmentSearchResultsList.clear();
 
-        if (Validator.searchStringIsANumber(searchTextField.getText())) {
-            appointmentSearchResultsList = appointmentDAO.lookupAppointment(Integer.parseInt(searchText));
-
-        } else {
-            appointmentSearchResultsList = appointmentDAO.lookupAppointment(searchText);
-        }
+        appointmentSearchResultsList = appointmentDAO.lookupAppointment(searchText);
 
         if (appointmentSearchResultsList.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "No appointment was not found.");
@@ -176,6 +169,8 @@ public class AppointmentsCalendarController implements Initializable {
             stage.show();
 
         } catch (IOException | NullPointerException ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "You must choose an appointment to edit.");
+            alert.showAndWait();
             System.out.println(ex.getMessage());
         }
     }
@@ -276,7 +271,6 @@ public class AppointmentsCalendarController implements Initializable {
             return cell;
         });
     }
-
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {

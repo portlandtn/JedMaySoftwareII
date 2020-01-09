@@ -36,8 +36,8 @@
                   </RadioButton>
                   <RadioButton fx:id="monthRadioButton" mnemonicParsing="false" onAction="#onActionSelectMonth" prefWidth="75.0" text="Month" toggleGroup="$CalendarViewToggle" />
                   <RadioButton fx:id="weekRadioButton" mnemonicParsing="false" onAction="#onActionSelectWeek" prefWidth="75.0" text="Week" toggleGroup="$CalendarViewToggle" />
-                  <Button mnemonicParsing="false" onAction="#onActionSearch" text="Search" />
                   <TextField fx:id="searchTextField" />
+                  <Button mnemonicParsing="false" onAction="#onActionSearch" text="Search" />
                </children>
                <VBox.margin>
                   <Insets bottom="20.0" left="250.0" top="10.0" />

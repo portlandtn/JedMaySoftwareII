@@ -79,7 +79,7 @@ public class AppointmentDAO extends DAO<Appointment> {
         }
         return appointments;
     }
-    
+
     // Searches database by id for a single appointment. Returns only one appointment (id's are primary keys)
     public Appointment querySingleAppointmenet(int id) {
         Appointment appt = new Appointment();
@@ -122,7 +122,7 @@ public class AppointmentDAO extends DAO<Appointment> {
         }
         return appt;
     }
-    
+
     // Query used to return data for a table view (joins multiple tables together)
     public ObservableList<Appointment> queryForAppointmentCalendar() {
 
@@ -134,6 +134,7 @@ public class AppointmentDAO extends DAO<Appointment> {
                 + "contact, "
                 + "title, "
                 + "location, "
+                + "description, "
                 + "type, "
                 + "start, "
                 + "end "
@@ -150,6 +151,7 @@ public class AppointmentDAO extends DAO<Appointment> {
                 appointment.setCustomerName(result.getString("customerName"));
                 appointment.setUserName(result.getString("userName"));
                 appointment.setTitle(result.getString("title"));
+                appointment.setDescription(result.getString("description"));
                 appointment.setLocation(result.getString("location"));
                 appointment.setType(result.getString("type"));
                 appointment.setContact(result.getString("contact"));
@@ -164,7 +166,7 @@ public class AppointmentDAO extends DAO<Appointment> {
         }
         return appointments;
     }
-    
+
     // Queries the same information as above, but only returns the next month's worth of appointments.
     public ObservableList<Appointment> queryForAppointmentCalendarMonthly() {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
@@ -175,6 +177,7 @@ public class AppointmentDAO extends DAO<Appointment> {
                 + "contact, "
                 + "title, "
                 + "location, "
+                + "description, "
                 + "type, "
                 + "start, "
                 + "end "
@@ -192,6 +195,7 @@ public class AppointmentDAO extends DAO<Appointment> {
                 appointment.setCustomerName(result.getString("customerName"));
                 appointment.setUserName(result.getString("userName"));
                 appointment.setTitle(result.getString("title"));
+                appointment.setDescription(result.getString("description"));
                 appointment.setLocation(result.getString("location"));
                 appointment.setType(result.getString("type"));
                 appointment.setContact(result.getString("contact"));
@@ -217,6 +221,7 @@ public class AppointmentDAO extends DAO<Appointment> {
                 + "contact, "
                 + "title, "
                 + "location, "
+                + "description, "
                 + "type, "
                 + "start, "
                 + "end "
@@ -234,6 +239,7 @@ public class AppointmentDAO extends DAO<Appointment> {
                 appointment.setCustomerName(result.getString("customerName"));
                 appointment.setUserName(result.getString("userName"));
                 appointment.setTitle(result.getString("title"));
+                appointment.setDescription(result.getString("description"));
                 appointment.setLocation(result.getString("location"));
                 appointment.setType(result.getString("type"));
                 appointment.setContact(result.getString("contact"));
@@ -247,9 +253,9 @@ public class AppointmentDAO extends DAO<Appointment> {
         }
         return appointments;
     }
-    
-    // Used to search appointments by id (search function). Should only return one record, as id's are primary keys.
-    public ObservableList<Appointment> lookupAppointment(int id) {
+
+    // Used to find appointments by title or customer name.
+    public ObservableList<Appointment> lookupAppointment(String searchString) {
 
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
 
@@ -266,48 +272,8 @@ public class AppointmentDAO extends DAO<Appointment> {
                 + "customer.customerId = appointment.customerId "
                 + "JOIN user ON "
                 + "user.userId = appointment.userId "
-                + "WHERE appointmentId = " + id)) {
-
-            ResultSet result = stmt.executeQuery();
-
-            while (result.next()) {
-                Appointment appointment = new Appointment();
-                appointment.setCustomerName(result.getString("customerName"));
-                appointment.setUserName(result.getString("userName"));
-                appointment.setTitle(result.getString("title"));
-                appointment.setLocation(result.getString("location"));
-                appointment.setType(result.getString("type"));
-                appointment.setContact(result.getString("contact"));
-                appointment.setStart(DateTimeConverter.convertLocalDateTimeUTCToUserLocaDatelTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
-                appointment.setEnd(DateTimeConverter.convertLocalDateTimeUTCToUserLocaDatelTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
-                appointments.add(appointment);
-            }
-
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        }
-        return appointments;
-    }
-
-    // Used to find appointments by title.
-    public ObservableList<Appointment> lookupAppointment(String title) {
-
-        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
-
-        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
-                + "customerName, "
-                + "userName, "
-                + "contact, "
-                + "title, "
-                + "location, "
-                + "type, "
-                + "start, "
-                + "end "
-                + "FROM appointment JOIN customer ON "
-                + "customer.customerId = appointment.customerId "
-                + "JOIN user ON "
-                + "user.userId = appointment.userId "
-                + "WHERE title like '%" + title + "%'")) {
+                + "WHERE title like '%" + searchString + "%' "
+                + "OR customerName like '%" + searchString + "%'")) {
 
             ResultSet result = stmt.executeQuery();
 
@@ -330,7 +296,7 @@ public class AppointmentDAO extends DAO<Appointment> {
         return appointments;
     }
     // </editor-fold>
-    
+
     @Override
     public void insert(Appointment dto) {
         try (PreparedStatement stmt = this.conn.prepareStatement("INSERT INTO appointment ("
