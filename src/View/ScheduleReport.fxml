@@ -57,8 +57,6 @@
             <HBox alignment="TOP_CENTER" prefHeight="55.0" prefWidth="825.0" spacing="15.0">
                <children>
                   <Button minWidth="125.0" mnemonicParsing="false" onAction="#onActionGoBack" text="Back" />
-                  <Button minWidth="125.0" mnemonicParsing="false" onAction="#onActionMoreInfo" text="More Info" />
-                  <Button minWidth="125.0" mnemonicParsing="false" onAction="#onActionPrintReport" text="Print Report" />
                </children>
                <padding>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />

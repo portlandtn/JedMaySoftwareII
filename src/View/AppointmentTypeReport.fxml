@@ -2,11 +2,10 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -30,19 +29,23 @@
                </VBox.margin>
             </Label>
             <HBox alignment="TOP_CENTER" prefHeight="26.0" prefWidth="770.0">
-               <children>
-                  <RadioButton fx:id="allRadioButton" mnemonicParsing="false" onAction="#onActionSelectAll" prefWidth="50.0" selected="true" text="All">
-                     <toggleGroup>
-                        <ToggleGroup fx:id="AppointmentTypeToggle" />
-                     </toggleGroup>
-                  </RadioButton>
-                  <RadioButton fx:id="consulationRadioButton" mnemonicParsing="false" onAction="#onActionSelectConsultation" prefWidth="100.0" text="Consultation" toggleGroup="$AppointmentTypeToggle" />
-                  <RadioButton fx:id="introductionRadioButton" mnemonicParsing="false" onAction="#onActionSelectIntroduction" prefWidth="100.0" text="Introduction" toggleGroup="$AppointmentTypeToggle" />
-                  <RadioButton fx:id="terminationRadioButton" mnemonicParsing="false" onAction="#onActionSelectTermination" prefWidth="100.0" text="Termination" toggleGroup="$AppointmentTypeToggle" />
-               </children>
                <VBox.margin>
                   <Insets bottom="20.0" top="10.0" />
                </VBox.margin>
+               <children>
+                  <Label text="Type:">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <padding>
+                        <Insets right="10.0" />
+                     </padding>
+                  </Label>
+                  <ChoiceBox fx:id="typeChoiceBox" prefWidth="150.0" />
+               </children>
             </HBox>
             <TableView fx:id="appointmentTypeReportTableView" maxWidth="-Infinity" prefHeight="300.0" prefWidth="825.0">
               <columns>
@@ -58,8 +61,6 @@
             <HBox alignment="TOP_CENTER" prefHeight="55.0" prefWidth="825.0" spacing="15.0">
                <children>
                   <Button minWidth="125.0" mnemonicParsing="false" onAction="#onActionGoBack" text="Back" />
-                  <Button minWidth="125.0" mnemonicParsing="false" onAction="#onActionMoreInfo" text="More Info" />
-                  <Button minWidth="125.0" mnemonicParsing="false" onAction="#onActionPrintReport" text="Print Report" />
                </children>
                <padding>
                   <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
