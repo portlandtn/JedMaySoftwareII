@@ -47,8 +47,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
  */
 public class AppointmentTypeReportController implements Initializable {
     
-    protected String appointmentType;
-    
     DatabaseConnector dc = new DatabaseConnector();
     Connection conn;
     AppointmentDAO appointmentDAO;
@@ -100,7 +98,7 @@ public class AppointmentTypeReportController implements Initializable {
     
     private void refreshData (String type) {
         
-        ObservableList<Appointment> appointments = appointmentDAO.queryForAppointmentByType(type);;
+        ObservableList<Appointment> appointments = appointmentDAO.queryForAppointmentByType(type);
 
         //Setup the appointment table with data from the database, based on the view selected.
 

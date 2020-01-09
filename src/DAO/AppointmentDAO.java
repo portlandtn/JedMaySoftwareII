@@ -315,6 +315,104 @@ public class AppointmentDAO extends DAO<Appointment> {
         }
         return appointments;
     }
+    
+    // Query for the user report for the current month.
+    public ObservableList<Appointment> queryForAppointmentByUser(String user) {
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "appointmentId, "
+                + "customerName, "
+                + "userName, "
+                + "contact, "
+                + "title, "
+                + "location, "
+                + "description, "
+                + "type, "
+                + "start, "
+                + "end "
+                + "FROM appointment JOIN customer ON "
+                + "customer.customerId = appointment.customerId "
+                + "JOIN user ON "
+                + "user.userId = appointment.userId "
+                + "WHERE userName = '" + user + "' AND "
+                + "start >= '" + DateTimeConverter.getTimeStampfromLocalDateTime(
+                        DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(
+                                LocalDateTime.now().with(TemporalAdjusters.firstDayOfMonth()))) + "' "
+                + "AND start <= '" + DateTimeConverter.getTimeStampfromLocalDateTime(
+                        DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(
+                                LocalDateTime.now().with(TemporalAdjusters.lastDayOfMonth()))) + "'")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Appointment appointment = new Appointment();
+                appointment.setAppointmentId(result.getInt("appointmentId"));
+                appointment.setCustomerName(result.getString("customerName"));
+                appointment.setUserName(result.getString("userName"));
+                appointment.setTitle(result.getString("title"));
+                appointment.setDescription(result.getString("description"));
+                appointment.setLocation(result.getString("location"));
+                appointment.setType(result.getString("type"));
+                appointment.setContact(result.getString("contact"));
+                appointment.setStart(DateTimeConverter.convertLocalDateTimeUTCToUserLocaDatelTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
+                appointment.setEnd(DateTimeConverter.convertLocalDateTimeUTCToUserLocaDatelTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
+                appointments.add(appointment);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return appointments;
+    }
+    
+    // Query for the location report for the current month.
+    public ObservableList<Appointment> queryForAppointmentByLocation(String location) {
+        ObservableList<Appointment> appointments = FXCollections.observableArrayList();
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "appointmentId, "
+                + "customerName, "
+                + "userName, "
+                + "contact, "
+                + "title, "
+                + "location, "
+                + "description, "
+                + "type, "
+                + "start, "
+                + "end "
+                + "FROM appointment JOIN customer ON "
+                + "customer.customerId = appointment.customerId "
+                + "JOIN user ON "
+                + "user.userId = appointment.userId "
+                + "WHERE location = '" + location + "' AND "
+                + "start >= '" + DateTimeConverter.getTimeStampfromLocalDateTime(
+                        DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(
+                                LocalDateTime.now().with(TemporalAdjusters.firstDayOfMonth()))) + "' "
+                + "AND start <= '" + DateTimeConverter.getTimeStampfromLocalDateTime(
+                        DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(
+                                LocalDateTime.now().with(TemporalAdjusters.lastDayOfMonth()))) + "'")) {
+
+            ResultSet result = stmt.executeQuery();
+
+            while (result.next()) {
+                Appointment appointment = new Appointment();
+                appointment.setAppointmentId(result.getInt("appointmentId"));
+                appointment.setCustomerName(result.getString("customerName"));
+                appointment.setUserName(result.getString("userName"));
+                appointment.setTitle(result.getString("title"));
+                appointment.setDescription(result.getString("description"));
+                appointment.setLocation(result.getString("location"));
+                appointment.setType(result.getString("type"));
+                appointment.setContact(result.getString("contact"));
+                appointment.setStart(DateTimeConverter.convertLocalDateTimeUTCToUserLocaDatelTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("start"))));
+                appointment.setEnd(DateTimeConverter.convertLocalDateTimeUTCToUserLocaDatelTime(DateTimeConverter.getLocalDateTimeFromTimestamp(result.getTimestamp("end"))));
+                appointments.add(appointment);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return appointments;
+    }
 
     // Used to find appointments by title or customer name.
     public ObservableList<Appointment> lookupAppointment(String searchString) {
