@@ -27,20 +27,20 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <HBox alignment="CENTER" maxWidth="-Infinity" prefHeight="25.0" prefWidth="600.0" spacing="15.0">
+            <HBox alignment="CENTER" maxWidth="-Infinity" prefHeight="25.0" prefWidth="750.0" spacing="15.0">
                <children>
                   <RadioButton fx:id="allRadioButton" mnemonicParsing="false" onAction="#onActionSelectAll" prefWidth="75.0" selected="true" text="All">
                      <toggleGroup>
                         <ToggleGroup fx:id="CalendarViewToggle" />
                      </toggleGroup>
                   </RadioButton>
-                  <RadioButton fx:id="monthRadioButton" mnemonicParsing="false" onAction="#onActionSelectMonth" prefWidth="75.0" text="Month" toggleGroup="$CalendarViewToggle" />
-                  <RadioButton fx:id="weekRadioButton" mnemonicParsing="false" onAction="#onActionSelectWeek" prefWidth="75.0" text="Week" toggleGroup="$CalendarViewToggle" />
+                  <RadioButton fx:id="monthRadioButton" mnemonicParsing="false" onAction="#onActionSelectMonth" prefWidth="125.0" text="Current Month" toggleGroup="$CalendarViewToggle" />
+                  <RadioButton fx:id="weekRadioButton" mnemonicParsing="false" onAction="#onActionSelectWeek" prefWidth="125.0" text="Current Week" toggleGroup="$CalendarViewToggle" />
                   <TextField fx:id="searchTextField" />
                   <Button mnemonicParsing="false" onAction="#onActionSearch" text="Search" />
                </children>
                <VBox.margin>
-                  <Insets bottom="20.0" left="250.0" top="10.0" />
+                  <Insets bottom="20.0" left="200.0" top="10.0" />
                </VBox.margin>
             </HBox>
             <TableView fx:id="calendarAppointmentTableView" maxWidth="-Infinity" prefHeight="300.0" prefWidth="950.0">

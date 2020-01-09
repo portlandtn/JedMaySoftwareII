@@ -24,6 +24,9 @@ import com.mysql.jdbc.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -124,7 +127,7 @@ public class AppointmentDAO extends DAO<Appointment> {
     }
 
     // Query used to return data for a table view (joins multiple tables together)
-    public ObservableList<Appointment> queryForAppointmentCalendar() {
+    public ObservableList<Appointment> queryForAppointmentCalendar_All() {
 
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
@@ -167,8 +170,8 @@ public class AppointmentDAO extends DAO<Appointment> {
         return appointments;
     }
 
-    // Queries the same information as above, but only returns the next month's worth of appointments.
-    public ObservableList<Appointment> queryForAppointmentCalendarMonthly() {
+    // Queries the same information as above, but only returns the current month's appointments.
+    public ObservableList<Appointment> queryForAppointmentCalendar_Monthly() {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "appointmentId, "
@@ -185,7 +188,12 @@ public class AppointmentDAO extends DAO<Appointment> {
                 + "customer.customerId = appointment.customerId "
                 + "JOIN user ON "
                 + "user.userId = appointment.userId "
-                + "WHERE start <= NOW() + INTERVAL 30 DAY")) {
+                + "WHERE start >= '" + DateTimeConverter.getTimeStampfromLocalDateTime(
+                        DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(
+                                LocalDateTime.now().with(TemporalAdjusters.firstDayOfMonth()))) + "' "
+                + "AND start <= '" + DateTimeConverter.getTimeStampfromLocalDateTime(
+                        DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(
+                                LocalDateTime.now().with(TemporalAdjusters.lastDayOfMonth()))) + "'")) {
 
             ResultSet result = stmt.executeQuery();
 
@@ -211,8 +219,8 @@ public class AppointmentDAO extends DAO<Appointment> {
         return appointments;
     }
 
-    // Query for the appointment calendar table view, but only 7 days in advance.
-    public ObservableList<Appointment> queryForAppointmentCalendarWeekly() {
+    // Query for the appointment calendar table view, but only returns the current week's appointments.
+    public ObservableList<Appointment> queryForAppointmentCalendar_Weekly() {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
         try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
                 + "appointmentId, "
@@ -229,7 +237,12 @@ public class AppointmentDAO extends DAO<Appointment> {
                 + "customer.customerId = appointment.customerId "
                 + "JOIN user ON "
                 + "user.userId = appointment.userId "
-                + "WHERE start <= NOW() + INTERVAL 7 DAY")) {
+                + "WHERE start >= '" + DateTimeConverter.getTimeStampfromLocalDateTime(
+                        DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(
+                                LocalDateTime.now().with(DayOfWeek.MONDAY))) + "' "
+                + "AND start <= '" + DateTimeConverter.getTimeStampfromLocalDateTime(
+                        DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(
+                                LocalDateTime.now().with(DayOfWeek.FRIDAY))) + "'")) {
 
             ResultSet result = stmt.executeQuery();
 

@@ -197,11 +197,11 @@ public class AppointmentsCalendarController implements Initializable {
 
         //Setup the appointment table with data from the database, based on the view selected.
         if (allRadioButton.isSelected()) {
-            appointments = appointmentDAO.queryForAppointmentCalendar();
+            appointments = appointmentDAO.queryForAppointmentCalendar_All();
         } else if (monthRadioButton.isSelected()) {
-            appointments = appointmentDAO.queryForAppointmentCalendarMonthly();
+            appointments = appointmentDAO.queryForAppointmentCalendar_Monthly();
         } else {
-            appointments = appointmentDAO.queryForAppointmentCalendarWeekly();
+            appointments = appointmentDAO.queryForAppointmentCalendar_Weekly();
         }
 
         calendarAppointmentTableView.setItems(appointments);
