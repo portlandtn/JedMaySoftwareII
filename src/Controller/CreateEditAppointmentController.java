@@ -157,8 +157,8 @@ public class CreateEditAppointmentController implements Initializable {
         urlTextField.setText(appt.getUrl());
         typeChoiceBox.setValue(appt.getType());
         dateDatePicker.setValue(appt.getStart().toLocalDate());
-        startTimeTextField.setText(DateTimeConverter.getTextFromLocalDateTime(appt.getStart()));
-        endTimeTextField.setText(DateTimeConverter.getTextFromLocalDateTime(appt.getEnd()));
+        startTimeTextField.setText(DateTimeConverter.getFormattedTimeStringFromLocalDateTime(appt.getStart()));
+        endTimeTextField.setText(DateTimeConverter.getFormattedTimeStringFromLocalDateTime(appt.getEnd()));
 
         // Assigns the passed in object appt to the appointmentToUpdate object for editing and inserting later.
         this.appointmentToUpdate = appt;
@@ -193,8 +193,8 @@ public class CreateEditAppointmentController implements Initializable {
 
         // First the start and end datetimes are built from the date picker and text entered in the start and end time fields.
         // Then the built LocalDateTime is converted to UTC for saving in the database.
-        appt.setStart(DateTimeConverter.convertToUtc(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(startTimeTextField.getText() + ":00"))));
-        appt.setEnd(DateTimeConverter.convertToUtc(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(endTimeTextField.getText() + ":00"))));
+        appt.setStart(DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(startTimeTextField.getText() + ":00"))));
+        appt.setEnd(DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(endTimeTextField.getText() + ":00"))));
 
         appointmentDAO.update(appt);
 
@@ -215,8 +215,8 @@ public class CreateEditAppointmentController implements Initializable {
 
         // First the start and end datetimes are built from the date picker and the text entered in the start and end time fields.
         // Then the built LocalDateTime is converted to UTC for saving in the database.
-        appt.setStart(DateTimeConverter.convertToUtc(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(startTimeTextField.getText() + ":00"))));
-        appt.setEnd(DateTimeConverter.convertToUtc(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(endTimeTextField.getText() + ":00"))));
+        appt.setStart(DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(startTimeTextField.getText() + ":00"))));
+        appt.setEnd(DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(endTimeTextField.getText() + ":00"))));
 
         appointmentDAO.insert(appt);
 

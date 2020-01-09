@@ -17,16 +17,11 @@
  */
 package Utilities;
 
-import Model.Appointment;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.Date;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
 
 /**
  *
@@ -42,15 +37,15 @@ public class DateTimeConverter {
         return Timestamp.valueOf(ldt);
     }
 
-    public static LocalDateTime convertToUtc(LocalDateTime time) {
+    public static LocalDateTime convertUserLocalDateTimeToUtcLocalDateTime(LocalDateTime time) {
         return time.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
     }
 
-    public static LocalDateTime convertFromUTCToLocalTime(LocalDateTime time) {
+    public static LocalDateTime convertLocalDateTimeUTCToUserLocaDatelTime(LocalDateTime time) {
         return time.atZone(ZoneOffset.UTC).withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime();
     }
 
-    public static String getTextFromLocalDateTime(LocalDateTime time) {
+    public static String getFormattedTimeStringFromLocalDateTime(LocalDateTime time) {
         DecimalFormat timeFormat = new DecimalFormat("00");
         return timeFormat.format(Double.valueOf(time.getHour())) + ":" + timeFormat.format(Double.valueOf(time.getMinute()));
     }
