@@ -289,6 +289,16 @@ public class CreateEditAppointmentController implements Initializable {
                 alert.showAndWait();
                 return false;
             }
+            
+            
+            // Ensures the user can't create an appointment that overlaps.
+            if (appointmentDAO.queryForDoAppointmentsOverlapForUser(assignedToChoiceBox.getValue(),
+                    DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(startTimeTextField.getText() + ":00"))),
+                    DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(LocalDateTime.of(dateDatePicker.getValue(), LocalTime.parse(endTimeTextField.getText() + ":00"))))) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "This appointment overlaps with an existing appointment. Please change the date/time range and try again.");
+                alert.showAndWait();
+                return false;
+            }
 
             // Ensures the user can't create an appointment in the past.
             if (!Validator.dateIsAfterCurrentDate(dateDatePicker.getValue())) {
@@ -298,6 +308,8 @@ public class CreateEditAppointmentController implements Initializable {
             } else {
                 return true;
             }
+            
+
 
             //This is the catch from the first validation. If the customer name is null, it will fall through to this catch.
         } catch (NullPointerException ex) {

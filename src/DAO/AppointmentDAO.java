@@ -315,7 +315,7 @@ public class AppointmentDAO extends DAO<Appointment> {
         }
         return appointments;
     }
-    
+
     // Query for the user report for the current month.
     public ObservableList<Appointment> queryForAppointmentByUser(String user) {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
@@ -364,7 +364,7 @@ public class AppointmentDAO extends DAO<Appointment> {
         }
         return appointments;
     }
-    
+
     // Query for the location report for the current month.
     public ObservableList<Appointment> queryForAppointmentByLocation(String location) {
         ObservableList<Appointment> appointments = FXCollections.observableArrayList();
@@ -413,7 +413,7 @@ public class AppointmentDAO extends DAO<Appointment> {
         }
         return appointments;
     }
-    
+
     // Query for the location report for the current month.
     public boolean queryForAppointmentTime() {
 
@@ -430,6 +430,27 @@ public class AppointmentDAO extends DAO<Appointment> {
             ResultSet result = stmt.executeQuery();
             return result.next();
 
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return false;
+    }
+
+    // Query for the location report for the current month.
+    public boolean queryForDoAppointmentsOverlapForUser(String user, LocalDateTime startTime, LocalDateTime endTime) {
+
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "start "
+                + "FROM appointment JOIN user ON appointment.userId = user.userId "
+                + "WHERE userName = '" + user + "' "
+                + "AND (start >= '" + DateTimeConverter.getTimeStampfromLocalDateTime(startTime) + "' "
+                + "AND start < '" + DateTimeConverter.getTimeStampfromLocalDateTime(endTime) + "') "
+                + "OR "
+                + "(end > '" + DateTimeConverter.getTimeStampfromLocalDateTime(startTime) + "' "
+                + "AND end <= '" + DateTimeConverter.getTimeStampfromLocalDateTime(endTime) + "')")) {
+
+            ResultSet result = stmt.executeQuery();
+            return result.next();
 
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

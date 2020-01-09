@@ -19,6 +19,8 @@ package Utilities;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -78,6 +80,10 @@ public class Validator {
     public static boolean dateIsAfterCurrentDate(LocalDate date) {
         if (date.equals(LocalDate.now())) return true;
         else return date.isAfter(LocalDate.now());
+    }
+    
+    public static boolean datesDoNotOverlap(LocalDateTime startTime, ChronoUnit interval) {
+        return false;
     }
 
 }
