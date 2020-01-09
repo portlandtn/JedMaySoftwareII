@@ -413,6 +413,29 @@ public class AppointmentDAO extends DAO<Appointment> {
         }
         return appointments;
     }
+    
+    // Query for the location report for the current month.
+    public boolean queryForAppointmentTime() {
+
+        try (PreparedStatement stmt = this.conn.prepareStatement("SELECT "
+                + "start "
+                + "FROM appointment "
+                + "WHERE start >= '" + DateTimeConverter.getTimeStampfromLocalDateTime(
+                        DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(
+                                LocalDateTime.now())) + "' "
+                + "AND start <= '" + DateTimeConverter.getTimeStampfromLocalDateTime(
+                        DateTimeConverter.convertUserLocalDateTimeToUtcLocalDateTime(
+                                LocalDateTime.now().plusMinutes(15))) + "'")) {
+
+            ResultSet result = stmt.executeQuery();
+            return result.next();
+
+
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return false;
+    }
 
     // Used to find appointments by title or customer name.
     public ObservableList<Appointment> lookupAppointment(String searchString) {

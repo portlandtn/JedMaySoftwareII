@@ -62,7 +62,7 @@ public class Validator {
         if (time == null || time.isEmpty())
             return true;
         
-        String regex = "^[0-1][0-9]:[0-5][0-9]";
+        String regex = "^[0-2][0-9]:[0-5][0-9]";
         Pattern pattern = Pattern.compile(regex);
         
         Matcher matcher = pattern.matcher(time);
@@ -76,7 +76,8 @@ public class Validator {
     
     // Ensures the date selected will take place in the future (shouldn't insert appointments prior to today)
     public static boolean dateIsAfterCurrentDate(LocalDate date) {
-        return date.isAfter(LocalDate.now());
+        if (date.equals(LocalDate.now())) return true;
+        else return date.isAfter(LocalDate.now());
     }
 
 }

@@ -17,6 +17,7 @@
  */
 package Controller;
 
+import DAO.AppointmentDAO;
 import Utilities.DataProvider;
 import Utilities.DatabaseConnector;
 import DAO.UserDAO;
@@ -27,6 +28,8 @@ import com.mysql.jdbc.Connection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -45,6 +48,7 @@ public class LoginScreenController implements Initializable {
     DatabaseConnector dc = new DatabaseConnector();
     Connection conn;
     UserDAO userDAO;
+    AppointmentDAO appointmentDAO;
 
     // Messages for alerts
     String usernameNotFound, usernameAndPasswordDoNotMatch, usernameIsInactive, usernameAndPasswordCannotBeEmpty;
@@ -54,6 +58,7 @@ public class LoginScreenController implements Initializable {
         try {
             conn = dc.createConnection();
             this.userDAO = new UserDAO(conn);
+            this.appointmentDAO = new AppointmentDAO(conn);
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
         }
@@ -105,6 +110,12 @@ public class LoginScreenController implements Initializable {
                 DataProvider.setIsLoggedIn(true);
                 DataProvider.setCurrentUser(userNameTextField.getText());
                 Logger.logUserLogin();
+                
+                if (appointmentIsWithin15MinutesOfLogin()) {
+                    Alert alert = new Alert(AlertType.ERROR, "You have an appointment within 15 minutes. Please check the calendar.");
+                    alert.showAndWait();
+                }
+               
                 Navigator.displayScreen(event, FXMLLoader.load(getClass().getResource(Navigator.pathOfFXML.DASHBOARD.getPath())));
             }
 
@@ -161,6 +172,10 @@ public class LoginScreenController implements Initializable {
         ResourceBundle resourceBundle = ResourceBundle.getBundle("i18n/Nat", locale);
         setLabels(resourceBundle);
         setMessageText(resourceBundle);
+    }
+
+    private boolean appointmentIsWithin15MinutesOfLogin() {
+        return appointmentDAO.queryForAppointmentTime();
     }
 
 }
